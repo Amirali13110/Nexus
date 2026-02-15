@@ -43,7 +43,7 @@ export async function signUpAction(prevState: any, formData: FormData) {
     return { success: true, error: null };
   } catch (error: any) {
     return {
-      error: "Failed to Sign up",
+      error: null,
     };
   }
 }

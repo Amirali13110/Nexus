@@ -40,10 +40,17 @@ export async function signUp(user: UserCredentials) {
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {
-      const message =
-        error.response.data?.msg ||
-        error.response.data.error_description ||
-        "Sign up failed";
+      const { data, status } = error.response;
+      if (
+        data?.code === 23505 ||
+        data?.message.includes("profiles_username_key")
+      ) {
+        return {
+          success: false,
+          error: "The username is already taken , Please try a different one.",
+        };
+      }
+      const message = error.response.data?.message || "Sign up failed";
 
       return {
         success: false,
