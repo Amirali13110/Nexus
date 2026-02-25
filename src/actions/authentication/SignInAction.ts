@@ -23,7 +23,7 @@ export async function signInAction(prevState: any, formData: FormData) {
       errors: fieldErrors,
     };
   }
-
+  let isSuccessfull = false;
   try {
     const result = await signIn({
       email: validation.data.email,
@@ -36,15 +36,13 @@ export async function signInAction(prevState: any, formData: FormData) {
       };
     }
 
-    if(result.success){
-      redirect('/home')
-
-    }
-    
-    return { success: true, error: null };
+    isSuccessfull = true;
   } catch {
     return {
       error: "Failed to sign in",
     };
+  }
+  if (isSuccessfull) {
+    redirect("/home");
   }
 }

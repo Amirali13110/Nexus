@@ -4,17 +4,22 @@ import { validateUser } from "./actions/authentication/ValidateUser";
 
 export async function proxy(request: NextRequest) {
   const token = request.cookies.get("access_token")?.value;
-  const { pathname } = request.nextUrl;
 
-  const isAuthPage = pathname === "/signIn" || pathname === "signUp";
-  const isProtectedPage = pathname.startsWith("/home");
+  const { pathname } = request.nextUrl;
+  const isCallbackPage = pathname.startsWith("/callback");
+  const isAuthPage =
+    pathname === "/signIn" ||
+    pathname === "/signUp" ||
+    pathname === "/forgetPassword";
+  const isProtectedPage =
+    pathname.startsWith("/") && !isAuthPage && !isCallbackPage;
 
   if (isProtectedPage && !token) {
     return NextResponse.redirect(new URL("/signIn", request.url));
   }
 
   if (isAuthPage && token) {
-    return NextResponse.redirect(new URL("/home", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   if (token) {
@@ -27,7 +32,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (isValid && isAuthPage) {
-      return NextResponse.redirect(new URL("/home", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
@@ -35,5 +40,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/home", "/home/:path*", "/signIn", "/signUp"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|public|callback).*)",
+  ],
 };

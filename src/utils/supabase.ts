@@ -1,2 +1,2 @@
-export const supabaseKey = 'sb_publishable_dd6_pcGLT2rVIIpfPTotuQ_ckFUs55-'
-export const supabaseUrl = 'https://vytomqwvgadwoylzlwpz.supabase.co'
+export const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

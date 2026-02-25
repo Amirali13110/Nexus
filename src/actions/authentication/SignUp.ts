@@ -1,5 +1,7 @@
+"use server";
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
-import Cookies from "js-cookie";
+import { cookies } from "next/headers";
+
 import axios from "axios";
 
 type UserCredentials = {
@@ -25,11 +27,11 @@ export async function signUp(user: UserCredentials) {
   const signUpUrl = `${supabaseUrl}/auth/v1/signup`;
 
   try {
+    const cookieStore = await cookies();
     const response = await axios.post(signUpUrl, body, { headers: headers });
-
     const { access_token } = response.data;
     if (access_token) {
-      Cookies.set("access_token", access_token, {
+      cookieStore.set("access_token", access_token, {
         expires: 7, // 7 days
         path: "/",
         sameSite: "lax",
@@ -40,7 +42,7 @@ export async function signUp(user: UserCredentials) {
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {
-      const { data, status } = error.response;
+      const { data } = error.response;
       if (
         data?.code === 23505 ||
         data?.message.includes("profiles_username_key")

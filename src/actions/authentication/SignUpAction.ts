@@ -22,7 +22,7 @@ export async function signUpAction(prevState: any, formData: FormData) {
       errors: fieldErrors,
     };
   }
-
+  let isSuccessfull: boolean = false;
   try {
     const result = await signUp({
       email: validation.data.email,
@@ -37,13 +37,13 @@ export async function signUpAction(prevState: any, formData: FormData) {
       };
     }
 
-    if (result.success) {
-      redirect("/home");
-    }
-    return { success: true, error: null };
+    isSuccessfull = true;
   } catch (error: any) {
     return {
-      error: null,
+      error: "Sign up failed",
     };
+  }
+  if (isSuccessfull) {
+    redirect("/");
   }
 }

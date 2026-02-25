@@ -65,7 +65,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         Cookies.set("auth_user", JSON.stringify(response?.data.user), {
           expires: 7,
         });
-        set({ user: response?.data.user });
+        set({ user: response?.data.user ,isLoading:false });
         return { success: true, data: response.data };
       } else {
         set({ error: response.error, isLoading: false });

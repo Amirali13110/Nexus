@@ -29,6 +29,7 @@ export default function SignUpForm() {
       {state?.errors?.email && <p>{state.errors.email}</p>}
       {state?.errors?.password && <p>{state.errors.password}</p>}
       {state?.error && <p>{state.error}</p>}
+      {isLoading && <p>Signing Up...</p>}
     </form>
   );
 }
