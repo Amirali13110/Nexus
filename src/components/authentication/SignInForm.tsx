@@ -10,7 +10,7 @@ export default function SignInForm() {
     <form action={formAction}>
       <div>
         <label>Email</label>
-        <input name="email" />
+        <input name="identifier" />
       </div>
       <div>
         <label>Password</label>
@@ -20,7 +20,7 @@ export default function SignInForm() {
       <button type="submit" disabled={isPending}>
         Sign In
       </button>
-      {state?.errors?.email && <p>{state.errors.email}</p>}
+      {state?.errors?.identifier && <p>{state.errors.identifier}</p>}
       {state?.errors?.password && <p>{state.errors.password}</p>}
       {state?.error && <p>{state.error}</p>}
       {isLoading && <p>Signing In...</p>}

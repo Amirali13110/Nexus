@@ -5,9 +5,6 @@ export default function SignUpPage() {
     <div>
       Sign Up Page
       <SignUpForm />
-
-
-      <Link href="/forgetPassword">forget password</Link>
       <p>
         Already have an account <Link href="/signIn">Log in</Link>
       </p>

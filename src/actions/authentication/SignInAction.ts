@@ -3,31 +3,40 @@
 import z from "zod";
 import { useAuthStore } from "../../store/authStore";
 import { redirect } from "next/navigation";
+import { useProfileStore } from "@/store/profileStore";
 
 const signInSchema = z.object({
-  email: z.string().email("Enter a real email address"),
+  identifier: z.string().min(3, "Username or Email is too short"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export async function signInAction(prevState: any, formData: FormData) {
   const { signIn } = useAuthStore.getState();
-  const email = formData.get("email") as string;
+  const { getProfile } = useProfileStore.getState();
+  const identifier = formData.get("identifier") as string;
   const password = formData.get("password") as string;
 
-  const validation = signInSchema.safeParse({ email, password });
-
+  const validation = signInSchema.safeParse({ identifier, password });
   if (!validation.success) {
-    const fieldErrors = validation.error.flatten().fieldErrors;
     return {
       success: false,
-      errors: fieldErrors,
+      errors: validation.error.flatten().fieldErrors,
     };
   }
+
   let isSuccessfull = false;
+
+  let emailToSignIn: string = identifier;
+
   try {
+    const profile = await getProfile({ username: identifier });
+
+    if (profile) {
+      emailToSignIn = profile.email;
+    }
     const result = await signIn({
-      email: validation.data.email,
-      password: validation.data.password,
+      email: emailToSignIn,
+      password: password,
     });
     if (!result.success) {
       return {
@@ -43,6 +52,6 @@ export async function signInAction(prevState: any, formData: FormData) {
     };
   }
   if (isSuccessfull) {
-    redirect("/home");
+    redirect("/");
   }
 }
