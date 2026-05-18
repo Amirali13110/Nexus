@@ -1,9 +1,9 @@
-"use server"
+"use server";
 
 import { setTestCookie } from "@/actions/testAction";
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
 import axios from "axios";
-import { setAuthCookies } from '@/actions/authentication/AuthActions';
+import { setAuthCookies } from "@/actions/authentication/AuthActions";
 import { axiosWithProxy } from "../HttpService";
 type UserCredentials = {
   email: string;
@@ -11,7 +11,6 @@ type UserCredentials = {
 };
 
 export async function signIn(user: UserCredentials) {
-
   const body = {
     email: user.email,
     password: user.password,
@@ -24,7 +23,9 @@ export async function signIn(user: UserCredentials) {
   const signInUrl = `${supabaseUrl}/auth/v1/token?grant_type=password`;
 
   try {
-    const response = await axiosWithProxy.post(signInUrl, body, { headers: headers });
+    const response = await axiosWithProxy.post(signInUrl, body, {
+      headers: headers,
+    });
     const data = response?.data;
     if (!data) {
       throw new Error("No data received from auth server");
@@ -59,6 +60,7 @@ export async function signIn(user: UserCredentials) {
     return {
       success: false,
       error:
+        error.msg ||
         "Unable to connect to the server . Please check your internet connection",
     };
   }

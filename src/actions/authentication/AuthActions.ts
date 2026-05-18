@@ -8,17 +8,13 @@ export async function setAuthCookies(data: any) {
   const isProd = process.env.NODE_ENV === "production";
 
 
- console.log("=== setAuthCookies received data keys:", Object.keys(data || {}));
-  console.log("data.access_token exists?", !!data?.access_token);
-  console.log("data.access_token type:", typeof data?.access_token);
+
   if (data?.access_token) {
-    console.log("data.access_token length:", data.access_token.length);
-    console.log("data.access_token first 10 chars:", data.access_token.substring(0,10));
+
     // Check for null byte or other weird chars
     const hasNullByte = data.access_token.includes('\u0000');
-    console.log("Has null byte?", hasNullByte);
+
   }
-  console.log("data.refresh_token exists?", !!data?.refresh_token);
 
   const cleanAccessToken = data.access_token.trim().replace(/[\n\r]/g, "");
   const encodedAccessToken = encodeURIComponent(cleanAccessToken);

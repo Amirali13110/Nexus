@@ -1,6 +1,6 @@
 "use server";
 
-import z, { success } from "zod";
+import z from "zod";
 import { redirect } from "next/navigation";
 import { setAuthCookies } from "./AuthActions";
 import { signIn } from "@/services/authentication/SignIn";
@@ -37,7 +37,6 @@ export async function signInAction(prevState: any, formData: FormData) {
     });
 
     if (!result.success) {
-      console.log(result.error);
       return {
         success: false,
         error: result.error,

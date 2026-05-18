@@ -19,6 +19,6 @@ export async function signOut(token: string) {
       "SignOut Fetch Error:",
       error.response?.data || error.message,
     );
-    return { success: false, error: error.message };
+    return { success: false, error: error.msg };
   }
 }

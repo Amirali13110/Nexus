@@ -4,8 +4,6 @@ import { supabaseKey, supabaseUrl } from "../../utils/supabase";
 import { cookies } from "next/headers";
 import { axiosWithProxy } from "../HttpService";
 
-
-
 type UserCredentials = {
   email: string;
   username: string;
@@ -30,7 +28,9 @@ export async function signUp(user: UserCredentials) {
 
   try {
     const cookieStore = await cookies();
-    const response = await axiosWithProxy.post(signUpUrl, body, { headers: headers });
+    const response = await axiosWithProxy.post(signUpUrl, body, {
+      headers: headers,
+    });
     const { access_token } = response.data;
     if (access_token) {
       cookieStore.set("access_token", access_token, {
@@ -71,6 +71,7 @@ export async function signUp(user: UserCredentials) {
     return {
       success: false,
       error:
+        error.msg ||
         "Unable to connect to the server . Please check your internet connection",
     };
   }

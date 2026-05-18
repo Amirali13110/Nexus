@@ -57,7 +57,8 @@ export async function requestPasswordReset(email: string) {
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.message || "Failed to send email",
+      error:
+        error.response?.data?.message || error.msg || "Failed to send email",
     };
   }
 }
