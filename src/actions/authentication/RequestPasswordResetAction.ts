@@ -1,5 +1,5 @@
 import { useProfileStore } from "@/store/profileStore";
-import { requestPasswordReset } from "./RequestPasswordReset";
+import { requestPasswordReset } from "../../services/authentication/RequestPasswordReset";
 export type ActionState = {
   success: boolean;
   message: string | null;

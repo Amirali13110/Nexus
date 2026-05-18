@@ -1,11 +1,11 @@
 "use client";
-import { useAuthStore } from "@/store/authStore";
+
 import { signInAction } from "../../actions/authentication/SignInAction";
 import { useActionState } from "react";
 
 export default function SignInForm() {
   const [state, formAction, isPending] = useActionState(signInAction, null);
-  const { isLoading } = useAuthStore();
+
   return (
     <form action={formAction}>
       <div>
@@ -23,7 +23,7 @@ export default function SignInForm() {
       {state?.errors?.identifier && <p>{state.errors.identifier}</p>}
       {state?.errors?.password && <p>{state.errors.password}</p>}
       {state?.error && <p>{state.error}</p>}
-      {isLoading && <p>Signing In...</p>}
+      {isPending && <p>Signing In...</p>}
     </form>
   );
 }

@@ -1,12 +1,17 @@
+"use server"
+
+import { setTestCookie } from "@/actions/testAction";
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
 import axios from "axios";
-
+import { setAuthCookies } from '@/actions/authentication/AuthActions';
+import { axiosWithProxy } from "../HttpService";
 type UserCredentials = {
   email: string;
   password: string;
 };
 
 export async function signIn(user: UserCredentials) {
+
   const body = {
     email: user.email,
     password: user.password,
@@ -19,8 +24,16 @@ export async function signIn(user: UserCredentials) {
   const signInUrl = `${supabaseUrl}/auth/v1/token?grant_type=password`;
 
   try {
-    const response = await axios.post(signInUrl, body, { headers: headers });
+    const response = await axiosWithProxy.post(signInUrl, body, { headers: headers });
+    const data = response?.data;
+    if (!data) {
+      throw new Error("No data received from auth server");
+    }
+
+    // await setAuthCookies(data)
+
     console.log(response.data);
+
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {
@@ -36,9 +49,10 @@ export async function signIn(user: UserCredentials) {
     }
 
     if (error.request) {
+      console.log(error);
       return {
         success: false,
-        error: "Network error: Please check your internet connection.",
+        error: "Network error: Please check your internet .",
       };
     }
 

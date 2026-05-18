@@ -16,12 +16,18 @@ interface ProfileState {
     username?: string;
   }) => Promise<Profile | null>;
   clearProfile: () => void;
+  setProfile: (profile: Profile) => void;
 }
 
 export const useProfileStore = create<ProfileState>((set) => ({
   profile: null,
   isLoading: false,
   error: null,
+
+  setProfile: (profile: Profile) => {
+    set({ profile });
+  },
+
   getProfile: async (filter) => {
     set({ isLoading: true, error: null });
 

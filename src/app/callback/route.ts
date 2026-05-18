@@ -1,11 +1,11 @@
-import axios from "axios";
+import { axiosWithProxy } from "@/services/HttpService";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { supabaseKey, supabaseUrl } from "@/utils/supabase";
 
 export async function GET(request: Request) {
-  console.log("🚀 CALLBACK HIT: The request has reached route.ts");
+
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/updatePassword";
@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     }
 
     if (!verifier) {
-      console.error("PKCE Error: Code verifier not found in cookies.");
+      
       return NextResponse.redirect(`${origin}/signIn?error=session_expired`);
     }
     console.log("DEBUG -> Code:", code ? "EXISTS" : "MISSING");
@@ -33,7 +33,7 @@ export async function GET(request: Request) {
     if (!verifier || !code) {
       throw new Error("Missing required PKCE components before fetch");
     }
-    const response = await axios.post(
+    const response = await axiosWithProxy.post(
       `${supabaseUrl}/auth/v1/token?grant_type=pkce`,
       {
         auth_code: code,
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
         },
       },
     );
-    console.log(response);
+   
     const { access_token, refresh_token, expires_in } = response.data;
     const finalResponse = NextResponse.redirect(`${origin}${safeNext}`);
     const isProd = process.env.NODE_ENV === "production";

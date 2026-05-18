@@ -1,8 +1,10 @@
 "use server";
+import axios from "axios";
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
 import { cookies } from "next/headers";
+import { axiosWithProxy } from "../HttpService";
 
-import axios from "axios";
+
 
 type UserCredentials = {
   email: string;
@@ -28,7 +30,7 @@ export async function signUp(user: UserCredentials) {
 
   try {
     const cookieStore = await cookies();
-    const response = await axios.post(signUpUrl, body, { headers: headers });
+    const response = await axiosWithProxy.post(signUpUrl, body, { headers: headers });
     const { access_token } = response.data;
     if (access_token) {
       cookieStore.set("access_token", access_token, {
@@ -38,7 +40,7 @@ export async function signUp(user: UserCredentials) {
         secure: process.env.NODE_ENV === "production",
       });
     }
-    console.log(response);
+    console.log(response.data);
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {

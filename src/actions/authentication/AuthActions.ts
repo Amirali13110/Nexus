@@ -1,31 +1,48 @@
 "use server";
-import { useAuthStore } from "@/store/authStore";
+
 import { cookies } from "next/headers";
-import { signOut } from "./SignOut";
+import { signOut } from "../../services/authentication/SignOut";
 
 export async function setAuthCookies(data: any) {
   const cookieStore = await cookies();
   const isProd = process.env.NODE_ENV === "production";
 
-  cookieStore.set("access_token", data.access_token, {
-    httpOnly: true,
-    secure: isProd,
-    maxAge: 60 * 60, // 30 days
-    path: "/",
-  });
-  cookieStore.set("refresh_token", data.refresh_token, {
+
+ console.log("=== setAuthCookies received data keys:", Object.keys(data || {}));
+  console.log("data.access_token exists?", !!data?.access_token);
+  console.log("data.access_token type:", typeof data?.access_token);
+  if (data?.access_token) {
+    console.log("data.access_token length:", data.access_token.length);
+    console.log("data.access_token first 10 chars:", data.access_token.substring(0,10));
+    // Check for null byte or other weird chars
+    const hasNullByte = data.access_token.includes('\u0000');
+    console.log("Has null byte?", hasNullByte);
+  }
+  console.log("data.refresh_token exists?", !!data?.refresh_token);
+
+  const cleanAccessToken = data.access_token.trim().replace(/[\n\r]/g, "");
+  const encodedAccessToken = encodeURIComponent(cleanAccessToken);
+  const refreshToken = data.refresh_token.trim();
+
+  cookieStore.set("access_token", encodedAccessToken, {
     httpOnly: true,
     secure: isProd,
     maxAge: 60 * 60 * 24 * 30, // 30 days
     path: "/",
   });
-  cookieStore.set("auth_user", JSON.stringify(data.user), {
-    httpOnly: true, // Recommended: keep it hidden from client-side JS
+  cookieStore.set("refresh_token",encodeURIComponent(refreshToken), {
+    httpOnly: true,
     secure: isProd,
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 30, // Match the refresh token duration
+    maxAge: 60 * 60 * 24 * 30, // 30 days
     path: "/",
   });
+  // cookieStore.set("auth_user", JSON.stringify(data.user), {
+  //   httpOnly: true, // Recommended: keep it hidden from client-side JS
+  //   secure: isProd,
+  //   sameSite: "lax",
+  //   maxAge: 60 * 60 * 24 * 30, // Match the refresh token duration
+  //   path: "/",
+  // });
 }
 
 export async function handleSignOut() {

@@ -1,7 +1,9 @@
 "use server";
-import axios from "axios";
+
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
+import axios from "axios";
 import { cookies } from "next/headers";
+import { axiosWithProxy } from "../HttpService";
 
 async function getPKCE() {
   const verifier = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) =>
@@ -33,7 +35,7 @@ export async function requestPasswordReset(email: string) {
   });
 
   try {
-    const response = await axios.post(
+    const response = await axiosWithProxy.post(
       url,
       {
         email: email,

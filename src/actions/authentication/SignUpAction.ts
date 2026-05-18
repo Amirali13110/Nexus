@@ -1,6 +1,8 @@
 import z, { email, success } from "zod";
 import { useAuthStore } from "../../store/authStore";
 import { redirect } from "next/navigation";
+import { signUp } from "@/services/authentication/SignUp";
+import { setAuthCookies } from "./AuthActions";
 
 const signUpSchema = z.object({
   email: z.string().email("Enter a real email address"),
@@ -8,8 +10,6 @@ const signUpSchema = z.object({
 });
 
 export async function signUpAction(prevState: any, formData: FormData) {
-  const { signUp } = useAuthStore.getState();
-
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const username = formData.get("username") as string;
@@ -35,6 +35,12 @@ export async function signUpAction(prevState: any, formData: FormData) {
         success: false,
         error: result.error,
       };
+    }
+
+    const data = result?.data;
+
+    if (data?.access_token) {
+      await setAuthCookies(data);
     }
 
     isSuccessfull = true;

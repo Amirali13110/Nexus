@@ -1,6 +1,7 @@
 import { supabaseKey, supabaseUrl } from "@/utils/supabase";
 import axios from "axios";
 
+
 export async function signOut(token: string) {
   const url = `${supabaseUrl}/auth/v1/logout`;
   try {

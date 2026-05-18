@@ -1,6 +1,10 @@
+
+
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { validateUser } from "./actions/authentication/ValidateUser";
+import { validateUser } from "./services/authentication/ValidateUser";
+
+
 
 export async function proxy(request: NextRequest) {
   const token = request.cookies.get("access_token")?.value;
@@ -18,23 +22,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/signIn", request.url));
   }
 
+
+
   if (isAuthPage && token) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  if (token) {
-    const { isValid } = await validateUser(token);
 
-    if (!isValid && isProtectedPage) {
-      const response = NextResponse.redirect(new URL("/signIn", request.url));
-      response.cookies.delete("access_token");
-      return response;
-    }
-
-    if (isValid && isAuthPage) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-  }
+if (token && isAuthPage) {
+    return NextResponse.redirect(new URL("/", request.url));
+}
 
   return NextResponse.next();
 }
