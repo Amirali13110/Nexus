@@ -30,11 +30,7 @@ export async function signIn(user: UserCredentials) {
     if (!data) {
       throw new Error("No data received from auth server");
     }
-
-    // await setAuthCookies(data)
-
-    console.log(response.data);
-
+    console.log(response)
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {

@@ -1,5 +1,5 @@
 import { supabaseKey, supabaseUrl } from "@/utils/supabase";
-import axios from "axios";
+import { axiosWithProxy } from "@/services/HttpService";
 
 export async function getUserProfile(filter: {
   username?: string;
@@ -20,10 +20,18 @@ export async function getUserProfile(filter: {
   const url = `${supabaseUrl}/rest/v1/profiles?${queryParam}&select=*`;
 
   try {
-    const response = await axios.get(url, { headers });
-    return response.data[0] || null;
-  } catch (error) {
+    const response = await axiosWithProxy.get(url, { headers });
+    // console.log(response);
+    // return response.data[0] || null;
+    return { success: true, profile: response.data[0], error: null };
+  } catch (error: any) {
     console.error("Profile Fetch Error:", error);
-    return null;
+    return {
+      success: false,
+      error:
+        error.msg ||
+        "Failed to get user's profile check your internet connection",
+      profile: null,
+    };
   }
 }

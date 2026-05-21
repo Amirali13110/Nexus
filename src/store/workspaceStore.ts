@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { createWorkspace } from "@/services/workspace/workspaceService";
+import { createWorkspace } from "@/services/workspace/createWorkspace";
 
 interface Workspace {
   id: string;
@@ -20,7 +20,6 @@ interface WorkspaceState {
   createWorkspace: (
     name: string,
     slug: string,
-    owner_id: string,
   ) => Promise<{ success: boolean; data?: Workspace; error?: string }>;
 }
 
@@ -29,11 +28,11 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   isLoading: false,
   error: null,
 
-  createWorkspace: async (name: string, slug: string, owner_id: string) => {
+  createWorkspace: async (name: string, slug: string) => {
     set({ isLoading: true, error: null });
 
     try {
-      const result = await createWorkspace(name, slug);
+      const result = await createWorkspace({ name, slug });
       if (result.success && result.data) {
         set((state) => ({
           workspaces: [...state.workspaces, result.data],

@@ -18,40 +18,39 @@ Unlike standard implementations, Project Nexus handles authentication entirely o
 
 ---
 
-### 🛡️ Password Reset Flow
+# Nexus Authentication System
 
-The recovery process follows a four-stage security handshake:
+A complete, secure authentication implementation for **Nexus** – a mini Linear.app clone – built with Next.js, Supabase, Axios, and httpOnly cookies.
 
-1. **Initiation**:
-   - A high-entropy `code_verifier` is generated client-side.
-   - A `code_challenge` is derived and sent to Supabase.
-   - The verifier is stored in a secure `HttpOnly` cookie (`sb-auth-token-code-verifier`).
+## Features
 
-2. **Handshake (`/auth/callback`)**:
-   - The server catches the authentication `code` from the email link.
-   - It performs a manual POST exchange via Axios to the GoTrue `/token` endpoint.
-   - **Compatibility Fix**: Sends both `code` and `auth_code` keys to satisfy GoTrue API requirements.
+- ✅ Sign Up (email/password)
+- ✅ Sign In (email/password)
+- ✅ Sign Out
+- ✅ Reset Password (email link flow)
+- ✅ Update Password (authenticated users)
+- ✅ httpOnly cookie storage for access/refresh tokens
+- ✅ JWT offline validation (no network calls, no proxy timeouts)
+- ✅ Server actions for all auth operations
+- ✅ TypeScript support
 
-3. **Session Persistence**:
-   - To resolve Next.js 15 "Cookie Shadowing," `access_token` and `refresh_token` are attached directly to the `NextResponse` redirect object.
-   - This ensures the user session is atomic and persists immediately upon landing on the next page.
 
-4. **Security**:
-   - **Open Redirect Protection**: Uses a `safeNext` validation pattern to ensure all redirects stay within the application domain.
-   - **Cleanup**: Automatically rotates/deletes the PKCE verifier cookie after a successful handshake.
+### Profile Management
+- ✅ Server‑side profile fetching with **`unstable_cache`** (1‑hour cache, no redundant Supabase calls)
+- ✅ Global profile state with **Zustand** (includes `profile`, `isLoading`, `error`)
+- ✅ `ProfileProvider` hydrates the store once – no duplicate requests
+- ✅ Auto‑create missing profile rows via Supabase RPC (handles edge cases after password reset)
 
-## 🛠️ Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
-- **Auth**: Supabase Auth (GoTrue)
-- **HTTP Client**: Axios
-- **Styling**: Tailwind CSS
+## Tech Stack
 
-### 1. Environment Variables
+| Layer       | Technology                                              |
+|-------------|---------------------------------------------------------|
+| Framework   | Next.js 15+ (App Router)                                |
+| Auth API    | Supabase (REST endpoints)                               |
+| HTTP Client | Axios + native fetch (for middleware)                   |
+| Cookies     | httpOnly (server‑side)                                  |
+| Validation  | `jose` (local JWT verification)                         |
+| Styling     | Tailwind CSS (your choice)                              |
 
-Create a `.env.local` file and add your Supabase credentials:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+## Architecture Overview

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getUserProfile } from "@/actions/profile/getUserProfile";
+import { getUserProfile } from "@/services/profile/getUserProfile";
 
 interface Profile {
   id: string;
@@ -11,10 +11,7 @@ interface ProfileState {
   profile: Profile | null;
   isLoading: boolean;
   error: string | null;
-  getProfile: (filter: {
-    id?: string;
-    username?: string;
-  }) => Promise<Profile | null>;
+  setError: (error: string) => void;
   clearProfile: () => void;
   setProfile: (profile: Profile) => void;
 }
@@ -28,24 +25,10 @@ export const useProfileStore = create<ProfileState>((set) => ({
     set({ profile });
   },
 
-  getProfile: async (filter) => {
-    set({ isLoading: true, error: null });
-
-    const data = await getUserProfile(filter);
-
-    if (!data) {
-      set({ isLoading: false, error: "User not found" });
-      return null;
-    }
-
-    if (filter.id) {
-      set({ profile: data, isLoading: false });
-    } else {
-      set({ isLoading: false });
-    }
-
-    return data;
+  setError: (error: string) => {
+    set({ error });
   },
+
   clearProfile: () => {
     set({ profile: null, error: null });
   },

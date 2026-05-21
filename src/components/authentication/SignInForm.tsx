@@ -2,10 +2,13 @@
 
 import { signInAction } from "../../actions/authentication/SignInAction";
 import { useActionState } from "react";
+import { useHashError } from "@/hooks/useHashError";
+import useRedirectAction from "@/hooks/useRedirectAction";
 
 export default function SignInForm() {
   const [state, formAction, isPending] = useActionState(signInAction, null);
-
+  useRedirectAction(state);
+  const error = useHashError();
   return (
     <form action={formAction}>
       <div>
@@ -24,6 +27,7 @@ export default function SignInForm() {
       {state?.errors?.password && <p>{state.errors.password}</p>}
       {state?.error && <p>{state.error}</p>}
       {isPending && <p>Signing In...</p>}
+      {error && <p>{error}</p>}
     </form>
   );
 }

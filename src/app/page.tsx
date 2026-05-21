@@ -1,14 +1,17 @@
 "use client";
-
+import ProfileInfo from "@/components/profile/ProfileInfo";
 import { useAuthStore } from "@/store/authStore";
 
 export default function Home() {
-  const { user, signOut } = useAuthStore();
+  const { signOut } = useAuthStore();
 
   return (
     <div>
       Home page
-      <button onClick={() => signOut()}>Log out </button>
+      <div>
+        <ProfileInfo />
+        <button onClick={() => signOut()}>Log out </button>
+      </div>
     </div>
   );
 }

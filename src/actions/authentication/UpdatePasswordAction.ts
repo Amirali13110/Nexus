@@ -1,7 +1,10 @@
+"use server";
+
 import { updatePassword } from "@/services/authentication/UpdatePassword";
 import { redirect } from "next/navigation";
 
 import z from "zod";
+import { setAuthCookies, setUserCookie } from "./AuthActions";
 
 const updatePasswordSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -20,29 +23,35 @@ export default async function UpdatePasswordAction(
     };
   }
 
-  let isSuccessfull = false
+  let isSuccessfull = false;
   try {
     const result = await updatePassword(password);
 
     if (!result.success) {
+      console.log(result);
+      console.log(result.error);
       return {
         success: false,
         error: result.error,
       };
     }
 
-    if(result.success){
-        isSuccessfull = true
-    }    
-
-  } catch (error:any) {
-    return {
-        error:error.message || "Failed to update password"
+    if (result.success) {
+      isSuccessfull = true;
     }
+    const data = result?.data;
+
+    if (data) {
+      await setUserCookie(data);
+    }
+  } catch (error: any) {
+    console.log(error);
+    return {
+      error: error || "Failed to update password",
+    };
   }
 
-  if(isSuccessfull){
-    redirect("/")
+  if (isSuccessfull) {
+    redirect("/");
   }
-
 }

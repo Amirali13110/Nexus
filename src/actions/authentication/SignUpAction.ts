@@ -22,34 +22,25 @@ export async function signUpAction(prevState: any, formData: FormData) {
       errors: fieldErrors,
     };
   }
-  let isSuccessfull: boolean = false;
-  try {
-    const result = await signUp({
-      email: validation.data.email,
-      password: validation.data.password,
-      username,
-    });
 
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error,
-      };
-    }
+  const result = await signUp({
+    email: validation.data.email,
+    password: validation.data.password,
+    username,
+  });
 
-    const data = result?.data;
-
-    if (data?.access_token) {
-      await setAuthCookies(data);
-    }
-
-    isSuccessfull = true;
-  } catch (error: any) {
+  if (!result.success) {
     return {
-      error: "Sign up failed",
+      success: false,
+      error: result.error,
     };
   }
-  if (isSuccessfull) {
-    redirect("/");
+
+  const data = result?.data;
+
+  if (data?.access_token) {
+    await setAuthCookies(data);
   }
+
+  return { success: true, redirectTo: "/" };
 }

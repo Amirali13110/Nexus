@@ -1,16 +1,30 @@
+"use server";
+
 import { useAuthStore } from "@/store/authStore";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { axiosWithProxy } from "../HttpService";
+import { cookies } from "next/headers";
 
-export async function createWorkspace(
-  name: string,
-  slug: string,
-  // owner_id: string,
-) {
-  const { access_token, user } = useAuthStore.getState();
+export async function createWorkspace({
+  name,
+  slug,
+}: {
+  name: string;
+  slug: string;
+}) {
+  const cookieStore = await cookies();
+  const encodedToken = cookieStore.get("access_token")?.value;
+  const userCookie = cookieStore.get("auth_user")?.value;
+  if (!userCookie) {
+    return { success: false, error: "User session invalid." };
+  }
+  const { owner_id } = JSON.parse(userCookie);
+  if (!encodedToken) {
+    return { success: false, error: "Not authenticated. Please log in again." };
+  }
+  const accessToken = decodeURIComponent(encodedToken);
   try {
-    console.log(access_token)
-    if (!access_token) {
+    if (!accessToken) {
       console.error("No access token found in authStore");
       return {
         success: false,
@@ -19,12 +33,12 @@ export async function createWorkspace(
     }
     const response = await axiosWithProxy.post(
       `${supabaseUrl}/rest/v1/workspaces`,
-      { name, slug, owner_id: user?.id },
+      { name, slug, owner_id },
       {
         headers: {
           "Content-Type": "application/json",
           apikey: supabaseKey,
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${accessToken}`,
           Prefer: "return=representation",
         },
       },

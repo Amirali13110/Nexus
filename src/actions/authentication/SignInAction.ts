@@ -4,7 +4,7 @@ import z from "zod";
 import { redirect } from "next/navigation";
 import { setAuthCookies } from "./AuthActions";
 import { signIn } from "@/services/authentication/SignIn";
-import { getUserProfile } from "../profile/getUserProfile";
+import { getUserProfile } from "../../services/profile/getUserProfile";
 
 const signInSchema = z.object({
   identifier: z.string().min(3, "Username or Email is too short"),
@@ -24,40 +24,30 @@ export async function signInAction(prevState: any, formData: FormData) {
   }
 
   let emailToSignIn: string = identifier;
-  let isSuccessfull = false;
-  try {
-    const profile = await getUserProfile({ username: identifier });
 
-    if (profile) {
-      emailToSignIn = profile.email;
-    }
-    const result = await signIn({
-      email: emailToSignIn,
-      password: password,
-    });
+  const response = await getUserProfile({ username: identifier });
+  const profile = response.profile;
 
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error,
-      };
-    }
+  if (profile) {
+    emailToSignIn = profile.email;
+  }
+  const result = await signIn({
+    email: emailToSignIn,
+    password: password,
+  });
 
-    const data = result?.data;
-
-    if (result.success) {
-      isSuccessfull = true;
-    }
-
-    if (data?.access_token) {
-      await setAuthCookies(data);
-    }
-  } catch {
+  if (!result.success) {
     return {
-      error: "Failed to sign in",
+      success: false,
+      error: result.error,
     };
   }
-  if (isSuccessfull) {
-    redirect("/");
+
+  const data = result?.data;
+
+  if (data?.access_token) {
+    await setAuthCookies(data);
   }
+
+  return { success: true, redirectTo: "/" };
 }

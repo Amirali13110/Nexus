@@ -3,9 +3,11 @@
 import { useAuthStore } from "@/store/authStore";
 import { signUpAction } from "../../actions/authentication/SignUpAction";
 import { useActionState } from "react";
+import useRedirectAction from "@/hooks/useRedirectAction";
 
 export default function SignUpForm() {
   const [state, formAction] = useActionState(signUpAction, null);
+  useRedirectAction(state);
   const { isLoading } = useAuthStore();
   return (
     <form action={formAction}>

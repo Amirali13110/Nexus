@@ -1,5 +1,7 @@
-import { useProfileStore } from "@/store/profileStore";
+"use server";
+
 import { requestPasswordReset } from "../../services/authentication/RequestPasswordReset";
+import { getUserProfile } from "@/services/profile/getUserProfile";
 export type ActionState = {
   success: boolean;
   message: string | null;
@@ -10,11 +12,11 @@ export async function requestPasswordResetAction(
   formData: FormData,
 ): Promise<ActionState> {
   const identifier = formData.get("identifier") as string;
-  const { getProfile } = useProfileStore.getState();
+
   try {
     let emailToSend = identifier;
 
-    const profile = await getProfile({ username: identifier });
+    const profile = await getUserProfile({ username: identifier });
 
     if (profile) {
       emailToSend = profile.email;

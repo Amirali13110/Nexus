@@ -1,13 +1,15 @@
+import { createWorkspace } from "@/services/workspace/createWorkspace";
 import { useWorkspaceStore } from "@/store/workspaceStore";
+import { slugify } from "@/utils/slugify";
 
 export async function createWorkspaceAction(
   prevState: any,
   formData: FormData,
 ) {
   const workspaceName = formData.get("workspace-name") as string;
-  const { createWorkspace } = useWorkspaceStore.getState();
+  const slug = slugify(workspaceName);
   try {
-    const result = await createWorkspace(workspaceName, "");
+    const result = await createWorkspace({ name: workspaceName, slug });
     if (result.success) {
       return { success: true, data: result.data };
     }

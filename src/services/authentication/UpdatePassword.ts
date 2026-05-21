@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { axiosWithProxy } from "../HttpService";
 import { supabaseKey, supabaseUrl } from "@/utils/supabase";
@@ -29,12 +29,19 @@ export async function updatePassword(newPassword: string) {
       },
     );
 
+    if(!response){
+      return {success:false, error:"Failed to update password please check your internet connection!"}
+    }
+    if (response.data.msg) {
+      return { success: false, error: response.data.msg };
+    }
+
     return { success: true, data: response.data };
   } catch (error: any) {
     console.error(
       "Update password Fetch Error:",
-      error.response?.data || error.msg,
+      error.response?.data.msg || error.msg,
     );
-    return { success: false, error: error.msg };
+    return { success: false, error: error.response?.data.msg   };
   }
 }

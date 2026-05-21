@@ -7,15 +7,6 @@ export async function setAuthCookies(data: any) {
   const cookieStore = await cookies();
   const isProd = process.env.NODE_ENV === "production";
 
-
-
-  if (data?.access_token) {
-
-    // Check for null byte or other weird chars
-    const hasNullByte = data.access_token.includes('\u0000');
-
-  }
-
   const cleanAccessToken = data.access_token.trim().replace(/[\n\r]/g, "");
   const encodedAccessToken = encodeURIComponent(cleanAccessToken);
   const refreshToken = data.refresh_token.trim();
@@ -23,22 +14,35 @@ export async function setAuthCookies(data: any) {
   cookieStore.set("access_token", encodedAccessToken, {
     httpOnly: true,
     secure: isProd,
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60, // 30 days
     path: "/",
   });
-  cookieStore.set("refresh_token",encodeURIComponent(refreshToken), {
+  cookieStore.set("refresh_token", encodeURIComponent(refreshToken), {
     httpOnly: true,
     secure: isProd,
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60, // 30 days
     path: "/",
   });
-  // cookieStore.set("auth_user", JSON.stringify(data.user), {
-  //   httpOnly: true, // Recommended: keep it hidden from client-side JS
-  //   secure: isProd,
-  //   sameSite: "lax",
-  //   maxAge: 60 * 60 * 24 * 30, // Match the refresh token duration
-  //   path: "/",
-  // });
+  cookieStore.set("auth_user", JSON.stringify(data.user), {
+    httpOnly: false, // Recommended: keep it hidden from client-side JS
+    secure: isProd,
+    sameSite: "lax",
+    maxAge: 60 * 60, // Match the refresh token duration
+    path: "/",
+  });
+}
+
+export async function setUserCookie(user: any) {
+  const cookieStore = await cookies();
+  const isProd = process.env.NODE_ENV === "production";
+
+  cookieStore.set("auth_user", JSON.stringify(user), {
+    httpOnly: false,
+    secure: isProd,
+    sameSite: "lax",
+    maxAge: 60 * 60,
+    path: "/",
+  });
 }
 
 export async function handleSignOut() {
