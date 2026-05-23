@@ -1,6 +1,7 @@
 import { createWorkspace } from "@/services/workspace/createWorkspace";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 import { slugify } from "@/utils/slugify";
+import {redirect} from "next/navigation"
 
 export async function createWorkspaceAction(
   prevState: any,
@@ -8,19 +9,15 @@ export async function createWorkspaceAction(
 ) {
   const workspaceName = formData.get("workspace-name") as string;
   const slug = slugify(workspaceName);
-  try {
-    const result = await createWorkspace({ name: workspaceName, slug });
-    if (result.success) {
-      return { success: true, data: result.data };
-    }
-    if (result.error) {
-      return { success: false, error: result.error };
-    }
-  } catch (error: any) {
-    return {
-      success: false,
-      error:
-        error.message || error.response.message || "Workspace creation failed",
-    };
+
+  const result = await createWorkspace({ name: workspaceName, slug });
+  if (result.success) {
+    return { success: true, data: result.data , redirectTo:"/workspaces" };
   }
+  if (result.error) {
+    return { success: false, error: result.error };
+  }
+  
+
+
 }

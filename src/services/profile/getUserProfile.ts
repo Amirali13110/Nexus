@@ -21,11 +21,8 @@ export async function getUserProfile(filter: {
 
   try {
     const response = await axiosWithProxy.get(url, { headers });
-    // console.log(response);
-    // return response.data[0] || null;
     return { success: true, profile: response.data[0], error: null };
   } catch (error: any) {
-    console.error("Profile Fetch Error:", error);
     return {
       success: false,
       error:
@@ -35,3 +32,6 @@ export async function getUserProfile(filter: {
     };
   }
 }
+
+
+

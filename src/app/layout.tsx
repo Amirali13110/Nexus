@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-
-import getProfileAction from "@/actions/profile/getProfileAction";
 import ProfileProvider from "@/components/profile/ProfileProvider";
-import { useProfileStore } from "@/store/profileStore";
+import WorkspaceProvider from "@/components/workspace/WorkspaceProvider";
 
 export const metadata: Metadata = {
   title: "Nexus",

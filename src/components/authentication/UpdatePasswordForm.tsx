@@ -1,11 +1,11 @@
 "use client";
-import UpdatePasswordAction from "@/actions/authentication/UpdatePasswordAction";
+import updatePasswordAction from "@/actions/authentication/UpdatePasswordAction";
 
 import { useActionState } from "react";
 
 export default function UpdatePasswordForm() {
   const [state, formAction, isPending] = useActionState(
-    UpdatePasswordAction,
+    updatePasswordAction,
     null,
   );
 

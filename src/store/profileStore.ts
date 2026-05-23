@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getUserProfile } from "@/services/profile/getUserProfile";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface Profile {
   id: string;
@@ -16,20 +17,30 @@ interface ProfileState {
   setProfile: (profile: Profile) => void;
 }
 
-export const useProfileStore = create<ProfileState>((set) => ({
-  profile: null,
-  isLoading: false,
-  error: null,
+export const useProfileStore = create<ProfileState>()(
+  persist(
+    (set) => ({
+      profile: null,
+      isLoading: false,
+      error: null,
 
-  setProfile: (profile: Profile) => {
-    set({ profile });
-  },
+      setProfile: (profile: Profile) => {
+        set({ profile });
+      },
 
-  setError: (error: string) => {
-    set({ error });
-  },
+      setError: (error: string) => {
+        set({ error });
+      },
 
-  clearProfile: () => {
-    set({ profile: null, error: null });
-  },
-}));
+      clearProfile: () => {
+        set({ profile: null, error: null });
+      },
+    }),
+    {
+      name: "nexus-profile-storage",
+      storage: createJSONStorage(() => localStorage),
+
+      partialize: (state) => ({ profile: state.profile }),
+    },
+  ),
+);

@@ -10,7 +10,7 @@ const updatePasswordSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-export default async function UpdatePasswordAction(
+export default async function updatePasswordAction(
   prevState: any,
   formData: FormData,
 ) {

@@ -16,7 +16,8 @@ export async function requestPasswordResetAction(
   try {
     let emailToSend = identifier;
 
-    const profile = await getUserProfile({ username: identifier });
+    const response = await getUserProfile({ username: identifier });
+    const profile = response.profile;
 
     if (profile) {
       emailToSend = profile.email;

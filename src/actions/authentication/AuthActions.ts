@@ -24,10 +24,10 @@ export async function setAuthCookies(data: any) {
     path: "/",
   });
   cookieStore.set("auth_user", JSON.stringify(data.user), {
-    httpOnly: false, // Recommended: keep it hidden from client-side JS
+    httpOnly: false,
     secure: isProd,
     sameSite: "lax",
-    maxAge: 60 * 60, // Match the refresh token duration
+    maxAge: 60 * 60,
     path: "/",
   });
 }

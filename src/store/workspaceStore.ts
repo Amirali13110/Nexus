@@ -15,12 +15,9 @@ interface WorkspaceState {
   workspaces: Workspace[];
   isLoading: boolean;
   error: string | null;
-
-  // The Create Action
-  createWorkspace: (
-    name: string,
-    slug: string,
-  ) => Promise<{ success: boolean; data?: Workspace; error?: string }>;
+  setWorkspaces: (workspace: Workspace[]) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  setError: (error: string) => void;
 }
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
@@ -28,23 +25,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   isLoading: false,
   error: null,
 
-  createWorkspace: async (name: string, slug: string) => {
-    set({ isLoading: true, error: null });
-
-    try {
-      const result = await createWorkspace({ name, slug });
-      if (result.success && result.data) {
-        set((state) => ({
-          workspaces: [...state.workspaces, result.data],
-          isLoading: false,
-        }));
-      }
-      return { success: true, data: result.data };
-    } catch (error: any) {
-      const errorMessage = error.message || "An unexpected error occurred";
-      set({ error: errorMessage, isLoading: false });
-
-      return { success: false, error: errorMessage };
-    }
-  },
+  setWorkspaces: (workspaces) => set({ workspaces, isLoading: false }),
+  setIsLoading: (isLoading) => set({ isLoading }),
+  setError: (error) => set({ error, isLoading: false }),
 }));

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
 import { useProfileStore } from "@/store/profileStore";
-import getProfileAction from "@/actions/profile/getProfileAction";
 
 export default function ProfileProvider({
   children,
@@ -11,16 +10,26 @@ export default function ProfileProvider({
   const { profile, setProfile, setError } = useProfileStore();
 
   useEffect(() => {
-    if (!profile) {
-      getProfileAction().then((result) => {
-        if (result.success && result.profile) {
-          setProfile(result.profile);
-        } else if (result.error) {
-          setError(result.error);
+    const fetchProfile = async () => {
+      try {
+        if (!profile) {
+          const module = await import("@/actions/profile/GetProfileAction");
+          const GetProfileAction = module.default;
+          const result = await GetProfileAction();
+          if (result.success && result.profile) {
+            setProfile(result.profile);
+          }
+          if (result.error) {
+            setError(result.error);
+          }
         }
-      });
-    }
-  }, [profile, setProfile]);
+
+        fetchProfile();
+      } catch (err) {
+        console.error("Failed to load profile:", err);
+      }
+    };
+  }, [profile, setProfile, setError]);
 
   return <>{children}</>;
 }

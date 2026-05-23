@@ -1,6 +1,5 @@
 "use server";
 
-import { setTestCookie } from "@/actions/testAction";
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
 import axios from "axios";
 import { setAuthCookies } from "@/actions/authentication/AuthActions";
@@ -30,7 +29,7 @@ export async function signIn(user: UserCredentials) {
     if (!data) {
       throw new Error("No data received from auth server");
     }
-    console.log(response)
+    console.log(response);
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {

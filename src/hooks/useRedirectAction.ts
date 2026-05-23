@@ -1,8 +1,14 @@
 import { useEffect } from "react";
 
-export default function useRedirectAction<
-  T extends { success?: boolean; redirectTo?: string },
->(state: T | null) {
+type ActionStateWithRedirect = {
+  success?: boolean;
+  redirectTo?: string;
+  [key: string]: any;
+};
+
+export default function useRedirectAction<T extends ActionStateWithRedirect>(
+  state: T | null | undefined,
+) {
   useEffect(
     function () {
       if (state?.success && state.redirectTo) {

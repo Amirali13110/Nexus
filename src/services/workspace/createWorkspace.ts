@@ -1,6 +1,4 @@
 "use server";
-
-import { useAuthStore } from "@/store/authStore";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { axiosWithProxy } from "../HttpService";
 import { cookies } from "next/headers";
@@ -18,7 +16,8 @@ export async function createWorkspace({
   if (!userCookie) {
     return { success: false, error: "User session invalid." };
   }
-  const { owner_id } = JSON.parse(userCookie);
+  const { id:owner_id } = JSON.parse(userCookie);
+  console.log(owner_id)
   if (!encodedToken) {
     return { success: false, error: "Not authenticated. Please log in again." };
   }
