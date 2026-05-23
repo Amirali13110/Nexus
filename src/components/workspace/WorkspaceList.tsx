@@ -1,5 +1,6 @@
 "use client";
 import { useWorkspaceStore } from "@/store/workspaceStore";
+import Link from "next/link";
 
 export default function WorkspaceList() {
   const { workspaces, error, isLoading } = useWorkspaceStore();
@@ -14,9 +15,11 @@ export default function WorkspaceList() {
         {!isLoading &&
           !error &&
           workspaces.map((workspaces) => (
-            <li key={workspaces.id}>
-              <h1>{workspaces.name}</h1>
-            </li>
+            <Link key={workspaces.id} href={`/workspace/${workspaces.slug}`}>
+              <li>
+                <h1>{workspaces.name}</h1>
+              </li>
+            </Link>
           ))}
       </ul>
     </div>
