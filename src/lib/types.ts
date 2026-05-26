@@ -91,9 +91,19 @@ export type Profile = {
   updated_at: string;
 };
 
-// // Input for creating/updating a profile (all fields optional)
-// export type UpsertProfileInput = {
-//   username?: string;
-//   full_name?: string;
-//   avatar_url?: string;
-// };
+//----------Issue Types----------
+
+export interface Issue {
+  id: string;
+  title: string;
+  description: string | null;
+  status: "backlog" | "todo" | "in_progress" | "in_review" | "done";
+  priority: 0 | 1 | 2 | 3 | 4;
+  assignee_id: string | null;
+  project_id: string;
+  workspace_id: string;
+  created_by: string;
+  due_date: string | null;
+  created_at: string;
+  updated_at: string;
+}

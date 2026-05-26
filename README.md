@@ -64,6 +64,13 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Security** – RLS policies ensure users can only see and create projects in workspaces they own.
 - **Tech stack** – Uses the same pattern as workspaces: axios service → server action → client form (useActionState). Fetching is done on the server (no client‑side store needed).
 
+- **Dynamic routing** – Each project has its own page at `/workspace/[workspaceSlug]/project/[projectSlug]`.
+- **Server‑side data fetching** – The page uses both slugs to fetch and validate the project, ensuring it belongs to the correct workspace.
+- **Type safety** – Full TypeScript with `Project` interface and `ApiResult<T>` discriminated union for consistent error handling.
+- **Placeholder for issues** – The project page currently displays project details (name, description) and is ready to host the issue list and creation form.
+
+**Next step:** Issues (tasks) will be added to the project page, with status, priority, assignee, due date – turning Nexus into a functional task manager.
+
 ## Tech Stack
 
 | Layer       | Technology                            |

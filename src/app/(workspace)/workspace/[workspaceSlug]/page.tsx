@@ -5,11 +5,11 @@ import WorkspaceView from "@/components/workspace/WorkspaceView";
 export default async function WorkspacePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ workspaceSlug: string }>;
 }) {
-  const { slug } = await params;
+  const { workspaceSlug } = await params;
 
-  const result = await GetWorkspaceBySlugAction(slug);
+  const result = await GetWorkspaceBySlugAction(workspaceSlug);
 
   if (result.error) {
     return <p> {result.error || "Failed to fetch the workspace"}</p>;
