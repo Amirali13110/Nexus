@@ -4,6 +4,7 @@ import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import axios from "axios";
 import { cookies } from "next/headers";
 import { axiosWithProxy } from "../HttpService";
+import { ApiResult, ResetPasswordRequest } from "@/lib/types";
 
 async function getPKCE() {
   const verifier = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) =>
@@ -21,7 +22,9 @@ async function getPKCE() {
   return { verifier, challenge };
 }
 
-export async function requestPasswordReset(email: string) {
+export async function requestPasswordReset(
+  email: string,
+): Promise<ApiResult<ResetPasswordRequest>> {
   const target = "http://localhost:3000/auth/callback?next=/updatePassword";
   const url = `${supabaseUrl}/auth/v1/recover`;
   const cookieStore = await cookies();
@@ -35,7 +38,7 @@ export async function requestPasswordReset(email: string) {
   });
 
   try {
-    const response = await axiosWithProxy.post(
+    const response = await axiosWithProxy.post<ResetPasswordRequest>(
       url,
       {
         email: email,
@@ -57,7 +60,8 @@ export async function requestPasswordReset(email: string) {
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.message || error.msg || "Failed to send email",
+      error:
+        error.response?.data?.message || error.msg || "Failed to send email",
     };
   }
 }

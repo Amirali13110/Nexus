@@ -1,15 +1,5 @@
 import { create } from "zustand";
-import { createWorkspace } from "@/services/workspace/createWorkspace";
-
-interface Workspace {
-  id: string;
-  name: string;
-  slug: string;
-  owner_id: string;
-  created_at: string;
-  updated_at: string;
-  image_url?: string | null;
-}
+import { Workspace } from "@/lib/types";
 
 interface WorkspaceState {
   workspaces: Workspace[];

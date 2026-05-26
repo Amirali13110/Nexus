@@ -49,6 +49,21 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Loading & error states** – The store provides `isLoading` and `error` fields, so you can show skeletons or error messages.
 - **Redirect after creation** – After a workspace is created, the user is redirected to the workspaces list (or the new workspace page) using a client‑side `redirectTo` pattern (avoids cookie race).
 
+### Workspace Page (Dynamic Routing)
+
+- **Slug‑based URLs** – Each workspace has its own page at `/workspace/[slug]`.
+- **Server‑side fetch** – The page fetches workspace data on the server using the `slug` parameter, ensuring fast initial load and SEO.
+- **Authorization** – The query filters by both `slug` and `owner_id` (or relies on RLS), so users can only see workspaces they own.
+- **Not Found handling** – If the workspace does not exist or the user is not authorized, the `notFound()` function shows a clean 404 page.
+- **Client‑side navigation** – The workspace list uses Next.js `Link` components for instant, client‑side transitions.
+
+### Projects
+
+- **Create a project** – From any workspace page, click “New Project” to open an inline form. Enter a name and optional description. The slug is auto‑generated from the name. The project is stored in Supabase with the current workspace as its parent.
+- **List projects** – The workspace page fetches and displays all projects belonging to that workspace. Each project name is a clickable link to its own page.
+- **Security** – RLS policies ensure users can only see and create projects in workspaces they own.
+- **Tech stack** – Uses the same pattern as workspaces: axios service → server action → client form (useActionState). Fetching is done on the server (no client‑side store needed).
+
 ## Tech Stack
 
 | Layer       | Technology                            |

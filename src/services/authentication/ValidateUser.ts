@@ -1,12 +1,11 @@
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
-import axios from "axios";
-import { ProxyAgent , fetch as undiciFetch } from "undici";
+
+import { ProxyAgent, fetch as undiciFetch } from "undici";
 
 const proxyDispatcher = new ProxyAgent({ uri: "http://127.0.0.1:10808" });
 export async function validateUser(token: string) {
   try {
-
-    const response = await undiciFetch(`${supabaseUrl}/auth/v1/user`,{
+    const response = await undiciFetch(`${supabaseUrl}/auth/v1/user`, {
       method: "GET",
       headers: {
         apikey: `${supabaseKey}`,
@@ -30,4 +29,3 @@ export async function validateUser(token: string) {
     return { isValid: false };
   }
 }
-

@@ -3,14 +3,9 @@ import axios from "axios";
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
 import { cookies } from "next/headers";
 import { axiosWithProxy } from "../HttpService";
+import { ApiResult, User, UserCredentials } from "@/lib/types";
 
-type UserCredentials = {
-  email: string;
-  username: string;
-  password: string;
-};
-
-export async function signUp(user: UserCredentials) {
+export async function signUp(user: UserCredentials):Promise<ApiResult<User>> {
   console.log(user.username);
   const body = {
     email: user.email,
@@ -28,7 +23,7 @@ export async function signUp(user: UserCredentials) {
 
   try {
     const cookieStore = await cookies();
-    const response = await axiosWithProxy.post(signUpUrl, body, {
+    const response = await axiosWithProxy.post<User>(signUpUrl, body, {
       headers: headers,
     });
     const { access_token } = response.data;

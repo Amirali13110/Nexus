@@ -1,14 +1,17 @@
 // services/workspace/getWorkspaceBySlug.ts
+import { ApiResult, Workspace } from "@/lib/types";
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
-export async function getWorkspaceBySlug(slug: string) {
+export async function getWorkspaceBySlug(
+  slug: string,
+): Promise<ApiResult<Workspace>> {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
   const userCookie = cookieStore.get("auth_user")?.value;
   if (!encodedToken || !userCookie) {
-    return { success: false, error: "Not authenticated", workspace: null };
+    return { success: false, error: "Not authenticated" };
   }
   const accessToken = decodeURIComponent(encodedToken);
   const { id: userId } = JSON.parse(userCookie);
@@ -21,17 +24,16 @@ export async function getWorkspaceBySlug(slug: string) {
   const url = `${supabaseUrl}/rest/v1/workspaces?select=*&slug=eq.${slug}&owner_id=eq.${userId}`;
 
   try {
-    const response = await axiosWithProxy.get(url, { headers });
+    const response = await axiosWithProxy.get<Workspace[]>(url, { headers });
     const data = response.data;
-    console.log(data);
+
     const workspace = data[0] || null;
 
-    return { success: true, workspace };
+    return { success: true, data: workspace };
   } catch (error: any) {
     return {
       success: false,
       error: error?.message || "Failed to fetch workspace",
-      workspace: null,
     };
   }
 }

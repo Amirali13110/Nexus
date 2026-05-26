@@ -1,12 +1,7 @@
 import { create } from "zustand";
 import { getUserProfile } from "@/services/profile/getUserProfile";
 import { createJSONStorage, persist } from "zustand/middleware";
-
-interface Profile {
-  id: string;
-  username: string;
-  email: string;
-}
+import { Profile } from "@/lib/types";
 
 interface ProfileState {
   profile: Profile | null;

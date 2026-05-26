@@ -1,10 +1,13 @@
 "use server";
 
+import { ApiResult, UpdatePasswordParams } from "@/lib/types";
 import { axiosWithProxy } from "../HttpService";
 import { supabaseKey, supabaseUrl } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
-export async function updatePassword(newPassword: string) {
+export async function updatePassword(
+  newPassword: string,
+): Promise<ApiResult<UpdatePasswordParams>> {
   const url = `${supabaseUrl}/auth/v1/user`;
 
   const cookieStore = await cookies();
@@ -17,7 +20,7 @@ export async function updatePassword(newPassword: string) {
   const actualToken = decodeURIComponent(encodedToken);
 
   try {
-    const response = await axiosWithProxy.put(
+    const response = await axiosWithProxy.put<UpdatePasswordParams>(
       url,
       { password: newPassword },
       {
@@ -29,11 +32,12 @@ export async function updatePassword(newPassword: string) {
       },
     );
 
-    if(!response){
-      return {success:false, error:"Failed to update password please check your internet connection!"}
-    }
-    if (response.data.msg) {
-      return { success: false, error: response.data.msg };
+    if (!response) {
+      return {
+        success: false,
+        error:
+          "Failed to update password please check your internet connection!",
+      };
     }
 
     return { success: true, data: response.data };
@@ -42,6 +46,6 @@ export async function updatePassword(newPassword: string) {
       "Update password Fetch Error:",
       error.response?.data.msg || error.msg,
     );
-    return { success: false, error: error.response?.data.msg   };
+    return { success: false, error: error.response?.data.msg };
   }
 }

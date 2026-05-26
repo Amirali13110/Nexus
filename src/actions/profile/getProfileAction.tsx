@@ -33,8 +33,9 @@ export default async function getProfileAction() {
     }
 
     const result = await getCachedProfile(id);
+    const profile = result.data;
 
-    if (!result?.profile) {
+    if (!profile) {
       return { success: false, error: "Profile not found" };
     }
 
@@ -42,7 +43,7 @@ export default async function getProfileAction() {
       return { success: false, error: result.error };
     }
 
-    return { success: true, profile: result.profile, error: null }; 
+    return { success: true, profile, error: null };
   } catch (error: any) {
     console.error("getProfileAction unexpected error:", error);
     return { success: false, error: "Internal server error" };

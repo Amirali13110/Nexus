@@ -1,15 +1,11 @@
 "use server";
 
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
-import axios from "axios";
-import { setAuthCookies } from "@/actions/authentication/AuthActions";
-import { axiosWithProxy } from "../HttpService";
-type UserCredentials = {
-  email: string;
-  password: string;
-};
 
-export async function signIn(user: UserCredentials) {
+import { axiosWithProxy } from "../HttpService";
+import { ApiResult, User, UserCredentials } from "@/lib/types";
+
+export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
   const body = {
     email: user.email,
     password: user.password,
@@ -22,7 +18,7 @@ export async function signIn(user: UserCredentials) {
   const signInUrl = `${supabaseUrl}/auth/v1/token?grant_type=password`;
 
   try {
-    const response = await axiosWithProxy.post(signInUrl, body, {
+    const response = await axiosWithProxy.post<User>(signInUrl, body, {
       headers: headers,
     });
     const data = response?.data;

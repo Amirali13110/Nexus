@@ -1,11 +1,7 @@
 import { create } from "zustand";
-import { signUp as apiSignUp } from "../services/authentication/SignUp";
-import { signIn as apiSignIn } from "../services/authentication/SignIn";
 
-import {
-  handleSignOut,
-  setAuthCookies,
-} from "@/actions/authentication/AuthActions";
+import { User } from "@/lib/types";
+import { handleSignOut } from "@/actions/authentication/AuthActions";
 import { redirect } from "next/navigation";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -14,17 +10,6 @@ export type AuthResponse = {
   error?: string;
   data?: any;
 };
-
-interface User {
-  id: string;
-  email: string;
-
-  user_metadata: {
-    username: string;
-    avatar_url?: string;
-    [key: string]: any;
-  };
-}
 
 interface AuthState {
   user: User | null;
