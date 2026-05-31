@@ -23,7 +23,7 @@ export async function signUp(user: UserCredentials):Promise<ApiResult<User>> {
 
   try {
     const cookieStore = await cookies();
-    const response = await axiosWithProxy.post<User>(signUpUrl, body, {
+    const response = await axios.post<User>(signUpUrl, body, {
       headers: headers,
     });
     const { access_token } = response.data;

@@ -1,8 +1,7 @@
 "use server";
 
+import axios from "axios";
 import { supabaseKey, supabaseUrl } from "../../utils/supabase";
-
-import { axiosWithProxy } from "../HttpService";
 import { ApiResult, User, UserCredentials } from "@/lib/types";
 
 export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
@@ -10,6 +9,7 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
     email: user.email,
     password: user.password,
   };
+
   const headers: {} = {
     "Content-Type": "application/json",
     apikey: supabaseKey,
@@ -18,7 +18,7 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
   const signInUrl = `${supabaseUrl}/auth/v1/token?grant_type=password`;
 
   try {
-    const response = await axiosWithProxy.post<User>(signInUrl, body, {
+    const response = await axios.post<User>(signInUrl, body, {
       headers: headers,
     });
     const data = response?.data;
@@ -28,6 +28,14 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
     console.log(response);
     return { success: true, data: response.data };
   } catch (error: any) {
+    console.error("=== FULL ERROR OBJECT ===");
+    console.error("Error message:", error.message);
+    console.error("Error code:", error.code); // e.g., ENOTFOUND, ECONNREFUSED, ETIMEDOUT, CERT_HAS_EXPIRED
+    console.error("Error stack:", error.stack);
+    if (error.request) {
+      console.error("Request was made but no response");
+    }
+
     if (error.response) {
       const message =
         error.response.data?.msg ||

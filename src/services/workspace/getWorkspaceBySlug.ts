@@ -3,6 +3,7 @@ import { ApiResult, Workspace } from "@/lib/types";
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
+import axios from "axios";
 
 export async function getWorkspaceBySlug(
   slug: string,
@@ -24,7 +25,7 @@ export async function getWorkspaceBySlug(
   const url = `${supabaseUrl}/rest/v1/workspaces?select=*&slug=eq.${slug}&owner_id=eq.${userId}`;
 
   try {
-    const response = await axiosWithProxy.get<Workspace[]>(url, { headers });
+    const response = await axios.get<Workspace[]>(url, { headers });
     const data = response.data;
 
     const workspace = data[0] || null;

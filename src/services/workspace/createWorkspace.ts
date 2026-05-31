@@ -2,6 +2,7 @@
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { axiosWithProxy } from "../HttpService";
 import { cookies } from "next/headers";
+import axios from "axios";
 
 export async function createWorkspace({
   name,
@@ -30,7 +31,7 @@ export async function createWorkspace({
         error: "Your session has expired. Please log in again.",
       };
     }
-    const response = await axiosWithProxy.post(
+    const response = await axios.post(
       `${supabaseUrl}/rest/v1/workspaces`,
       { name, slug, owner_id },
       {

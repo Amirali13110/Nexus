@@ -97,13 +97,22 @@ export interface Issue {
   id: string;
   title: string;
   description: string | null;
-  status: "backlog" | "todo" | "in_progress" | "in_review" | "done";
-  priority: 0 | 1 | 2 | 3 | 4;
-  assignee_id: string | null;
+  status: string;
+  priority: number;
+  assignee_username: string | null;
   project_id: string;
   workspace_id: string;
   created_by: string;
   due_date: string | null;
   created_at: string;
+  project?: { slug: string };
+  workspace?: { slug: string };
   updated_at: string;
 }
+//------zod-------
+
+export type ZodErrorMessagesType = [
+  {
+    message: string;
+  },
+];

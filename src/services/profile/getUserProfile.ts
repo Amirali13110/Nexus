@@ -1,6 +1,7 @@
 import { supabaseKey, supabaseUrl } from "@/utils/supabase";
 import { axiosWithProxy } from "@/services/HttpService";
 import { ApiResult, Profile } from "@/lib/types";
+import axios from "axios";
 
 export async function getUserProfile(filter: {
   username?: string;
@@ -21,7 +22,7 @@ export async function getUserProfile(filter: {
   const url = `${supabaseUrl}/rest/v1/profiles?${queryParam}&select=*`;
 
   try {
-    const response = await axiosWithProxy.get<Profile[]>(url, { headers });
+    const response = await axios.get<Profile[]>(url, { headers });
     return { success: true, data: response.data[0] };
   } catch (error: any) {
     return {

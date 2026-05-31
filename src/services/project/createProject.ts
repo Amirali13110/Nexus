@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { slugify } from "@/utils/slugify";
 import { ApiResult, CreateProjectInput } from "@/lib/types";
 import { Project } from "@/lib/types";
+import axios from "axios";
 
 export async function createProject({
   name,
@@ -30,7 +31,7 @@ export async function createProject({
 
   try {
     console.log("Trying to fetch...");
-    const response = await axiosWithProxy.post<Project>(
+    const response = await axios.post<Project>(
       `${supabaseUrl}/rest/v1/projects`,
       body,
       { headers },

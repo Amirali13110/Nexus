@@ -4,6 +4,7 @@ import { supabaseKey, supabaseUrl } from "@/utils/supabase";
 import { axiosWithProxy } from "../HttpService";
 import { cookies } from "next/headers";
 import { ApiResult, Workspace } from "@/lib/types";
+import axios from "axios";
 
 export async function getWorkspaces(): Promise<ApiResult<Workspace[]>> {
   const cookieStore = await cookies();
@@ -23,7 +24,7 @@ export async function getWorkspaces(): Promise<ApiResult<Workspace[]>> {
   const url = `${supabaseUrl}/rest/v1/workspaces?select=*&owner_id=eq.${userId}`;
 
   try {
-    const response = await axiosWithProxy.get<Workspace[]>(url, { headers });
+    const response = await axios.get<Workspace[]>(url, { headers });
 
     const data = await response.data;
 

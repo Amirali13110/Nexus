@@ -4,6 +4,7 @@ import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import { ApiResult, Project } from "@/lib/types";
+import axios from "axios";
 
 export async function getProjectsByWorkspace(
   workspaceId: string,
@@ -25,7 +26,7 @@ export async function getProjectsByWorkspace(
   const url = `${supabaseUrl}/rest/v1/projects?select=*&workspace_id=eq.${workspaceId}&order=created_at.desc`;
 
   try {
-    const response = await axiosWithProxy.get<Project[]>(url, { headers });
+    const response = await axios.get<Project[]>(url, { headers });
     const projects = response.data;
     return { success: true, data: projects };
   } catch (error: any) {

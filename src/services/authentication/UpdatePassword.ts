@@ -4,6 +4,7 @@ import { ApiResult, UpdatePasswordParams } from "@/lib/types";
 import { axiosWithProxy } from "../HttpService";
 import { supabaseKey, supabaseUrl } from "@/utils/supabase";
 import { cookies } from "next/headers";
+import axios from "axios";
 
 export async function updatePassword(
   newPassword: string,
@@ -20,7 +21,7 @@ export async function updatePassword(
   const actualToken = decodeURIComponent(encodedToken);
 
   try {
-    const response = await axiosWithProxy.put<UpdatePasswordParams>(
+    const response = await axios.put<UpdatePasswordParams>(
       url,
       { password: newPassword },
       {

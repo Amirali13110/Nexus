@@ -3,6 +3,7 @@ import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import type { Project, ApiResult } from "@/lib/types";
+import axios from "axios";
 
 export async function getProjectBySlug({
   projectSlug,
@@ -24,7 +25,7 @@ export async function getProjectBySlug({
   const url = `${supabaseUrl}/rest/v1/projects?select=*,workspace:workspace_id(slug)&slug=eq.${projectSlug}&workspace.slug=eq.${workspaceSlug}`;
 
   try {
-    const response = await axiosWithProxy.get(url, { headers });
+    const response = await axios.get(url, { headers });
     const data = response.data;
     const project = data[0] || null;
     if (!project) return { success: false, error: "Project not found" };

@@ -71,6 +71,29 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 
 **Next step:** Issues (tasks) will be added to the project page, with status, priority, assignee, due date – turning Nexus into a functional task manager.
 
+### Issues
+
+#### Creating an issue
+- A form on the project page allows users to create a new issue with:
+  - Title (required)
+  - Description (optional)
+  - Status (`backlog`, `todo`, `in_progress`, `in_review`, `done`)
+  - Priority (0–4)
+  - Assignee (by username, stored as `assignee_username` text)
+  - Due date (optional)
+- The form uses `useFormState` (React 18/19 compatible) and passes hidden fields (`projectSlug`, `workspaceSlug`, IDs) to the server action.
+- Zustand stores (`workspaceStore`, `projectStore`) hold the current workspace and project, eliminating prop drilling.
+- After successful creation, the server action calls `revalidatePath` (to purge the project page cache) and `redirect` – the new issue appears immediately without a manual refresh.
+
+#### Design decisions
+- **Assignee as username** – simplifies the UI; users type a username instead of a UUID. (A production version would use a dropdown or user picker.)
+- **Hidden inputs** – a simple, reliable way to pass client‑known data (slugs, IDs) to a server action.
+- **No extra API calls** – slugs are already available on the client via Zustand stores.
+- **Type safety** – full TypeScript with `ApiResult<T>` discriminated union and Zod validation.
+
+
+
+
 ## Tech Stack
 
 | Layer       | Technology                            |
