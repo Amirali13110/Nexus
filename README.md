@@ -85,6 +85,15 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - Zustand stores (`workspaceStore`, `projectStore`) hold the current workspace and project, eliminating prop drilling.
 - After successful creation, the server action calls `revalidatePath` (to purge the project page cache) and `redirect` – the new issue appears immediately without a manual refresh.
 
+
+#### Fetching and listing issues
+- The project page fetches all issues belonging to the current project using `getIssuesByProjectId` service (axios).
+- Issues are displayed in a table with columns: **Title**, **Status**, **Priority**, **Assignee**, **Due date**.
+- Priority numbers (0–4) are mapped to readable labels: `No priority`, `Urgent`, `High`, `Normal`, `Low`.
+- Loading and error states are handled gracefully.
+
+
+
 #### Design decisions
 - **Assignee as username** – simplifies the UI; users type a username instead of a UUID. (A production version would use a dropdown or user picker.)
 - **Hidden inputs** – a simple, reliable way to pass client‑known data (slugs, IDs) to a server action.
