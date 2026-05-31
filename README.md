@@ -74,6 +74,7 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 ### Issues
 
 #### Creating an issue
+
 - A form on the project page allows users to create a new issue with:
   - Title (required)
   - Description (optional)
@@ -85,23 +86,28 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - Zustand stores (`workspaceStore`, `projectStore`) hold the current workspace and project, eliminating prop drilling.
 - After successful creation, the server action calls `revalidatePath` (to purge the project page cache) and `redirect` – the new issue appears immediately without a manual refresh.
 
-
 #### Fetching and listing issues
+
 - The project page fetches all issues belonging to the current project using `getIssuesByProjectId` service (axios).
 - Issues are displayed in a table with columns: **Title**, **Status**, **Priority**, **Assignee**, **Due date**.
 - Priority numbers (0–4) are mapped to readable labels: `No priority`, `Urgent`, `High`, `Normal`, `Low`.
 - Loading and error states are handled gracefully.
 
+#### Single issue page
 
+- **Dedicated view** – Each issue has its own page at `/workspace/[workspaceSlug]/project/[projectSlug]/issue/[issueId]`.
+- **Detailed information** – Displays title, description, status, priority, assignee, due date, creation and last update timestamps.
+- **Server‑side fetching** – The page fetches the issue using `getIssueById` service, with full TypeScript support (`ApiResult<Issue>`).
+- **Loading skeleton** – A `loading.tsx` file provides a placeholder UI while the server component resolves, improving perceived performance.
+- **Not found handling** – Invalid or missing issues return a 404 page using `notFound()`.
+- **Navigation** – From the issue list, each title is a Next.js `<Link>` to the issue page.
 
 #### Design decisions
+
 - **Assignee as username** – simplifies the UI; users type a username instead of a UUID. (A production version would use a dropdown or user picker.)
 - **Hidden inputs** – a simple, reliable way to pass client‑known data (slugs, IDs) to a server action.
 - **No extra API calls** – slugs are already available on the client via Zustand stores.
 - **Type safety** – full TypeScript with `ApiResult<T>` discriminated union and Zod validation.
-
-
-
 
 ## Tech Stack
 
