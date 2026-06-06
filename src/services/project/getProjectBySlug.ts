@@ -25,7 +25,7 @@ export async function getProjectBySlug({
   const url = `${supabaseUrl}/rest/v1/projects?select=*,workspace:workspace_id(slug)&slug=eq.${projectSlug}&workspace.slug=eq.${workspaceSlug}`;
 
   try {
-    const response = await axios.get(url, { headers });
+    const response = await axiosWithProxy.get(url, { headers });
     const data = response.data;
     const project = data[0] || null;
     if (!project) return { success: false, error: "Project not found" };

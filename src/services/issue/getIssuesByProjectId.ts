@@ -22,7 +22,7 @@ export async function getIssuesByProjectId(
   const url = `${supabaseUrl}/rest/v1/issues?select=*&project_id=eq.${projectId}&order=priority.asc,created_at.desc`;
 
   try {
-    const response = await axios.get(url, { headers });
+    const response = await axiosWithProxy.get(url, { headers });
     const data = response.data as Issue[];
     return { success: true, data };
   } catch (error: any) {

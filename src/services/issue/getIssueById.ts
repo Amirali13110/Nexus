@@ -2,6 +2,7 @@ import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import type { Issue, ApiResult } from "@/lib/types";
 import axios from "axios";
+import { axiosWithProxy } from "../HttpService";
 
 export async function getIssueById(issueId: string): Promise<ApiResult<Issue>> {
   const cookieStore = await cookies();
@@ -17,7 +18,7 @@ export async function getIssueById(issueId: string): Promise<ApiResult<Issue>> {
   const url = `${supabaseUrl}/rest/v1/issues?id=eq.${issueId}&select=*`;
 
   try {
-    const response = await axios.get(url, { headers });
+    const response = await axiosWithProxy.get(url, { headers });
     const data = response.data;
     const issue = data[0] || null;
     if (!issue) return { success: false, error: "Issue not found" };

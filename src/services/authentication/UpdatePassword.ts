@@ -21,7 +21,7 @@ export async function updatePassword(
   const actualToken = decodeURIComponent(encodedToken);
 
   try {
-    const response = await axios.put<UpdatePasswordParams>(
+    const response = await axiosWithProxy.put<UpdatePasswordParams>(
       url,
       { password: newPassword },
       {

@@ -38,7 +38,7 @@ export async function requestPasswordReset(
   });
 
   try {
-    const response = await axios.post<ResetPasswordRequest>(
+    const response = await axiosWithProxy.post<ResetPasswordRequest>(
       url,
       {
         email: email,

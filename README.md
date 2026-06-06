@@ -98,7 +98,6 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Dedicated view** – Each issue has its own page at `/workspace/[workspaceSlug]/project/[projectSlug]/issue/[issueId]`.
 - **Detailed information** – Displays title, description, status, priority, assignee, due date, creation and last update timestamps.
 - **Server‑side fetching** – The page fetches the issue using `getIssueById` service, with full TypeScript support (`ApiResult<Issue>`).
-- **Loading skeleton** – A `loading.tsx` file provides a placeholder UI while the server component resolves, improving perceived performance.
 - **Not found handling** – Invalid or missing issues return a 404 page using `notFound()`.
 - **Navigation** – From the issue list, each title is a Next.js `<Link>` to the issue page.
 
@@ -108,6 +107,16 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Hidden inputs** – a simple, reliable way to pass client‑known data (slugs, IDs) to a server action.
 - **No extra API calls** – slugs are already available on the client via Zustand stores.
 - **Type safety** – full TypeScript with `ApiResult<T>` discriminated union and Zod validation.
+
+### Workspace Invitations & Membership
+
+- **Invite users** – Workspace owners can invite others by email, choosing a role (member/admin).
+- **Smart email handling** – Resend sends an email with a unique token link. If the user already has an account, they receive a pending invitation; otherwise, they are guided to sign up first.
+- **Accept an invitation** – Logged‑in users see pending invitations on `/workspace/invitations` and can accept (becoming a member) or decline.
+- **Token‑based acceptance** – The email link (`/invite/accept/[token]`) works for both new and existing users, setting a cookie and redirecting appropriately.
+- **Workspace access** – After acceptance, the user is added to `workspace_members`. Both the owner and members can view the workspace (RLS policies enforce this).
+- **Workspace list** – The sidebar or dashboard shows all workspaces the user owns **or** is a member of, with deduplication.
+- **Security** – RLS policies restrict SELECT/INSERT on `workspaces` and `workspace_members` to authenticated users with proper roles.
 
 ## Tech Stack
 

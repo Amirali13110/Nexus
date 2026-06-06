@@ -31,7 +31,7 @@ export async function createWorkspace({
         error: "Your session has expired. Please log in again.",
       };
     }
-    const response = await axios.post(
+    const response = await axiosWithProxy.post(
       `${supabaseUrl}/rest/v1/workspaces`,
       { name, slug, owner_id },
       {

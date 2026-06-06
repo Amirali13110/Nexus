@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { axiosWithProxy } from "../HttpService";
 import { ApiResult, User, UserCredentials } from "@/lib/types";
 
-export async function signUp(user: UserCredentials):Promise<ApiResult<User>> {
+export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
   console.log(user.username);
   const body = {
     email: user.email,
@@ -23,13 +23,13 @@ export async function signUp(user: UserCredentials):Promise<ApiResult<User>> {
 
   try {
     const cookieStore = await cookies();
-    const response = await axios.post<User>(signUpUrl, body, {
+    const response = await axiosWithProxy.post<User>(signUpUrl, body, {
       headers: headers,
     });
     const { access_token } = response.data;
     if (access_token) {
       cookieStore.set("access_token", access_token, {
-        expires: 7, // 7 days
+        expires: 7,
         path: "/",
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",

@@ -55,7 +55,7 @@ export async function createIssue({
   const url = `${supabaseUrl}/rest/v1/issues?select=*,project:project_id(slug),workspace:workspace_id(slug)`;
 
   try {
-    const response = await axios.post<Issue>(`${url}/rest/v1/issues`, body, {
+    const response = await axiosWithProxy.post<Issue>(`${url}/rest/v1/issues`, body, {
       headers,
     });
     const createdIssue = response.data as Issue;

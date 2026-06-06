@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { setAuthCookies } from "./AuthActions";
 import { signIn } from "@/services/authentication/SignIn";
 import { getUserProfile } from "../../services/profile/getUserProfile";
+import { Profile } from "@/lib/types";
+import { cookies } from "next/headers";
+import { acceptInvitationAction } from "../invitation/AcceptInvitationAction";
 
 const signInSchema = z.object({
   identifier: z.string().min(3, "Username or Email is too short"),
@@ -26,7 +29,7 @@ export async function signInAction(prevState: any, formData: FormData) {
   let emailToSignIn: string = identifier;
 
   const response = await getUserProfile({ username: identifier });
-  const profile = response.profile;
+  const profile = response.data;
 
   if (profile) {
     emailToSignIn = profile.email;
@@ -48,6 +51,10 @@ export async function signInAction(prevState: any, formData: FormData) {
   if (data?.access_token) {
     await setAuthCookies(data);
   }
-
+  const cookieStore = await cookies();
+  const inviteToken = cookieStore.get("pending_invite_token")?.value;
+  if (inviteToken) {
+    await acceptInvitationAction(inviteToken);
+  }
   return { success: true, redirectTo: "/" };
 }

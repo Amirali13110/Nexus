@@ -31,7 +31,7 @@ export async function createProject({
 
   try {
     console.log("Trying to fetch...");
-    const response = await axios.post<Project>(
+    const response = await axiosWithProxy.post<Project>(
       `${supabaseUrl}/rest/v1/projects`,
       body,
       { headers },

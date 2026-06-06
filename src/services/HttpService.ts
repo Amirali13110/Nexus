@@ -1,7 +1,7 @@
 import axios from "axios";
-// import { HttpsProxyAgent } from 'https-proxy-agent';
+import { HttpsProxyAgent } from "https-proxy-agent";
 
-// const proxyAgent = new HttpsProxyAgent('http://127.0.0.1:10808');
+// const proxyAgent = new HttpsProxyAgent("http://127.0.0.1:10808");
 
 export const axiosWithProxy = axios.create({
   // httpsAgent: proxyAgent,
