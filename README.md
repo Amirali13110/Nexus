@@ -108,16 +108,15 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **No extra API calls** – slugs are already available on the client via Zustand stores.
 - **Type safety** – full TypeScript with `ApiResult<T>` discriminated union and Zod validation.
 
-### Workspace Invitations & Membership
+### Workspace Members & Invitations
 
-- **Invite users** – Workspace owners can invite others by email, choosing a role (member/admin).
-- **Smart email handling** – Resend sends an email with a unique token link. If the user already has an account, they receive a pending invitation; otherwise, they are guided to sign up first.
-- **Accept an invitation** – Logged‑in users see pending invitations on `/workspace/invitations` and can accept (becoming a member) or decline.
-- **Token‑based acceptance** – The email link (`/invite/accept/[token]`) works for both new and existing users, setting a cookie and redirecting appropriately.
-- **Workspace access** – After acceptance, the user is added to `workspace_members`. Both the owner and members can view the workspace (RLS policies enforce this).
-- **Workspace list** – The sidebar or dashboard shows all workspaces the user owns **or** is a member of, with deduplication.
-- **Security** – RLS policies restrict SELECT/INSERT on `workspaces` and `workspace_members` to authenticated users with proper roles.
-
+- **Invite users** – Workspace owners and admins can invite others by email. The system prevents self‑invitation and duplicate pending invitations (unique partial index on `workspace_invitations`).
+- **Email delivery** – Resend sends a custom email with an acceptance link containing a unique token (valid 7 days). New users are guided to sign up; existing users see the invitation on their pending page.
+- **Pending invitations** – Logged‑in users can view all pending invites at `/workspace/invitations` and accept (become member) or decline.
+- **Token‑based acceptance** – The email link (`/invite/accept/[token]`) handles both new and existing users, setting a cookie and redirecting after sign‑up or login.
+- **Role‑based access** – Workspace members have roles: `owner`, `admin`, `member`. Only owners and admins can invite new members. The invite form is conditionally rendered based on the user’s role.
+- **Membership listing** – The workspace list (`getWorkspaces`) includes workspaces where the user is a member, not only owned ones.
+- **Security** – RLS policies on `workspaces` and `workspace_members` enforce that users can only access workspaces they own or are members of. The `workspace_invitations` table has a unique partial index to prevent duplicate pending invitations.
 ## Tech Stack
 
 | Layer       | Technology                            |

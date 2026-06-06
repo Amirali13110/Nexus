@@ -84,7 +84,7 @@ export type CreateProjectInput = {
 // ---------- Profile Types ----------
 export type Profile = {
   id: string; // matches auth.users.id
-  email:string;
+  email: string;
   username: string | null;
   full_name: string | null;
   avatar_url: string | null;
@@ -126,6 +126,11 @@ export interface Invitation {
   role: string;
   token: string;
   status: string;
+  workspace?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
   expires_at: string;
   created_at: string;
   updated_at: string;

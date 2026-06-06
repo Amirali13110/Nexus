@@ -29,6 +29,18 @@ export async function inviteWorkspaceMemberAction(
   if (!validation.success)
     return { success: false, error: validation.error.issues[0].message };
 
+  const cookieStore = await cookies();
+  const userCookie = cookieStore.get("auth_user")?.value;
+  if (!userCookie) return { success: false, error: "Not authenticated" };
+  const { email: currentUserEmail } = JSON.parse(userCookie);
+
+  if (email === currentUserEmail) {
+    return {
+      success: false,
+      error: "You cannot invite yourself to a workspace",
+    };
+  }
+
   const profileExists = await checkProfileExistsByEmail(email);
 
   const invitationResult = await createInvitation({ workspaceId, email, role });

@@ -23,6 +23,8 @@ export async function getUserProfile(filter: {
 
   try {
     const response = await axiosWithProxy.get<Profile[]>(url, { headers });
+    console.log("Response data:", response.data);
+
     return { success: true, data: response.data[0] };
   } catch (error: any) {
     return {

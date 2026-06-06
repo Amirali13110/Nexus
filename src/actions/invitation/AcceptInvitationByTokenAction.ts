@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
 
-export async function acceptInvitationAction(
+export async function acceptInvitationByTokenAction(
   token: string,
 ): Promise<{ error?: string }> {
   const invitationResult = await getInvitationByToken(token);
@@ -26,7 +26,7 @@ export async function acceptInvitationAction(
       httpOnly: true,
       maxAge: 3600,
     });
-    redirect("/auth/signUp");
+    redirect("/signUp");
   }
   const { id: profileId } = JSON.parse(userCookie);
 

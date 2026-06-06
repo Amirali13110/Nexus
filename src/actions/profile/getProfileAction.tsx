@@ -4,13 +4,8 @@ import { getUserProfile } from "@/services/profile/getUserProfile";
 import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 
-const getCachedProfile = unstable_cache(
-  async (userId: string) => getUserProfile({ id: userId }),
-  ["profile"],
-  { revalidate: 60 * 60 }, // cache for 1 hour (adjust as needed)
-);
-
 export default async function getProfileAction() {
+  console.log("Action is running");
   const cookieStore = await cookies();
 
   try {
@@ -31,10 +26,14 @@ export default async function getProfileAction() {
       console.error("Failed to parse auth_user cookie:", parseErr);
       return { success: false, error: "Invalid auth_user cookie format" };
     }
-
-    const result = await getCachedProfile(id);
+    const getCachedProfile = unstable_cache(
+      async () => getUserProfile({ id }),
+      [`profile-${id}`],
+      { revalidate: 60 * 60 },
+    );
+    const result = await getCachedProfile();
     const profile = result.data;
-
+    console.log("Profile:", profile);
     if (!profile) {
       return { success: false, error: "Profile not found" };
     }

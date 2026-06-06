@@ -3,6 +3,7 @@ import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import axios from "axios";
+import { updateInvitationStatus } from "./updateInvitationStatus";
 
 export async function acceptInvitation({
   invitationId,
@@ -51,13 +52,7 @@ export async function acceptInvitation({
       return { success: false, error: "Failed to add member" };
   }
 
-  await axios.patch(
-    `${supabaseUrl}/rest/v1/workspace_invitations?id=eq.${invitationId}`,
-    { status: "accepted" },
-    {
-      headers: { apikey: supabaseKey, Authorization: `Bearer ${accessToken}` },
-    },
-  );
+  await updateInvitationStatus(invitationId, "accepted");
 
   return { success: true };
 }

@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import GetWorkspaceBySlugAction from "@/actions/workspace/GetWorkspaceBySlugAction";
 import WorkspaceView from "@/components/workspace/WorkspaceView";
+import { cookies } from "next/headers";
+import { getMemberRole } from "@/services/member/getMemberRole";
 
 export default async function WorkspacePage({
   params,
@@ -19,5 +21,20 @@ export default async function WorkspacePage({
     notFound();
   }
 
-  return <WorkspaceView workspace={result.workspace} />;
+  const workspace = result.workspace;
+
+  const cookieStore = await cookies();
+  const userCookie = cookieStore.get("auth_user")?.value;
+  let memberRole: string | null = null;
+  if (userCookie) {
+    const { id: profileId } = JSON.parse(userCookie);
+    const roleResult = await getMemberRole(workspace.id, profileId);
+    if (roleResult.success) memberRole = roleResult.data;
+  }
+
+  if (!memberRole) {
+    return <p>Can't get member's role </p>;
+  }
+
+  return <WorkspaceView workspace={result.workspace} role={memberRole} />;
 }

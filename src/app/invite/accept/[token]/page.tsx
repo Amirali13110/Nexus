@@ -14,7 +14,7 @@
 // }
 "use client";
 import { useEffect, useState } from "react";
-import { acceptInvitationAction } from "@/actions/invitation/AcceptInvitationAction";
+import { acceptInvitationByTokenAction} from "@/actions/invitation/AcceptInvitationByTokenAction";
 import { useParams } from "next/navigation";
 
 export default function AcceptInvitePage({
@@ -30,7 +30,7 @@ export default function AcceptInvitePage({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    acceptInvitationAction(token)
+    acceptInvitationByTokenAction(token)
       .then((result) => {
         if (result?.error) {
           setError(result.error);
