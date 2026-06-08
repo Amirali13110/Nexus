@@ -95,6 +95,14 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 
 **Next step:** Issues (tasks) will be added to the project page, with status, priority, assignee, due date – turning Nexus into a functional task manager.
 
+### Update & Delete Project
+
+- **Edit project details** – Project owners can change the `name` and `description` via a dedicated settings page (`/workspace/[workspaceSlug]/project/[projectSlug]/settings`).
+- **Auto‑slug sync** – When the name is updated, the `slug` is automatically regenerated using `slugify()`, and the user is redirected to the new URL after saving.
+- **Server action** – `updateProjectAction` validates input with Zod, updates the `projects` table via a PATCH request, and revalidates the new project page.
+- **Delete project** – Removes the project and all its issues (cascade delete). A confirmation dialog prevents accidental deletion.
+- **Security** – RLS policies ensure only workspace owners can update or delete projects within their workspaces.
+
 ### Issues
 
 #### Creating an issue
