@@ -17,8 +17,8 @@ export async function createWorkspace({
   if (!userCookie) {
     return { success: false, error: "User session invalid." };
   }
-  const { id:owner_id } = JSON.parse(userCookie);
-  console.log(owner_id)
+  const { id: owner_id } = JSON.parse(userCookie);
+  console.log(owner_id);
   if (!encodedToken) {
     return { success: false, error: "Not authenticated. Please log in again." };
   }
@@ -46,12 +46,15 @@ export async function createWorkspace({
 
     return { success: true, data: response.data };
   } catch (error: any) {
-    return {
-      success: false,
-      error:
-        error.response?.data?.message ||
-        error.message ||
-        "Workspace createion failed",
-    };
+    const status = error.response?.status;
+    const message = error.response?.data?.message || error.message;
+    if (status === 409 && message.includes("workspaces_owner_slug_unique")) {
+      return {
+        success: false,
+        error:
+          "You already have a workspace with this name. Please choose a different name.",
+      };
+    }
+    return { success: false, error: message };
   }
 }

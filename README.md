@@ -54,6 +54,15 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Loading & error states** – The store provides `isLoading` and `error` fields, so you can show skeletons or error messages.
 - **Redirect after creation** – After a workspace is created, the user is redirected to the workspaces list (or the new workspace page) using a client‑side `redirectTo` pattern (avoids cookie race).
 
+### Update Workspace
+
+- **Edit workspace details** – Workspace owners can change the `name` and `description` via a dedicated settings page (`/workspace/[slug]/settings`).
+- **Auto‑slug sync** – When the name is updated, the `slug` is automatically regenerated using `slugify()`, and the user is redirected to the new URL after saving.
+- **Server action** – `updateWorkspaceAction` validates input with Zod, updates the `workspaces` table via a PATCH request, and revalidates both the workspace page and the workspace list.
+- **Real‑time store sync** – After a successful update, the Zustand store (`useWorkspaceStore`) is updated, so the new name appears across the app without a refresh.
+- **Security** – Row Level Security (RLS) ensures only the workspace owner can update the workspace (`owner_id = auth.uid()`).
+
+
 ### Workspace Page (Dynamic Routing)
 
 - **Slug‑based URLs** – Each workspace has its own page at `/workspace/[slug]`.
@@ -135,3 +144,4 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 | Styling     | Tailwind CSS (your choice)            |
 
 ## Architecture Overview
+```
