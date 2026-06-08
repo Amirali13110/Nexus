@@ -62,6 +62,16 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Real‑time store sync** – After a successful update, the Zustand store (`useWorkspaceStore`) is updated, so the new name appears across the app without a refresh.
 - **Security** – Row Level Security (RLS) ensures only the workspace owner can update the workspace (`owner_id = auth.uid()`).
 
+### Delete Workspace
+
+- **Owner‑only deletion** – Only the workspace owner can delete the workspace. Row Level Security (RLS) enforces `owner_id = auth.uid()`.
+- **Cascade cleanup** – Deleting a workspace automatically removes all related data:
+  - Projects and their issues
+  - Workspace memberships (`workspace_members`)
+  - Pending invitations (`workspace_invitations`)
+- **Server action** – `deleteWorkspaceAction` calls the service, revalidates the workspaces list, and redirects to `/workspaces`.
+- **Client button** – A simple button with a confirmation dialog (optional) triggers the action and performs a full page reload to ensure the list updates immediately.
+- **Data integrity** – Foreign keys are set with `ON DELETE CASCADE` to keep the database clean.
 
 ### Workspace Page (Dynamic Routing)
 
@@ -144,4 +154,7 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 | Styling     | Tailwind CSS (your choice)            |
 
 ## Architecture Overview
+
+```
+
 ```
