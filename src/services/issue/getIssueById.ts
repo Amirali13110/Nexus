@@ -15,13 +15,18 @@ export async function getIssueById(issueId: string): Promise<ApiResult<Issue>> {
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const url = `${supabaseUrl}/rest/v1/issues?id=eq.${issueId}&select=*`;
-
   try {
-    const response = await axiosWithProxy.get(url, { headers });
-    const data = response.data;
-    const issue = data[0] || null;
+    const issueUrl = `${supabaseUrl}/rest/v1/issues?select=*&id=eq.${issueId}`;
+    const issueRes = await axiosWithProxy.get(issueUrl, { headers });
+    const issue = issueRes.data[0];
     if (!issue) return { success: false, error: "Issue not found" };
+
+    if (issue.assignee_id) {
+      const profileUrl = `${supabaseUrl}/rest/v1/profiles?select=*&id=eq.${issue.assignee_id}`;
+      const profileRes = await axiosWithProxy.get(profileUrl, { headers });
+      issue.assignee = profileRes.data[0]; // add assignee object to the issue
+    }
+
     return { success: true, data: issue };
   } catch (error: any) {
     return { success: false, error: error?.message || "Failed to fetch issue" };

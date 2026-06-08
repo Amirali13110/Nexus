@@ -42,11 +42,15 @@ export async function createProject({
         error: response.data || "Failed to create project",
       };
     }
-    const data = response.data;
-    console.log(data);
-    return { success: true, data: response.data };
+    const project = Array.isArray(response.data)
+      ? response.data[0]
+      : response.data;
+    if (!project || !project.slug) {
+      return { success: false, error: "Project created but missing data" };
+    }
+    return { success: true, data: project };
   } catch (error: any) {
-    "Can't create your project"
+    ("Can't create your project");
     return {
       success: false,
       error: error.response?.data?.msg || error.msg,

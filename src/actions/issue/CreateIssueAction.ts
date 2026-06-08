@@ -29,11 +29,7 @@ export async function createIssueAction(
   const workspaceId = formData.get("workspaceId") as string;
   const projectSlug = formData.get("projectSlug") as string;
   const workspaceSlug = formData.get("workspaceSlug") as string;
-  const assigneeUsernameRaw = formData.get("assigneeUsername");
-  const assigneeUsername =
-    assigneeUsernameRaw && assigneeUsernameRaw !== ""
-      ? String(assigneeUsernameRaw)
-      : null;
+  const assigneeId = formData.get("assigneeId") as string;
 
   const dueDate = (formData.get("dueDate") as string) || null;
 
@@ -44,7 +40,7 @@ export async function createIssueAction(
     priority,
     projectId,
     workspaceId,
-    assigneeUsername,
+    assigneeId,
     dueDate,
   });
   if (!validation.success) {
@@ -60,7 +56,7 @@ export async function createIssueAction(
     priority,
     projectId,
     workspaceId,
-    assigneeUsername,
+    assigneeId,
     dueDate,
   });
   if (!result.success) {

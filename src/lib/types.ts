@@ -33,8 +33,9 @@ export type AuthResponse = {
 };
 
 export type UserCredentials = {
+  fullname?: string;
   email: string;
-  username?: string;
+  username: string;
   password: string;
 };
 
@@ -85,6 +86,7 @@ export type CreateProjectInput = {
 export type Profile = {
   id: string; // matches auth.users.id
   email: string;
+  bio: string;
   username: string | null;
   full_name: string | null;
   avatar_url: string | null;
@@ -100,7 +102,13 @@ export interface Issue {
   description: string | null;
   status: string;
   priority: number;
-  assignee_username: string | null;
+  assignee?: {
+    id: string;
+    username: string;
+    full_name?: string;
+    email: string;
+  };
+  assignee_id?: string;
   project_id: string;
   workspace_id: string;
   created_by: string;

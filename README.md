@@ -40,6 +40,11 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - ✅ Global profile state with **Zustand** (includes `profile`, `isLoading`, `error`)
 - ✅ `ProfileProvider` hydrates the store once – no duplicate requests
 - ✅ Auto‑create missing profile rows via Supabase RPC (handles edge cases after password reset)
+- **Edit profile** – Users can update their `username`, `full_name`, `bio`, and `avatar_url` via a dedicated profile edit page (`/profile/edit`).
+- **Server action** – `updateProfileAction` validates input with Zod, updates the `profiles` table via a PATCH request, and revalidates relevant pages.
+- **Real‑time store sync** – After a successful update, the Zustand store (`useProfileStore`) is immediately updated, so the new name appears across the app without a refresh.
+- **Security** – Row Level Security (RLS) ensures users can only update their own profile rows (`id = auth.uid()`).
+- **User experience** – The form pre‑fills current values, shows loading states, and displays success/error messages.
 
 ### Workspaces
 
@@ -117,6 +122,7 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Role‑based access** – Workspace members have roles: `owner`, `admin`, `member`. Only owners and admins can invite new members. The invite form is conditionally rendered based on the user’s role.
 - **Membership listing** – The workspace list (`getWorkspaces`) includes workspaces where the user is a member, not only owned ones.
 - **Security** – RLS policies on `workspaces` and `workspace_members` enforce that users can only access workspaces they own or are members of. The `workspace_invitations` table has a unique partial index to prevent duplicate pending invitations.
+
 ## Tech Stack
 
 | Layer       | Technology                            |

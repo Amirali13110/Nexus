@@ -2,6 +2,7 @@
 "use server";
 import z from "zod";
 import { createProject } from "@/services/project/createProject";
+import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
 
 const createProjectSchema = z.object({
   name: z.string().min(1, "Project name is required").max(100),
@@ -34,11 +35,17 @@ export async function createProjectAction(prevState: any, formData: FormData) {
   if (!result.success && !result.data)
     return { success: false, error: result.error };
 
-  if (!result.data) {
+  console.log(result.data?.slug);
+
+  if (!result.data?.slug) {
     return { success: false, error: result.error };
   }
+
+  const workspaceResult = await getWorkspaceById(workspaceId);
+  const workspace = workspaceResult.success ? workspaceResult.data : null;
+
   return {
     success: true,
-    redirectTo: `/workspace/${workspaceId}/project/${result.data.slug}`,
+    redirectTo: `/workspace/${workspace.slug}/project/${result.data.slug}`,
   };
 }

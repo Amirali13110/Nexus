@@ -6,7 +6,7 @@ export default async function GetIssueByIdAction(
   issueId: string,
 ): Promise<ApiResult<Issue>> {
   const result = await getIssueById(issueId);
-
+  console.log(result);
   if (!result.success && result.error) {
     return { success: false, error: result.error };
   }

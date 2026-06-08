@@ -7,11 +7,13 @@ import { ApiResult, User, UserCredentials } from "@/lib/types";
 
 export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
   console.log(user.username);
+  console.log(user.fullname)
   const body = {
     email: user.email,
     password: user.password,
     data: {
       username: user.username,
+      full_name: user.fullname,
     },
   };
   const headers: {} = {

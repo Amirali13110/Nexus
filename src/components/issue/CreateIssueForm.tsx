@@ -1,7 +1,7 @@
 "use client";
 import { useActionState } from "react";
 import { createIssueAction } from "@/actions/issue/CreateIssueAction";
-import type { ApiResult, Issue } from "@/lib/types";
+import type { ApiResult, Issue, Profile } from "@/lib/types";
 import { useProjectStore } from "@/store/projectStore";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 
@@ -13,9 +13,11 @@ type CreateIssueActionType = (
 export default function CreateIssueForm({
   projectId,
   workspaceId,
+  members,
 }: {
   projectId: string;
   workspaceId: string;
+  members: Profile[];
 }) {
   const currentProject = useProjectStore((state) => state.currentProject);
   const currentWorkspace = useWorkspaceStore((state) => state.currentWorkspace);
@@ -78,14 +80,22 @@ export default function CreateIssueForm({
         </select>
       </div>
       <div>
-        <label htmlFor="assigneeUsername">Assignee (optional, username)</label>
-        <input
-          id="assigneeUsername"
-          name="assigneeUsername"
-          placeholder="Username"
+        <label htmlFor="assigneeId">Assignee</label>
+        <select
+          id="assigneeId"
+          name="assigneeId"
+          defaultValue=""
           disabled={isPending}
-        />
+        >
+          <option value="">Unassigned</option>
+          {members.map((member) => (
+            <option key={member.id} value={member.id}>
+              {member.username} ({member.email})
+            </option>
+          ))}
+        </select>
       </div>
+
       <div>
         <label htmlFor="dueDate">Due date (optional)</label>
         <input id="dueDate" name="dueDate" type="date" disabled={isPending} />

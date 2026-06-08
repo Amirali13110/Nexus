@@ -10,17 +10,34 @@ const priorityLabels: Record<number, string> = {
 };
 
 export default function IssueView({ issue }: { issue: Issue }) {
+  const assigneeName =
+    issue.assignee?.full_name || issue.assignee?.username || "Unassigned";
+
   return (
     <div>
       <h1>{issue.title}</h1>
-      <p><strong>Status:</strong> {issue.status}</p>
-      <p><strong>Priority:</strong> {priorityLabels[issue.priority]}</p>
-      <p><strong>Assignee:</strong> {issue.assignee_username || "Unassigned"}</p>
-      <p><strong>Due date:</strong> {issue.due_date || "Not set"}</p>
-      <p><strong>Description:</strong></p>
+      <p>
+        <strong>Status:</strong> {issue.status}
+      </p>
+      <p>
+        <strong>Priority:</strong> {priorityLabels[issue.priority]}
+      </p>
+      <p>
+        <strong>Assignee:</strong> {assigneeName}
+      </p>
+      <p>
+        <strong>Due date:</strong> {issue.due_date || "Not set"}
+      </p>
+      <p>
+        <strong>Description:</strong>
+      </p>
       <p>{issue.description || "No description"}</p>
-      <p><small>Created: {new Date(issue.created_at).toLocaleString()}</small></p>
-      <p><small>Updated: {new Date(issue.updated_at).toLocaleString()}</small></p>
+      <p>
+        <small>Created: {new Date(issue.created_at).toLocaleString()}</small>
+      </p>
+      <p>
+        <small>Updated: {new Date(issue.updated_at).toLocaleString()}</small>
+      </p>
     </div>
   );
 }

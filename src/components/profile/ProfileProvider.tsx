@@ -16,6 +16,7 @@ export default function ProfileProvider({
         try {
           const result = await getProfileAction();
           if (result.success && result.profile) {
+            console.log("Profile result", result.profile);
             setProfile(result.profile);
           }
           if (result.error) {

@@ -12,7 +12,7 @@ export async function createIssue({
   priority,
   projectId,
   workspaceId,
-  assigneeUsername,
+  assigneeId,
   dueDate,
 }: {
   title: string;
@@ -21,7 +21,7 @@ export async function createIssue({
   priority: number;
   projectId: string;
   workspaceId: string;
-  assigneeUsername: string | null;
+  assigneeId: string | null;
   dueDate: string | null;
 }): Promise<ApiResult<Issue>> {
   const cookieStore = await cookies();
@@ -48,16 +48,20 @@ export async function createIssue({
     project_id: projectId,
     workspace_id: workspaceId,
     created_by: userId,
-    assignee_username: assigneeUsername || null,
+    assignee_id: assigneeId,
     due_date: dueDate || null,
   };
 
   const url = `${supabaseUrl}/rest/v1/issues?select=*,project:project_id(slug),workspace:workspace_id(slug)`;
 
   try {
-    const response = await axiosWithProxy.post<Issue>(`${url}/rest/v1/issues`, body, {
-      headers,
-    });
+    const response = await axiosWithProxy.post<Issue>(
+      `${url}/rest/v1/issues`,
+      body,
+      {
+        headers,
+      },
+    );
     const createdIssue = response.data as Issue;
     return { success: true, data: createdIssue };
   } catch (error: any) {

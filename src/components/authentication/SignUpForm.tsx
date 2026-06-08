@@ -12,6 +12,10 @@ export default function SignUpForm() {
   return (
     <form action={formAction}>
       <div>
+        <label>Full name</label>
+        <input name="fullname" />
+      </div>
+      <div>
         <label>Email</label>
         <input name="email" />
       </div>
