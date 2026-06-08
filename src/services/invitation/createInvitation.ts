@@ -43,7 +43,7 @@ export async function createInvitation({
   try {
     const checkRes = await axiosWithProxy.get(checkUrl, { headers });
     const existing = checkRes.data;
-    console.log(existing);
+
     if (existing && existing.length > 0) {
       const accepted = existing.find((inv: any) => inv.status === "accepted");
       if (accepted) {
@@ -55,15 +55,8 @@ export async function createInvitation({
 
       const pending = existing.find((inv: any) => inv.status === "pending");
       if (pending) {
-        console.log(
-          "Pending invitation already exists, reusing existing token.",
-        );
         return { success: true, data: pending };
       }
-
-      console.log(
-        "Existing invitation is declined/expired, creating a new one.",
-      );
     }
   } catch (err) {
     console.warn(
@@ -77,7 +70,6 @@ export async function createInvitation({
       body,
       { headers },
     );
-    console.log(response.data);
     const created = Array.isArray(response.data)
       ? response.data[0]
       : response.data;

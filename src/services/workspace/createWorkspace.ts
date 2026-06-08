@@ -18,7 +18,6 @@ export async function createWorkspace({
     return { success: false, error: "User session invalid." };
   }
   const { id: owner_id } = JSON.parse(userCookie);
-  console.log(owner_id);
   if (!encodedToken) {
     return { success: false, error: "Not authenticated. Please log in again." };
   }

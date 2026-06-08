@@ -3,6 +3,9 @@ import GetWorkspaceBySlugAction from "@/actions/workspace/GetWorkspaceBySlugActi
 import WorkspaceView from "@/components/workspace/WorkspaceView";
 import { cookies } from "next/headers";
 import { getMemberRole } from "@/services/member/getMemberRole";
+import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
+import { getUserProfile } from "@/services/profile/getUserProfile";
+import MembersList from "@/components/member/MembersList";
 
 export default async function WorkspacePage({
   params,
@@ -11,18 +14,24 @@ export default async function WorkspacePage({
 }) {
   const { workspaceSlug } = await params;
 
-  const result = await GetWorkspaceBySlugAction(workspaceSlug);
+  const workspaceResult = await GetWorkspaceBySlugAction(workspaceSlug);
 
-  if (result.error) {
-    return <p> {result.error || "Failed to fetch the workspace"}</p>;
+  if (workspaceResult.error) {
+    return <p> {workspaceResult.error || "Failed to fetch the workspace"}</p>;
   }
 
-  if (!result.success || !result.workspace) {
+  if (!workspaceResult.success || !workspaceResult.workspace) {
     notFound();
   }
 
-  const workspace = result.workspace;
+  const workspace = workspaceResult.workspace;
+  const membersResult = await getWorkspaceMembers(workspace.id);
 
+  const members = membersResult.data;
+
+  if (!membersResult.success || !members) {
+    return <p>Couldn't get members</p>;
+  }
   const cookieStore = await cookies();
   const userCookie = cookieStore.get("auth_user")?.value;
   let memberRole: string | null = null;
@@ -36,5 +45,10 @@ export default async function WorkspacePage({
     return <p>Can't get member's role </p>;
   }
 
-  return <WorkspaceView workspace={result.workspace} role={memberRole} />;
+  return (
+    <div>
+      <WorkspaceView workspace={workspaceResult.workspace} role={memberRole} />
+      <MembersList members={members} workspaceSlug={workspace.slug} />
+    </div>
+  );
 }

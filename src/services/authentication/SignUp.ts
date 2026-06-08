@@ -6,8 +6,6 @@ import { axiosWithProxy } from "../HttpService";
 import { ApiResult, User, UserCredentials } from "@/lib/types";
 
 export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
-  console.log(user.username);
-  console.log(user.fullname)
   const body = {
     email: user.email,
     password: user.password,
@@ -37,7 +35,6 @@ export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
         secure: process.env.NODE_ENV === "production",
       });
     }
-    console.log(response.data);
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {

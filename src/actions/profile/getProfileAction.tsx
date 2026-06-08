@@ -5,7 +5,6 @@ import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 
 export default async function getProfileAction() {
-  console.log("Action is running");
   const cookieStore = await cookies();
 
   try {
@@ -32,9 +31,7 @@ export default async function getProfileAction() {
       { revalidate: 60 * 60 },
     );
     const result = await getCachedProfile();
-    const profile = result.data;
-    console.log("Profile:", profile);
-    if (!profile) {
+    const profile = result.data;    if (!profile) {
       return { success: false, error: "Profile not found" };
     }
 

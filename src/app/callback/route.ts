@@ -27,8 +27,6 @@ export async function GET(request: Request) {
       
       return NextResponse.redirect(`${origin}/signIn?error=session_expired`);
     }
-    console.log("DEBUG -> Code:", code ? "EXISTS" : "MISSING");
-    console.log("DEBUG -> Verifier:", verifier ? "EXISTS" : "MISSING");
 
     if (!verifier || !code) {
       throw new Error("Missing required PKCE components before fetch");

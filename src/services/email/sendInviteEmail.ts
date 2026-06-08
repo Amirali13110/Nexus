@@ -17,7 +17,6 @@ export async function sendInviteEmail({
 
   const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invite/accept/${invitationToken}`;
   // Later when we get a domain we can send actual email to them 
-  console.log("Invite link", inviteLink)
   const workspaceDisplay = workspaceName ? `workspace "${workspaceName}"` : "a workspace";
 
   try {
@@ -39,7 +38,6 @@ export async function sendInviteEmail({
         },
       }
     );
-    console.log("Email sent:", response.data);
     return { success: true };
   } catch (error: any) {
     console.error("Email send error:", error.response?.data || error.message);

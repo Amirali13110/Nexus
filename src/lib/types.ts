@@ -57,6 +57,18 @@ export type Workspace = {
   name: string;
   created_at: string;
 };
+// ---------- Members ----------
+
+export type Member = {
+  id: string;
+  email: string;
+  bio: string;
+  username: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  role: string;
+  joined_at: string;
+};
 
 // Input for creating a workspace (if needed)
 export type CreateWorkspaceInput = {

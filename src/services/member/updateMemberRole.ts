@@ -1,16 +1,13 @@
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
-import { slugify } from "@/utils/slugify";
 
-export async function updateWorkspace({
-  workspaceId,
-  name,
-  description,
+export async function updateMemberRole({
+  memberId,
+  role,
 }: {
-  workspaceId: string;
-  name?: string;
-  description?: string;
+  memberId: string;
+  role: string;
 }) {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
@@ -24,26 +21,15 @@ export async function updateWorkspace({
     Prefer: "return=representation",
   };
 
-  const body: any = {};
-  if (name !== undefined) {
-    body.name = name;
-    body.slug = slugify(name);
-  }
-  if (description !== undefined) body.description = description;
-
-  const url = `${supabaseUrl}/rest/v1/workspaces?id=eq.${workspaceId}`;
+  const url = `${supabaseUrl}/rest/v1/workspace_members?id=eq.${memberId}`;
+  const body = { role };
 
   try {
     const response = await axiosWithProxy.patch(url, body, { headers });
-    const updated = Array.isArray(response.data)
-      ? response.data[0]
-      : response.data;
+    const updated = Array.isArray(response.data) ? response.data[0] : response.data;
     return { success: true, data: updated };
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to update workspace";
+    const errorMsg = error.response?.data?.message || error.message || "Failed to update member role";
     return { success: false, error: errorMsg };
   }
 }

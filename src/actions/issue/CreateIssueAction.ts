@@ -45,7 +45,7 @@ export async function createIssueAction(
   });
   if (!validation.success) {
     const firstError = validation.error.issues[0].message;
-    console.log(firstError);
+    
     return { success: false, error: firstError };
   }
 

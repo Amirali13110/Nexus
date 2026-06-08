@@ -26,7 +26,6 @@ export async function getWorkspaceBySlug(
   const encodedSlug = encodeURIComponent(slug.trim());
 
   const url = `${supabaseUrl}/rest/v1/workspaces?select=*&slug=eq.${encodedSlug}`;
-  console.log("Fetching workspace with URL:", url);
 
   let workspace: Workspace | null = null;
 
@@ -35,7 +34,6 @@ export async function getWorkspaceBySlug(
     const data = response.data;
 
     workspace = data[0] || null;
-    console.log(workspace);
 
     if (!workspace) {
       return { success: false, error: "Couldn't get workspace" };
@@ -50,22 +48,5 @@ export async function getWorkspaceBySlug(
     };
   }
 
-  // if (workspace.owner_id === userId) {
-  //   console.log(workspace.owner_id === userId);
-  //   return { success: true, data: workspace };
-  // }
-  // const memberUrl = `${supabaseUrl}/rest/v1/workspace_members?workspace_id=eq.${workspace.id}&profile_id=eq.${userId}&select=id`;
-  // try {
-  //   const memberRes = await axiosWithProxy.get(memberUrl, { headers });
-  //   console.log(memberRes);
-  //   if (memberRes.data && memberRes.data.length > 0) {
-  //     return { success: true, data: workspace };
-  //   }
-  //   return { success: false, error: "You don't have access to this workspace" };
-  // } catch (error: any) {
-  //   return {
-  //     success: false,
-  //     error: error?.message || "Failed to verify membership",
-  //   };
-  // }
+
 }

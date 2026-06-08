@@ -150,6 +150,14 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Membership listing** – The workspace list (`getWorkspaces`) includes workspaces where the user is a member, not only owned ones.
 - **Security** – RLS policies on `workspaces` and `workspace_members` enforce that users can only access workspaces they own or are members of. The `workspace_invitations` table has a unique partial index to prevent duplicate pending invitations.
 
+### Member Management (View Only)
+
+- **Members list** – The workspace page (or a dedicated `/workspace/[slug]/members` page) displays all members of the workspace, showing their username, email, and role.
+- **Member profile page** – Clicking a member's name navigates to a dedicated page (`/workspace/[slug]/member/[profileId]`) that shows the member's full profile: username, full name, email, bio, avatar, role, and join date.
+- **Data fetching** – The member list uses a server component to fetch workspace members with joined profile data. The member profile page fetches the profile and membership role separately (two-step query for reliability).
+- **Security** – Only authenticated users with access to the workspace can view the member list and profile pages. RLS policies ensure proper access control.
+- **Future enhancements** – Role updates and member removal will be added later.
+
 ## Tech Stack
 
 | Layer       | Technology                            |

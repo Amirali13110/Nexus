@@ -39,7 +39,6 @@ export default async function ProjectPage({
     ? null
     : issuesResult.error || "Failed to get issues";
 
-  console.log(project.workspace_id);
   const membersResult = await getWorkspaceMembers(project.workspace_id);
   if (!membersResult.success) {
     return <p>Failed to get workspace members: {membersResult.error}</p>;

@@ -20,7 +20,6 @@ export default function WorkspaceProvider({
           const GetWorkspacesAction = module.default;
 
           const result = await GetWorkspacesAction();
-          console.log("Fetch result:", result);
           if (result?.success && result?.workspaces) {
             setWorkspaces(result.workspaces);
           } else if (result?.error) {

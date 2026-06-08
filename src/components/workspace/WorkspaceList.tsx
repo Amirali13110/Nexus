@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export default function WorkspaceList() {
   const { workspaces, error, isLoading } = useWorkspaceStore();
-  console.log(isLoading);
 
   return (
     <div>

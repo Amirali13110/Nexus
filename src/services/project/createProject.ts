@@ -13,7 +13,6 @@ export async function createProject({
   description,
   workspace_id,
 }: CreateProjectInput): Promise<ApiResult<Project>> {
-  console.log("Fetching...");
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
   if (!encodedToken) return { success: false, error: "User not authenticated" };
@@ -30,7 +29,6 @@ export async function createProject({
   const body = { name, slug, description, workspace_id: workspace_id };
 
   try {
-    console.log("Trying to fetch...");
     const response = await axiosWithProxy.post<Project>(
       `${supabaseUrl}/rest/v1/projects`,
       body,

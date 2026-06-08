@@ -35,7 +35,6 @@ export async function createProjectAction(prevState: any, formData: FormData) {
   if (!result.success && !result.data)
     return { success: false, error: result.error };
 
-  console.log(result.data?.slug);
 
   if (!result.data?.slug) {
     return { success: false, error: result.error };

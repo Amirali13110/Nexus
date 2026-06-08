@@ -28,8 +28,7 @@ export default async function updatePasswordAction(
     const result = await updatePassword(password);
 
     if (!result.success) {
-      console.log(result);
-      console.log(result.error);
+
       return {
         success: false,
         error: result.error,
@@ -45,7 +44,7 @@ export default async function updatePasswordAction(
       await setUserCookie(data);
     }
   } catch (error: any) {
-    console.log(error);
+    
     return {
       error: error || "Failed to update password",
     };

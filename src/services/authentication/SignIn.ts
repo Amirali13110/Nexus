@@ -25,7 +25,6 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
     if (!data) {
       throw new Error("No data received from auth server");
     }
-    console.log(response);
     return { success: true, data: response.data };
   } catch (error: any) {
     console.error("=== FULL ERROR OBJECT ===");
@@ -49,7 +48,6 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
     }
 
     if (error.request) {
-      console.log(error);
       return {
         success: false,
         error: "Network error: Please check your internet .",
