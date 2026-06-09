@@ -16,8 +16,11 @@ export async function sendInviteEmail({
   }
 
   const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invite/accept/${invitationToken}`;
-  // Later when we get a domain we can send actual email to them 
-  const workspaceDisplay = workspaceName ? `workspace "${workspaceName}"` : "a workspace";
+  // Later when we get a domain we can send actual email to them
+  console.log("Invite link:", inviteLink);
+  const workspaceDisplay = workspaceName
+    ? `workspace "${workspaceName}"`
+    : "a workspace";
 
   try {
     const response = await axios.post(
@@ -36,7 +39,7 @@ export async function sendInviteEmail({
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     return { success: true };
   } catch (error: any) {

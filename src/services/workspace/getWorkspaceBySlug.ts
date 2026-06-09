@@ -22,7 +22,6 @@ export async function getWorkspaceBySlug(
     Authorization: `Bearer ${accessToken}`,
   };
 
-  // const url = `${supabaseUrl}/rest/v1/workspaces?select=*&slug=eq.${slug}&owner_id=eq.${userId}`;
   const encodedSlug = encodeURIComponent(slug.trim());
 
   const url = `${supabaseUrl}/rest/v1/workspaces?select=*&slug=eq.${encodedSlug}`;

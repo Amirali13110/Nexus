@@ -158,6 +158,13 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Security** – Only authenticated users with access to the workspace can view the member list and profile pages. RLS policies ensure proper access control.
 - **Future enhancements** – Role updates and member removal will be added later.
 
+- **Role update** – Workspace owners and admins can change a member's role (`member` ↔ `admin`). The dropdown shows the current role as a disabled placeholder and offers the other valid roles (owner option only appears for the workspace owner themselves).
+- **Delete member** – Owners and admins can remove members from the workspace. The workspace owner cannot be deleted or demoted.
+- **Owner protection** – The UI hides the role dropdown for the owner's own row and prevents self‑demotion. Server‑side checks block any attempt to change the owner's role or promote another member to owner.
+- **Server actions** – `updateMemberRoleAction` and `deleteMemberAction` enforce permissions and revalidate the members page after successful changes.
+- **Client components** – `UpdateMemberForm` uses `useActionState` for form handling, optimistic UI updates, and error display. `DeleteMemberForm` triggers a confirmation dialog before removal.
+- **Data fetching** – `getWorkspaceMembers` service fetches both member roles and profile data, merging them into a single `Member` object with `role`, `username`, `email`, etc.
+
 ## Tech Stack
 
 | Layer       | Technology                            |

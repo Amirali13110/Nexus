@@ -48,7 +48,6 @@ export default async function WorkspacePage({
   return (
     <div>
       <WorkspaceView workspace={workspaceResult.workspace} role={memberRole} />
-      <MembersList members={members} workspaceSlug={workspace.slug} />
     </div>
   );
 }

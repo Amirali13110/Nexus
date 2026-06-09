@@ -1,12 +1,9 @@
-import { ApiResult } from "@/lib/types";
+import { ApiResult, Member } from "@/lib/types";
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
-export async function getMemberRole(
-  workspaceId: string,
-  profileId: string,
-): Promise<ApiResult> {
+export async function getMemberRole(workspaceId: string, profileId: string) {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
   if (!encodedToken) return { success: false, error: "Unauthorized" };
@@ -21,6 +18,7 @@ export async function getMemberRole(
   try {
     const response = await axiosWithProxy.get(url, { headers });
     const data = response.data;
+
     if (data && data.length > 0) {
       return { success: true, data: data[0].role };
     }

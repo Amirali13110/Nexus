@@ -2,12 +2,12 @@ import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
-export async function updateMemberRole({
+export async function deleteMember({
+  workspaceId,
   profileId,
-  role,
 }: {
+  workspaceId: string;
   profileId: string;
-  role: string;
 }) {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
@@ -17,24 +17,14 @@ export async function updateMemberRole({
   const headers = {
     apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-    Prefer: "return=representation",
   };
 
-  const url = `${supabaseUrl}/rest/v1/workspace_members?profile_id=eq.${profileId}`;
-  const body = { role };
-
+  const url = `${supabaseUrl}/rest/v1/workspace_members?workspace_id=eq.${workspaceId}&profile_id=eq.${profileId}`;
   try {
-    const response = await axiosWithProxy.patch(url, body, { headers });
-    const updated = Array.isArray(response.data)
-      ? response.data[0]
-      : response.data;
-    return { success: true, data: updated };
+    await axiosWithProxy.delete(url, { headers });
+    return { success: true };
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to update member role";
+    const errorMsg = error.response?.data?.message || error.message || "Failed to delete member";
     return { success: false, error: errorMsg };
   }
 }
