@@ -1,6 +1,6 @@
 "use client";
 import { useActionState, useEffect } from "react";
-import { updateProjectAction } from "@/actions/project/UpdateProfileAction";
+import { updateProjectAction } from "@/actions/project/UpdateProjectAction";
 
 export default function UpdateProjectForm({
   project,

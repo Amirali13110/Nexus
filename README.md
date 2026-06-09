@@ -133,6 +133,15 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Not found handling** – Invalid or missing issues return a 404 page using `notFound()`.
 - **Navigation** – From the issue list, each title is a Next.js `<Link>` to the issue page.
 
+### Update & Delete Issue
+
+- **Edit issue** – Workspace members can edit any issue via a dedicated edit page (`/workspace/[ws]/project/[p]/issue/[id]/edit`). The form allows changing title, description, status, priority, assignee, and due date. After saving, the user is redirected to the updated issue page, and the cache is revalidated.
+- **Delete issue** – Only the issue creator, workspace owner, or workspace admin can delete an issue. A confirmation dialog prevents accidental deletion. After deletion, the user is redirected to the project page.
+- **Server actions** – `updateIssueAction` validates input with Zod, calls the update service, revalidates the issue page, and redirects. `deleteIssueAction` checks permissions via the issue creator and the user's role in the workspace, then calls the delete service and redirects.
+- **Service layer** – `updateIssue` and `deleteIssue` use axios to interact with Supabase REST API, handling errors and returning `ApiResult` objects.
+- **Client components** – `EditIssueForm` uses `useActionState` for form handling and pending state. `DeleteIssueButton` submits a form action and shows an alert on error.
+- **Security** – Row Level Security (RLS) policies on the `issues` table restrict deletion to creators, owners, and admins (optional). The server action also enforces permission checks for added safety.
+
 #### Design decisions
 
 - **Assignee as username** – simplifies the UI; users type a username instead of a UUID. (A production version would use a dropdown or user picker.)
@@ -177,6 +186,10 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 | Styling     | Tailwind CSS (your choice)            |
 
 ## Architecture Overview
+
+```
+
+```
 
 ```
 

@@ -52,16 +52,12 @@ export async function createIssue({
     due_date: dueDate || null,
   };
 
-  const url = `${supabaseUrl}/rest/v1/issues?select=*,project:project_id(slug),workspace:workspace_id(slug)`;
+  const url = `${supabaseUrl}/rest/v1/issues`;
 
   try {
-    const response = await axiosWithProxy.post<Issue>(
-      `${url}/rest/v1/issues`,
-      body,
-      {
-        headers,
-      },
-    );
+    const response = await axiosWithProxy.post<Issue>(url, body, {
+      headers,
+    });
     const createdIssue = response.data as Issue;
     return { success: true, data: createdIssue };
   } catch (error: any) {
