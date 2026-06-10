@@ -132,6 +132,14 @@ export interface Issue {
   updated_at: string;
 }
 
+export interface IssueFilters {
+  search?: string;
+  status?: string;
+  priority?: string;
+  assigneeId?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
 //------zod-------
 export type ZodErrorMessagesType = [
   {

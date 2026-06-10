@@ -174,6 +174,14 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Client components** – `UpdateMemberForm` uses `useActionState` for form handling, optimistic UI updates, and error display. `DeleteMemberForm` triggers a confirmation dialog before removal.
 - **Data fetching** – `getWorkspaceMembers` service fetches both member roles and profile data, merging them into a single `Member` object with `role`, `username`, `email`, etc.
 
+### Search Issues
+
+- **Instant client‑side filtering** – Users can search issues by title or description. As they type, the issue list updates immediately without any network delay or page reload.
+- **Simple and fast** – The search term is stored in local component state, not in the URL, ensuring a smooth and responsive user experience.
+- **Case‑insensitive** – Search matches text regardless of capitalisation.
+- **No extra dependencies** – Uses React `useState` and `useMemo` for efficient filtering.
+
+
 ## Tech Stack
 
 | Layer       | Technology                            |

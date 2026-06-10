@@ -1,14 +1,9 @@
 "use client";
 import { useActionState } from "react";
 import { createIssueAction } from "@/actions/issue/CreateIssueAction";
-import type { ApiResult, Issue, Profile } from "@/lib/types";
+import type { ApiResult, Issue, Member, Profile } from "@/lib/types";
 import { useProjectStore } from "@/store/projectStore";
 import { useWorkspaceStore } from "@/store/workspaceStore";
-
-type CreateIssueActionType = (
-  prevState: ApiResult<Issue> | null,
-  formData: FormData,
-) => Promise<ApiResult<Issue>>;
 
 export default function CreateIssueForm({
   projectId,
@@ -17,7 +12,7 @@ export default function CreateIssueForm({
 }: {
   projectId: string;
   workspaceId: string;
-  members: Profile[];
+  members: Member[];
 }) {
   const currentProject = useProjectStore((state) => state.currentProject);
   const currentWorkspace = useWorkspaceStore((state) => state.currentWorkspace);

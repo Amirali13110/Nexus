@@ -1,9 +1,10 @@
 "use client";
 
-import type { Issue, Profile, Project } from "@/lib/types";
+import type { Issue, Member, Profile, Project } from "@/lib/types";
 import Link from "next/link";
 import CreateIssueForm from "../issue/CreateIssueForm";
 import { useWorkspaceStore } from "@/store/workspaceStore";
+import IssueSearchBar from "../issue/IssueSearchBar";
 
 export default function ProjectView({
   project,
@@ -14,11 +15,12 @@ export default function ProjectView({
   project: Project;
   issues: Issue[] | [];
   error: string | null;
-  members: Profile[];
+  members: Member[];
 }) {
   const currentWorkspace = useWorkspaceStore((state) => state.currentWorkspace);
   return (
     <div>
+      <IssueSearchBar />
       <h1>{project.name}</h1>
       <p>{project.description || "No description"}</p>
       <CreateIssueForm
@@ -26,16 +28,17 @@ export default function ProjectView({
         members={members}
         workspaceId={project.workspace_id}
       />
-      <div>
+      <ul>
         {issues.map((issue) => (
-          <Link
-            key={issue.id}
-            href={`/workspace/${currentWorkspace?.slug}/project/${project.slug}/issue/${issue.id}`}
-          >
-            {issue.title}
-          </Link>
+          <li key={issue.id}>
+            <Link
+              href={`/workspace/${currentWorkspace?.slug}/project/${project.slug}/issue/${issue.id}`}
+            >
+              {issue.title}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

@@ -8,10 +8,21 @@ import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
 
 export default async function ProjectPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ workspaceSlug: string; projectSlug: string }>;
+  searchParams: Promise<{
+    search?: string;
+    status?: string;
+    priority?: string;
+    assignee?: string;
+    sort?: string;
+    order?: string;
+  }>;
 }) {
   const { workspaceSlug, projectSlug } = await params;
+  const { search, status, priority, assignee, sort, order } =
+    await searchParams;
 
   const workspaceResult = await getWorkspaceBySlug(workspaceSlug);
   if (!workspaceResult.success) notFound();
@@ -33,7 +44,14 @@ export default async function ProjectPage({
     return notFound();
   }
 
-  const issuesResult = await getIssuesByProjectIdAction(project.id);
+  const issuesResult = await getIssuesByProjectIdAction(project.id, {
+    search,
+    status,
+    priority,
+    assigneeId: assignee,
+    sortBy: sort,
+    sortOrder: order as "asc" | "desc",
+  });
   const issues = issuesResult.success ? issuesResult.data || [] : [];
   const issuesError = issuesResult.success
     ? null

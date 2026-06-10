@@ -25,13 +25,10 @@ export default async function getProfileAction() {
       console.error("Failed to parse auth_user cookie:", parseErr);
       return { success: false, error: "Invalid auth_user cookie format" };
     }
-    const getCachedProfile = unstable_cache(
-      async () => getUserProfile({ id }),
-      [`profile-${id}`],
-      { revalidate: 60 * 60 },
-    );
-    const result = await getCachedProfile();
-    const profile = result.data;    if (!profile) {
+
+    const result = await getUserProfile({ id });
+    const profile = result.data;
+    if (!profile) {
       return { success: false, error: "Profile not found" };
     }
 
