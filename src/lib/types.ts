@@ -35,7 +35,7 @@ export type AuthResponse = {
 export type UserCredentials = {
   fullname?: string;
   email: string;
-  username: string;
+  username?: string;
   password: string;
 };
 

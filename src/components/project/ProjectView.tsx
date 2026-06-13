@@ -5,6 +5,8 @@ import Link from "next/link";
 import CreateIssueForm from "../issue/CreateIssueForm";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 import IssueSearchBar from "../issue/IssueSearchBar";
+import IssueFilter from "../issue/IssueFilter";
+import IssueFilters from "../issue/IssueFilter";
 
 export default function ProjectView({
   project,
@@ -20,7 +22,7 @@ export default function ProjectView({
   const currentWorkspace = useWorkspaceStore((state) => state.currentWorkspace);
   return (
     <div>
-      <IssueSearchBar />
+     
       <h1>{project.name}</h1>
       <p>{project.description || "No description"}</p>
       <CreateIssueForm

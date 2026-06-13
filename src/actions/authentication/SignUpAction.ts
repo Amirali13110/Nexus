@@ -18,10 +18,16 @@ const signUpSchema = z.object({
 });
 
 export async function signUpAction(prevState: any, formData: FormData) {
+  console.log("Sign up action is running");
+
   const fullname = formData.get("fullname") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const username = formData.get("username") as string;
+  console.log(username);
+  console.log(fullname);
+  console.log(password);
+  console.log(email);
   const validation = signUpSchema.safeParse({
     fullname,
     email,
@@ -45,6 +51,7 @@ export async function signUpAction(prevState: any, formData: FormData) {
   });
 
   if (!result.success) {
+    console.log(result.error);
     return {
       success: false,
       error: result.error,
@@ -62,5 +69,6 @@ export async function signUpAction(prevState: any, formData: FormData) {
   if (inviteToken) {
     await acceptInvitationByTokenAction(inviteToken);
   }
+
   return { success: true, redirectTo: "/" };
 }

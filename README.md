@@ -181,6 +181,27 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Case‑insensitive** – Search matches text regardless of capitalisation.
 - **No extra dependencies** – Uses React `useState` and `useMemo` for efficient filtering.
 
+### Filter & Sort Issues
+
+- **Filter by status** – Backlog, Todo, In Progress, In Review, Done.
+- **Filter by priority** – No priority, Urgent, High, Normal, Low.
+- **Filter by assignee** – Select any workspace member from the dropdown.
+- **Sort options** – Sort issues by **priority**, **due date**, or **created date**, in ascending or descending order.
+- **Server‑side execution** – All filters and sorting are applied directly in the database using Supabase queries, ensuring scalability even with thousands of issues.
+- **URL persistence** – Filter and sort selections are stored in the URL (`?status=in_progress&sort=priority&order=desc`), making views shareable and bookmarkable.
+- **Loading state** – A `loading.tsx` skeleton provides immediate visual feedback during navigation.
+
+### Theming & Form UI
+
+- **Dark / Light mode toggle** – A sliding switch (smooth animation) lets users switch between light and dark themes. The preference is stored in `localStorage` and applied to the whole application via a `dark` class on the `<html>` element. Tailwind’s `dark:` variants handle all colour changes.
+- **Consistent form design** – All authentication forms (sign‑up, sign‑in) share a unified look:
+  - `FormCard` – centred card with a blue accent line, title, subtitle, and consistent padding/border.
+  - `FormInput` – styled input fields with labels, error messages, and dark/light support.
+  - `FormButton` – primary blue button with hover effect, loading state, and arrow icon.
+- **Responsive** – The card scales from mobile (full width, 1rem padding) to desktop (max‑width 32rem, larger padding). Inputs switch to a two‑column layout on larger screens.
+- **Background decoration** – A subtle radial pattern and blurred blue circles create depth, visible only on authentication pages. The opacity is reduced in dark mode.
+- **Accessibility** – Focus states are clearly visible, buttons and inputs have appropriate `disabled` styles, and labels are properly associated with inputs.
+- **Password visibility toggles** – Clean SVG eye icons (open / closed) replace emojis, matching the overall aesthetic.
 
 ## Tech Stack
 

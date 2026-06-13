@@ -5,6 +5,9 @@ import getIssuesByProjectIdAction from "@/actions/issue/GetIssuesByProjectIdActi
 import ProjectInitializer from "@/components/project/ProjectInitializer";
 import { getWorkspaceBySlug } from "@/services/workspace/getWorkspaceBySlug";
 import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
+import IssueSearchBar from "@/components/issue/IssueSearchBar";
+import IssueFilters from "@/components/issue/IssueFilter";
+import IssueSort from "@/components/issue/IssueSort";
 
 export default async function ProjectPage({
   params,
@@ -65,9 +68,15 @@ export default async function ProjectPage({
   if (!members) {
     return <p>Failed to get workspace members</p>;
   }
+  console.log("Full URL with query:", await searchParams);
 
   return (
     <div>
+      <div className="">
+        <IssueSearchBar />
+        <IssueFilters members={members} />
+        <IssueSort />
+      </div>
       <ProjectView
         project={project}
         issues={issues}
