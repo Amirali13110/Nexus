@@ -17,14 +17,14 @@ export async function requestPasswordResetAction(
     let emailToSend = identifier;
 
     const response = await getUserProfile({ username: identifier });
-    const profile = response.profile;
+    const profile = response.data;
 
     if (profile) {
       emailToSend = profile.email;
     }
 
     const result = await requestPasswordReset(emailToSend);
-    if (!result.success) {
+    if (!result.success && result.error) {
       return {
         success: false,
         message: "Some thing went wrong",

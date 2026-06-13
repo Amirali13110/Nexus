@@ -191,17 +191,14 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **URL persistence** – Filter and sort selections are stored in the URL (`?status=in_progress&sort=priority&order=desc`), making views shareable and bookmarkable.
 - **Loading state** – A `loading.tsx` skeleton provides immediate visual feedback during navigation.
 
-### Theming & Form UI
+### Authentication UI & Theming
 
-- **Dark / Light mode toggle** – A sliding switch (smooth animation) lets users switch between light and dark themes. The preference is stored in `localStorage` and applied to the whole application via a `dark` class on the `<html>` element. Tailwind’s `dark:` variants handle all colour changes.
-- **Consistent form design** – All authentication forms (sign‑up, sign‑in) share a unified look:
-  - `FormCard` – centred card with a blue accent line, title, subtitle, and consistent padding/border.
-  - `FormInput` – styled input fields with labels, error messages, and dark/light support.
-  - `FormButton` – primary blue button with hover effect, loading state, and arrow icon.
-- **Responsive** – The card scales from mobile (full width, 1rem padding) to desktop (max‑width 32rem, larger padding). Inputs switch to a two‑column layout on larger screens.
-- **Background decoration** – A subtle radial pattern and blurred blue circles create depth, visible only on authentication pages. The opacity is reduced in dark mode.
-- **Accessibility** – Focus states are clearly visible, buttons and inputs have appropriate `disabled` styles, and labels are properly associated with inputs.
-- **Password visibility toggles** – Clean SVG eye icons (open / closed) replace emojis, matching the overall aesthetic.
+- **Dark / Light mode toggle** – A sliding switch (smooth animation) toggles the `dark` class on `<html>`. Tailwind’s `dark:` variants handle all colour changes. The theme preference is stored in `localStorage` and applied globally.
+- **Reusable form components** – `FormCard` (centered card with blue accent line, title, subtitle, consistent padding/border), `FormInput` (field with label, error message, dark/light support), and `FormButton` (primary blue button with loading state and arrow icon) ensure a uniform look across sign‑up, sign‑in, password reset request, and password update pages.
+- **Background decoration** – Subtle radial pattern and blurred blue circles (opacity 10%) create depth without distracting from the form.
+- **Responsive** – The card scales from full width on mobile (px‑4, py‑6) to centred (max‑w‑xl, larger padding) on desktop. Inputs use a two‑column grid for name fields.
+- **Password visibility** – Clean SVG eye icons (open/closed) replace emojis, matching the overall aesthetic.
+- **No scrollbar** – Containers use `h-screen overflow-hidden` to prevent unwanted vertical scroll on these pages.
 
 ## Tech Stack
 

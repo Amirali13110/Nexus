@@ -4,6 +4,7 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
+import ThemeSync from "@/components/ThemeSync";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -22,6 +23,7 @@ export default async function RootLayout({
       <body>
         <ProfileProvider>
           <Navbar />
+          <ThemeSync />
           {children}
         </ProfileProvider>
       </body>
