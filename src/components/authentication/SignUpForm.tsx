@@ -36,7 +36,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-grow items-center justify-center overflow-hidden bg-gray-50 dark:bg-black">
+    <div className="relative flex h-screen flex-grow items-center justify-center overflow-hidden bg-gray-50 dark:bg-black">
       {/* Background decoration */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-10">
         <div

@@ -11,7 +11,6 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: #111827 !important;
 }
 
-/* Override for dark mode */
 .dark input:-webkit-autofill,
 .dark input:-webkit-autofill:hover,
 .dark input:-webkit-autofill:focus,
@@ -19,4 +18,11 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #2a2a2a inset !important;
   box-shadow: 0 0 0 30px #2a2a2a inset !important;
   -webkit-text-fill-color: #e5e2e1 !important;
+}
+html,
+body {
+  overflow: hidden !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }

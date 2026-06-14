@@ -1,13 +1,28 @@
 "use client";
-import { useEffect } from "react";
-import { useThemeStore } from "@/store/themeStore";
+
+import Script from "next/script";
 
 export default function ThemeSync() {
-  const { theme } = useThemeStore();
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
-
-  return null;
+  return (
+    <Script
+      id="theme-script"
+      strategy="beforeInteractive"
+      dangerouslySetInnerHTML={{
+        __html: `
+          (function() {
+            try {
+              const stored = localStorage.getItem("nexus-theme");
+        
+              const theme = stored === "dark" ? "dark" : "dark";
+              if (theme === "dark") {
+                document.documentElement.classList.add("dark");
+              } else {
+                document.documentElement.classList.remove("dark");
+              }
+            } catch (e) {}
+          })();
+        `,
+      }}
+    />
+  );
 }
