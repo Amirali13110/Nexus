@@ -14,8 +14,10 @@ export type ApiResult<T = any> = {
 export type User = {
   id: string;
   email: string;
-  created_at: string;
-  access_token: string;
+  username: string;
+  fullname?: string;
+  created_at?: string;
+  access_token?: string;
 };
 
 export type Session = {
