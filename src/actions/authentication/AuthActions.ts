@@ -51,11 +51,9 @@ export async function handleSignOut() {
     const token = cookieStore.get("access_token")?.value;
 
     if (token) {
-      // Hit Supabase logout
       await signOut(token);
     }
 
-    // Clear cookies
     cookieStore.delete("access_token");
     cookieStore.delete("refresh_token");
     cookieStore.delete("auth_user");

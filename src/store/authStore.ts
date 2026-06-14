@@ -4,6 +4,7 @@ import { User } from "@/lib/types";
 import { handleSignOut } from "@/actions/authentication/AuthActions";
 import { redirect } from "next/navigation";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { useProfileStore } from "./profileStore";
 
 export type AuthResponse = {
   success: boolean;
@@ -37,11 +38,11 @@ export const useAuthStore = create<AuthState>()(
 
       signOut: async () => {
         await handleSignOut();
-        redirect("/signIn");
+        useProfileStore.getState().clearProfile();
       },
     }),
     {
-      name: "nexus-auth-storage", // 3. Unique name for localStorage key
+      name: "nexus-auth-storage",
       storage: createJSONStorage(() => localStorage),
     },
   ),

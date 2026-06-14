@@ -1,16 +1,15 @@
-"use client";
-import ProfileInfo from "@/components/profile/ProfileInfo";
-import { useAuthStore } from "@/store/authStore";
+import Navbar from "@/components/Navbar";
+import StatsCards from "@/components/StatsCards";
+import WelcomeCard from "@/components/WelcomeCard";
+import WorkspaceSwitcher from "@/components/workspace/WorkspaceSwitcher";
 
 export default function Home() {
-  const { signOut } = useAuthStore();
-
   return (
-    <div>
-      Home page
+    <div className="">
       <div>
-        <ProfileInfo />
-        <button onClick={() => signOut()}>Log out </button>
+        <Navbar />
+        <WelcomeCard />
+        <StatsCards />
       </div>
     </div>
   );

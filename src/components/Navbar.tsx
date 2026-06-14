@@ -1,16 +1,19 @@
 "use client";
 import Link from "next/link";
-import ThemeToggle from "./Button/ThemeToggle";
+import WorkspaceSwitcher from "@/components/workspace/WorkspaceSwitcher";
+import ThemeToggle from "@/components/Button/ThemeToggle";
+import UserAvatar from "./profile/UserAvatar";
+import { useProfileStore } from "@/store/profileStore";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Navbar() {
+  const { profile } = useProfileStore();
+  const isAuthenticated = !!profile;
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-8">
-        <Link
-          href="/"
-          className="flex items-center gap-2 transition-opacity active:opacity-80"
-        >
-          <div className="h-8 w-8">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-black">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 md:px-8">
+        <Link href="/" className="flex shrink-0 items-center gap-1">
+          <div className="h-7 w-7 sm:h-8 sm:w-8">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -29,11 +32,21 @@ export default function Navbar() {
               <path d="M9.5 10.5L4 7.5" />
             </svg>
           </div>
-          <span className="text-2xl font-bold tracking-tighter text-[#0066ff]">
+          <span className="hidden text-lg font-bold tracking-tighter text-[#0066ff] sm:inline sm:text-2xl">
             NEXUS
           </span>
         </Link>
-        <ThemeToggle />
+
+        {isAuthenticated && (
+          <div className="flex flex-1 justify-center">
+            <WorkspaceSwitcher />
+          </div>
+        )}
+
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
+          <ThemeToggle />
+          {isAuthenticated && <UserAvatar />}
+        </div>
       </div>
     </header>
   );

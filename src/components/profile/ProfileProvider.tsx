@@ -18,6 +18,7 @@ export default function ProfileProvider({
           if (result.success && result.profile) {
             setProfile(result.profile);
           }
+
           if (result.error) {
             setError(result.error);
           }

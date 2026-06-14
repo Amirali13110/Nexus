@@ -5,6 +5,9 @@ import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import ThemeSync from "@/components/ThemeSync";
+import ThemeToggle from "@/components/Button/ThemeToggle";
+import WorkspaceSwitcher from "@/components/workspace/WorkspaceSwitcher";
+import WorkspaceProvider from "@/components/workspace/WorkspaceProvider";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -20,11 +23,12 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body>
+      <head>
+        <ThemeSync />
+      </head>
+      <body className="bg-white dark:bg-black">
         <ProfileProvider>
-          <Navbar />
-          <ThemeSync />
-          {children}
+          <WorkspaceProvider>{children}</WorkspaceProvider>
         </ProfileProvider>
       </body>
     </html>

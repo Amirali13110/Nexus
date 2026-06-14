@@ -8,6 +8,7 @@ import { getUserProfile } from "../../services/profile/getUserProfile";
 import { Profile } from "@/lib/types";
 import { cookies } from "next/headers";
 import { acceptInvitationByTokenAction } from "../invitation/AcceptInvitationByTokenAction";
+import { useAuthStore } from "@/store/authStore";
 
 const signInSchema = z.object({
   identifier: z.string().min(3, "Username or Email is too short"),
