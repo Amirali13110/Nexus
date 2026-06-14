@@ -1,9 +1,9 @@
-import { axiosWithProxy } from "@/services/HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
+import axios from "axios";
 
 export async function validateUser(token: string) {
   try {
-    const response = await axiosWithProxy.get(`${supabaseUrl}/auth/v1/user`, {
+    const response = await axios.get(`${supabaseUrl}/auth/v1/user`, {
       headers: {
         apikey: supabaseKey,
         Authorization: `Bearer ${token}`,
