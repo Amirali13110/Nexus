@@ -27,7 +27,6 @@ export const useThemeStore = create<ThemeState>((set) => {
       set((state) => {
         const nextTheme = state.theme === "dark" ? "light" : "dark";
         localStorage.setItem("nexus-theme", nextTheme);
-        console.log("Toggling to :", nextTheme);
         if (typeof window !== "undefined") {
           if (nextTheme === "dark") {
             document.documentElement.classList.add("dark");

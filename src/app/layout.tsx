@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import ProfileProvider from "@/components/profile/ProfileProvider";
 import "./globals.css";
 import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
-import ThemeSync from "@/components/ThemeSync";
+import IssueProvider from "@/components/issue/IssueProvider";
+import ThemeSync from "@/components/ui/ThemeSync";
 import ThemeToggle from "@/components/Button/ThemeToggle";
 import WorkspaceSwitcher from "@/components/workspace/WorkspaceSwitcher";
 import WorkspaceProvider from "@/components/workspace/WorkspaceProvider";
@@ -26,10 +25,12 @@ export default async function RootLayout({
       <head>
         <ThemeSync />
       </head>
-      <body className="bg-white dark:bg-black">
-        <ProfileProvider>
-          <WorkspaceProvider>{children}</WorkspaceProvider>
-        </ProfileProvider>
+      <body className="bg-white dark:bg-black  ">
+        <IssueProvider>
+          <ProfileProvider>
+            <WorkspaceProvider>{children}</WorkspaceProvider>
+          </ProfileProvider>
+        </IssueProvider>
       </body>
     </html>
   );

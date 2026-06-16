@@ -68,7 +68,6 @@ export default async function ProjectPage({
   if (!members) {
     return <p>Failed to get workspace members</p>;
   }
-  console.log("Full URL with query:", await searchParams);
 
   return (
     <div>

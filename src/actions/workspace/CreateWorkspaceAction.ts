@@ -4,6 +4,7 @@ import { Workspace } from "@/lib/types";
 import { addWorkspaceMember } from "@/services/member/addWorkspaceMember";
 import { createWorkspace } from "@/services/workspace/createWorkspace";
 import { slugify } from "@/utils/slugify";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import z from "zod";
@@ -38,9 +39,10 @@ export async function createWorkspaceAction(
   const slug = slugify(workspaceName);
   const result = await createWorkspace({ name: workspaceName, slug });
 
-  if (result.error) {
+  if (!result.data && result.error) {
     return { success: false, error: result.error };
   }
+  if (!result.data) return { success: false, error: result.error };
   const workspace: Workspace = result.data[0];
 
   const memberResult = await addWorkspaceMember({
@@ -50,12 +52,16 @@ export async function createWorkspaceAction(
   });
 
   if (!memberResult.success && memberResult.error) {
-    //Add delete workspace function here later
     return {
       success: false,
       error: memberResult.error || "Failed to create workspace",
     };
   }
 
-  redirect(`/workspace/${slug}`);
+  if (memberResult.success && result.success) {
+    return {
+      success: true,
+      workspaces: result.data,
+    };
+  }
 }

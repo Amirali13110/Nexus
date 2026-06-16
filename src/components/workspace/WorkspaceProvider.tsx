@@ -12,7 +12,6 @@ export default function WorkspaceProvider({
 
   useEffect(() => {
     const fetchWorkspaces = async () => {
-      console.log("workspaces", workspaces);
       if (workspaces.length === 0) {
         setIsLoading(true);
         try {

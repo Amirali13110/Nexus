@@ -9,7 +9,7 @@ export default function IssueProvider({
   children: React.ReactNode;
 }) {
   const { issues, setIssues, setLoading, setError } = useIssueStore();
-
+  
   useEffect(() => {
     if (issues.length === 0) {
       setLoading(true);
@@ -24,7 +24,7 @@ export default function IssueProvider({
         .catch((err) => setError(err.message))
         .finally(() => setLoading(false));
     }
-  }, [issues.length, setIssues, setLoading, setError]);
+  }, []);
 
   return <>{children}</>;
 }

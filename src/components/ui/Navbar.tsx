@@ -2,7 +2,7 @@
 import Link from "next/link";
 import WorkspaceSwitcher from "@/components/workspace/WorkspaceSwitcher";
 import ThemeToggle from "@/components/Button/ThemeToggle";
-import UserAvatar from "./profile/UserAvatar";
+import UserAvatar from "../profile/UserAvatar";
 import { useProfileStore } from "@/store/profileStore";
 import { useAuthStore } from "@/store/authStore";
 
@@ -36,12 +36,12 @@ export default function Navbar() {
             NEXUS
           </span>
         </Link>
-
+        {/* 
         {isAuthenticated && (
           <div className="flex flex-1 justify-center">
             <WorkspaceSwitcher />
           </div>
-        )}
+        )} */}
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           <ThemeToggle />

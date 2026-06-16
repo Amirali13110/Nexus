@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Workspace } from "@/lib/types";
+import getWorkspacesAction from "@/actions/workspace/GetWorkspacesAction";
 
 interface WorkspaceState {
   workspaces: Workspace[];
@@ -10,6 +11,7 @@ interface WorkspaceState {
   setCurrentWorkspace: (workspace: Workspace | null) => void;
   setIsLoading: (isLoading: boolean) => void;
   setError: (error: string) => void;
+  fetchWorkspaces: () => Promise<void>;
 }
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
@@ -22,4 +24,20 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setCurrentWorkspace: (workspace) => set({ currentWorkspace: workspace }),
   setIsLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error, isLoading: false }),
+  fetchWorkspaces: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const result = await getWorkspacesAction();
+
+      if (result) {
+        if (result.success && result.workspaces) {
+          set({ workspaces: result.workspaces, isLoading: false });
+        } else {
+          set({ error: result.error, isLoading: false });
+        }
+      }
+    } catch (err: any) {
+      set({ error: err.message, isLoading: false });
+    }
+  },
 }));

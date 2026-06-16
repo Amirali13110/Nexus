@@ -3,6 +3,7 @@ import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { axiosWithProxy } from "../HttpService";
 import { cookies } from "next/headers";
 import axios from "axios";
+import { ApiResult, Workspace } from "@/lib/types";
 
 export async function createWorkspace({
   name,
@@ -10,7 +11,7 @@ export async function createWorkspace({
 }: {
   name: string;
   slug: string;
-}) {
+}): Promise<ApiResult<Workspace[]>> {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
   const userCookie = cookieStore.get("auth_user")?.value;
