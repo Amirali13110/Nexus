@@ -3,8 +3,10 @@
 import { inviteWorkspaceMemberAction } from "@/actions/invitation/InviteWorkspaceMemberAction";
 import { useActionState } from "react";
 export default function InviteMemberForm({
+  onSuccess,
   workspaceId,
 }: {
+  onSuccess: () => void;
   workspaceId: string;
 }) {
   const [state, formAction, isPending] = useActionState(

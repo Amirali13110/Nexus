@@ -1,15 +1,17 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { createIssueAction } from "@/actions/issue/CreateIssueAction";
-import type { ApiResult, Issue, Member, Profile } from "@/lib/types";
+import type { Member } from "@/lib/types";
 import { useProjectStore } from "@/store/projectStore";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 
 export default function CreateIssueForm({
+  onSuccess,
   projectId,
   workspaceId,
   members,
 }: {
+  onSuccess: () => void;
   projectId: string;
   workspaceId: string;
   members: Member[];
@@ -19,6 +21,15 @@ export default function CreateIssueForm({
   const [state, formAction, isPending] = useActionState(
     createIssueAction,
     null,
+  );
+
+  useEffect(
+    function () {
+      if (state?.success && state.data) {
+        onSuccess();
+      }
+    },
+    [state],
   );
 
   if (!currentWorkspace || !currentProject) {

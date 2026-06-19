@@ -1,7 +1,6 @@
 "use server";
 import z from "zod";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { updateIssue } from "@/services/issue/updateIssue";
 
 const updateIssueSchema = z.object({
@@ -53,10 +52,6 @@ export async function updateIssueAction(prevState: any, formData: FormData) {
   });
   if (!result.success) return { success: false, error: result.error };
 
-  revalidatePath(
-    `/workspace/${workspaceSlug}/project/${projectSlug}/issue/${issueId}`,
-  );
-  redirect(
-    `/workspace/${workspaceSlug}/project/${projectSlug}/issue/${issueId}`,
-  );
+  revalidatePath(`/workspace/${workspaceSlug}/project/${projectSlug}`)
+  return { success: true, issue: result.data };
 }

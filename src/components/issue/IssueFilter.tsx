@@ -2,7 +2,7 @@
 import { Member } from "@/lib/types";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-export default function IssueFilters({ members }: { members: Member[] }) {
+export default function IssueFilter({ members }: { members: Member[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -15,10 +15,11 @@ export default function IssueFilters({ members }: { members: Member[] }) {
   };
 
   return (
-    <div>
+    <div className="flex flex-wrap items-center gap-3">
       <select
         value={searchParams.get("status") || ""}
         onChange={(e) => updateFilter("status", e.target.value)}
+        className="w-full cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] dark:border-gray-700 dark:bg-gray-800 dark:text-white sm:w-auto"
       >
         <option value="">All statuses</option>
         <option value="backlog">Backlog</option>
@@ -31,6 +32,7 @@ export default function IssueFilters({ members }: { members: Member[] }) {
       <select
         value={searchParams.get("priority") || ""}
         onChange={(e) => updateFilter("priority", e.target.value)}
+        className="w-full cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] dark:border-gray-700 dark:bg-gray-800 dark:text-white sm:w-auto"
       >
         <option value="">All priorities</option>
         <option value="0">No priority</option>
@@ -43,6 +45,7 @@ export default function IssueFilters({ members }: { members: Member[] }) {
       <select
         value={searchParams.get("assignee") || ""}
         onChange={(e) => updateFilter("assignee", e.target.value)}
+        className="w-ful cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] dark:border-gray-700 dark:bg-gray-800 dark:text-white sm:w-auto"
       >
         <option value="">All assignees</option>
         {members.map((member) => (

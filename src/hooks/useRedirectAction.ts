@@ -12,6 +12,7 @@ export default function useRedirectAction<T extends ActionStateWithRedirect>(
   useEffect(
     function () {
       if (state?.success && state.redirectTo) {
+        console.log("Use redirect is working")
         window.location.href = state.redirectTo;
       }
     },

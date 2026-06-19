@@ -40,6 +40,8 @@ export async function createIssue({
     Prefer: "return=representation",
   };
 
+  let assignee_id = assigneeId === "" ? null : assigneeId;
+
   const body = {
     title,
     description: description || null,
@@ -48,7 +50,7 @@ export async function createIssue({
     project_id: projectId,
     workspace_id: workspaceId,
     created_by: userId,
-    assignee_id: assigneeId,
+    assignee_id,
     due_date: dueDate || null,
   };
 

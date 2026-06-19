@@ -6,6 +6,9 @@ import { getMemberRole } from "@/services/member/getMemberRole";
 import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
 import { getUserProfile } from "@/services/profile/getUserProfile";
 import MembersList from "@/components/member/MembersList";
+import getProjectsAction from "@/actions/project/GetProjectsAction";
+import { Project } from "@/lib/types";
+import Navbar from "@/components/ui/Navbar";
 
 export default async function WorkspacePage({
   params,
@@ -25,6 +28,10 @@ export default async function WorkspacePage({
   }
 
   const workspace = workspaceResult.workspace;
+  const projectsResult = await getProjectsAction(workspace.id);
+  const projects = projectsResult.success
+    ? (projectsResult.projects as Project[])
+    : [];
   const membersResult = await getWorkspaceMembers(workspace.id);
 
   const members = membersResult.data;
@@ -47,7 +54,12 @@ export default async function WorkspacePage({
 
   return (
     <div>
-      <WorkspaceView workspace={workspaceResult.workspace} role={memberRole} />
+      <Navbar />
+      <WorkspaceView
+        workspace={workspaceResult.workspace}
+        projects={projects}
+        role={memberRole}
+      />
     </div>
   );
 }

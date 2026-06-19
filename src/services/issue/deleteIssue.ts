@@ -1,3 +1,4 @@
+"use server"
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";

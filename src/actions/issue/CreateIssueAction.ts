@@ -13,7 +13,13 @@ const createIssueSchema = z.object({
   priority: z.number().int().min(0).max(4),
   projectId: z.string().uuid("Invalid project ID"),
   workspaceId: z.string().uuid("Invalid workspace ID"),
-  assigneeId: z.string().uuid().nullish(),
+  assigneeId: z
+    .string()
+    .uuid()
+    .optional()
+    .nullable()
+    .or(z.literal(""))
+    .transform((val) => (val === "" ? null : val)),
   dueDate: z.string().date().nullish(),
 });
 
@@ -45,7 +51,7 @@ export async function createIssueAction(
   });
   if (!validation.success) {
     const firstError = validation.error.issues[0].message;
-    
+
     return { success: false, error: firstError };
   }
 
@@ -67,5 +73,5 @@ export async function createIssueAction(
   const path = `/workspace/${workspaceSlug}/project/${projectSlug}`;
 
   revalidatePath(path);
-  redirect(path);
+  return { success: true, data: result.data };
 }

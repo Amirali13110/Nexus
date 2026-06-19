@@ -41,7 +41,6 @@ export async function updateProfileAction(prevState: any, formData: FormData) {
   });
   if (!result.success) return { success: false, error: result.error };
 
-  // Revalidate any page that shows profile data
   revalidatePath("/");
   revalidatePath("/profile");
   revalidatePath("/profile/edit");

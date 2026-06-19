@@ -1,17 +1,22 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { updateIssueAction } from "@/actions/issue/UpdateIssueAction";
 import { Issue, Member } from "@/lib/types";
+import { useIssueStore } from "@/store/issueStore";
 
 export default function UpdateIssueForm({
+  onSuccess,
   issue,
   projectId,
   workspaceSlug,
+
   projectSlug,
   members,
 }: {
+  onSuccess: () => void;
   issue: Issue;
   projectId: string;
+
   workspaceSlug: string;
   projectSlug: string;
   members: Member[];
@@ -19,6 +24,14 @@ export default function UpdateIssueForm({
   const [state, formAction, isPending] = useActionState(
     updateIssueAction,
     null,
+  );
+  useEffect(
+    function () {
+      if (state?.success) {
+        onSuccess();
+      }
+    },
+    [state?.success],
   );
 
   return (

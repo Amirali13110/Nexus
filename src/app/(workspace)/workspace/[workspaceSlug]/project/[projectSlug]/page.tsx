@@ -1,13 +1,12 @@
+// app/workspace/[workspaceSlug]/project/[projectSlug]/page.tsx
 import { notFound } from "next/navigation";
 import getProjectBySlugAction from "@/actions/project/GetProjectBySlugAction";
-import ProjectView from "@/components/project/ProjectView";
 import getIssuesByProjectIdAction from "@/actions/issue/GetIssuesByProjectIdAction";
-import ProjectInitializer from "@/components/project/ProjectInitializer";
-import { getWorkspaceBySlug } from "@/services/workspace/getWorkspaceBySlug";
 import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
-import IssueSearchBar from "@/components/issue/IssueSearchBar";
-import IssueFilters from "@/components/issue/IssueFilter";
-import IssueSort from "@/components/issue/IssueSort";
+import ProjectView from "@/components/project/ProjectView";
+import { Issue, Member } from "@/lib/types";
+import ProjectInitializer from "@/components/project/ProjectInitializer";
+import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
 
 export default async function ProjectPage({
   params,
@@ -27,63 +26,49 @@ export default async function ProjectPage({
   const { search, status, priority, assignee, sort, order } =
     await searchParams;
 
-  const workspaceResult = await getWorkspaceBySlug(workspaceSlug);
-  if (!workspaceResult.success) notFound();
-  const workspace = workspaceResult.data;
-
-  if (!workspace) {
-    notFound();
-  }
-
   const projectResult = await getProjectBySlugAction({
     projectSlug,
     workspaceSlug,
   });
   if (!projectResult.success) notFound();
-
   const project = projectResult.project;
+  if (!project) notFound();
+  const membersResult = await getWorkspaceMembers(project.workspace_id);
+  const members: Member[] = membersResult.success
+    ? (membersResult.data as Member[])
+    : [];
 
-  if (!project) {
-    return notFound();
-  }
+  const workspaceResult = await getWorkspaceById(project.workspace_id);
+  console.log(workspaceResult);
+  if (!workspaceResult.success) notFound();
+  const workspace = workspaceResult.data;
+  if (!workspace) notFound();
 
   const issuesResult = await getIssuesByProjectIdAction(project.id, {
     search,
     status,
-    priority,
+    priority: priority,
     assigneeId: assignee,
-    sortBy: sort,
-    sortOrder: order as "asc" | "desc",
+    sortBy: sort || "priority",
+    sortOrder: (order as "asc" | "desc") || "asc",
   });
-  const issues = issuesResult.success ? issuesResult.data || [] : [];
-  const issuesError = issuesResult.success
-    ? null
-    : issuesResult.error || "Failed to get issues";
-
-  const membersResult = await getWorkspaceMembers(project.workspace_id);
-  if (!membersResult.success) {
-    return <p>Failed to get workspace members: {membersResult.error}</p>;
+  const issues: Issue[] = issuesResult.success
+    ? (issuesResult.data as Issue[])
+    : [];
+  let issuesError = issuesResult.success ? null : issuesResult.error;
+  if (!issuesError) {
+    issuesError = null;
   }
-  const members = membersResult.data;
-  if (!members) {
-    return <p>Failed to get workspace members</p>;
-  }
-
   return (
-    <div>
-      <div className="">
-        <IssueSearchBar />
-        <IssueFilters members={members} />
-        <IssueSort />
-      </div>
+    <div className="">
+      <ProjectInitializer project={project} workspace={workspace} />
       <ProjectView
         project={project}
         issues={issues}
-        error={issuesError}
         members={members}
+        error={issuesError}
+        workspaceSlug={workspaceSlug}
       />
-
-      <ProjectInitializer project={project} workspace={workspace} />
     </div>
   );
 }

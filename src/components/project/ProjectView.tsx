@@ -1,46 +1,194 @@
 "use client";
-
-import type { Issue, Member, Profile, Project } from "@/lib/types";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import CreateIssueForm from "../issue/CreateIssueForm";
-import { useWorkspaceStore } from "@/store/workspaceStore";
-import IssueSearchBar from "../issue/IssueSearchBar";
+import type { Project, Issue, Member } from "@/lib/types";
+import IssueTable from "@/components/issue/IssueTable";
+import IssueSearchBar from "@/components/issue/IssueSearchBar";
+import IssueSort from "@/components/issue/IssueSort";
+import Modal from "@/components/ui/Modal";
+import CreateIssueForm from "@/components/issue/CreateIssueForm";
+import UpdateIssueForm from "@/components/issue/UpdateIssueForm";
+
 import IssueFilter from "../issue/IssueFilter";
-import IssueFilters from "../issue/IssueFilter";
+import { deleteIssueAction } from "@/actions/issue/DeleteIssueAction";
+import { useIssueStore } from "@/store/issueStore";
+const BackIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M19 12H5" />
+    <path d="M12 19l-7-7 7-7" />
+  </svg>
+);
+
+const PlusIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+interface ProjectViewProps {
+  project: Project;
+  issues: Issue[];
+  members: Member[];
+  error: string | null;
+  workspaceSlug: string;
+}
 
 export default function ProjectView({
   project,
   issues,
   members,
   error,
-}: {
-  project: Project;
-  issues: Issue[] | [];
-  error: string | null;
-  members: Member[];
-}) {
-  const currentWorkspace = useWorkspaceStore((state) => state.currentWorkspace);
+  workspaceSlug,
+}: ProjectViewProps) {
+  const router = useRouter();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingIssue, setEditingIssue] = useState<Issue | null>(null);
+  const [deletingIssueId, setDeletingIssueId] = useState<string | null>(null);
+
+  const refresh = () => router.refresh();
+
   return (
-    <div>
-     
-      <h1>{project.name}</h1>
-      <p>{project.description || "No description"}</p>
-      <CreateIssueForm
-        projectId={project.id}
-        members={members}
-        workspaceId={project.workspace_id}
-      />
-      <ul>
-        {issues.map((issue) => (
-          <li key={issue.id}>
-            <Link
-              href={`/workspace/${currentWorkspace?.slug}/project/${project.slug}/issue/${issue.id}`}
-            >
-              {issue.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className="mx-auto max-w-7xl px-4 py-8 pt-20 md:px-8">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <Link
+            href={`/workspace/${workspaceSlug}`}
+            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+          >
+            <BackIcon />
+            Back to workspace
+          </Link>
+          <h1 className="mt-1 text-3xl font-bold text-gray-900 dark:text-white">
+            {project.name}
+          </h1>
+          {project.description && (
+            <p className="mt-1 text-gray-500 dark:text-gray-400">
+              {project.description}
+            </p>
+          )}
+        </div>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="inline-flex items-center gap-2 rounded-xl bg-[#0066ff] px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc]"
+        >
+          <PlusIcon />
+          New Issue
+        </button>
+      </div>
+
+      <div className="mb-4 flex flex-wrap items-center gap-4">
+        <IssueSearchBar />
+        <IssueFilter members={members} />
+        <IssueSort />
+      </div>
+
+      {error ? (
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center dark:border-gray-800 dark:bg-gray-950">
+          <p className="text-red-500">{error}</p>
+        </div>
+      ) : issues.length === 0 ? (
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center dark:border-gray-800 dark:bg-gray-950">
+          <p className="text-gray-500 dark:text-gray-400">
+            No issues yet. Create one to get started.
+          </p>
+        </div>
+      ) : (
+        <IssueTable
+          issues={issues}
+          members={members}
+          workspaceSlug={workspaceSlug}
+          projectSlug={project.slug}
+          onEdit={(issue: Issue) => setEditingIssue(issue)}
+          onDelete={(issueId: string) => setDeletingIssueId(issueId)}
+          refresh={refresh}
+        />
+      )}
+
+      <Modal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        title="Create Issue"
+      >
+        <CreateIssueForm
+          projectId={project.id}
+          workspaceId={project.workspace_id}
+          members={members}
+          onSuccess={() => {
+            setIsCreateModalOpen(false);
+            
+          }}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={!!editingIssue}
+        onClose={() => setEditingIssue(null)}
+        title="Edit Issue"
+      >
+        {editingIssue && (
+          <UpdateIssueForm
+            issue={editingIssue}
+            projectId={project.id}
+            workspaceSlug={workspaceSlug}
+            projectSlug={project.slug}
+            members={members}
+            onSuccess={() => {
+              setEditingIssue(null);
+            }}
+          />
+        )}
+      </Modal>
+
+      {deletingIssueId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Delete Issue?
+            </h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              This action cannot be undone.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setDeletingIssueId(null)}
+                className="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  await deleteIssueAction(deletingIssueId);
+                  setDeletingIssueId(null);
+                  refresh();
+                }}
+                className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

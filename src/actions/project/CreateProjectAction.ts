@@ -1,4 +1,3 @@
-// app/actions/project/createProjectAction.ts
 "use server";
 import z from "zod";
 import { createProject } from "@/services/project/createProject";
@@ -35,7 +34,6 @@ export async function createProjectAction(prevState: any, formData: FormData) {
   if (!result.success && !result.data)
     return { success: false, error: result.error };
 
-
   if (!result.data?.slug) {
     return { success: false, error: result.error };
   }
@@ -45,6 +43,5 @@ export async function createProjectAction(prevState: any, formData: FormData) {
 
   return {
     success: true,
-    redirectTo: `/workspace/${workspace.slug}/project/${result.data.slug}`,
   };
 }

@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import ProfileProvider from "@/components/profile/ProfileProvider";
 import "./globals.css";
-import { Geist } from "next/font/google";
 import IssueProvider from "@/components/issue/IssueProvider";
 import ThemeSync from "@/components/ui/ThemeSync";
-import ThemeToggle from "@/components/Button/ThemeToggle";
-import WorkspaceSwitcher from "@/components/workspace/WorkspaceSwitcher";
 import WorkspaceProvider from "@/components/workspace/WorkspaceProvider";
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Nexus",
@@ -25,7 +20,7 @@ export default async function RootLayout({
       <head>
         <ThemeSync />
       </head>
-      <body className="bg-white dark:bg-black  ">
+      <body className="bg-white">
         <IssueProvider>
           <ProfileProvider>
             <WorkspaceProvider>{children}</WorkspaceProvider>
