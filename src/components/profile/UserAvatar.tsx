@@ -1,10 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/store/profileStore";
-import signOutAction from "@/actions/authentication/SignOutAction";
 import { useAuthStore } from "@/store/authStore";
+import ThemeToggle from "../Button/ThemeToggle";
 
 export default function UserAvatar() {
   const router = useRouter();
@@ -61,6 +61,7 @@ export default function UserAvatar() {
           >
             Invitations
           </Link>
+          <ThemeToggle />
           <button
             onClick={handleLogout}
             className="block w-full px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"

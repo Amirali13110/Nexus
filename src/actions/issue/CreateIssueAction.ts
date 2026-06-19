@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { createIssue } from "@/services/issue/createIssue";
-import { redirect } from "next/navigation";
 import type { ApiResult, Issue } from "@/lib/types";
 
 const createIssueSchema = z.object({

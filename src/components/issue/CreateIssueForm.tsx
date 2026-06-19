@@ -29,39 +29,72 @@ export default function CreateIssueForm({
         onSuccess();
       }
     },
-    [state],
+    [state, onSuccess],
   );
 
   if (!currentWorkspace || !currentProject) {
-    return <p>Loading workspace/project...</p>;
+    return (
+      <p className="text-sm text-gray-500 dark:text-gray-400 animate-pulse">
+        Loading workspace/project...
+      </p>
+    );
   }
 
   return (
-    <form action={formAction}>
+    <form action={formAction} className="space-y-6">
       <input type="hidden" name="projectId" value={projectId} />
       <input type="hidden" name="workspaceId" value={workspaceId} />
       <input type="hidden" name="projectSlug" value={currentProject.slug} />
       <input type="hidden" name="workspaceSlug" value={currentWorkspace.slug} />
-      <div>
-        <label htmlFor="title">Title *</label>
-        <input id="title" name="title" required disabled={isPending} />
+
+      <div className="space-y-1.5">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Title *
+        </label>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          required
+          disabled={isPending}
+          placeholder="Issue title"
+          className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+        />
       </div>
-      <div>
-        <label htmlFor="description">Description</label>
+
+      <div className="space-y-1.5">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Description
+        </label>
         <textarea
           id="description"
           name="description"
           rows={3}
           disabled={isPending}
+          placeholder="Add optional description..."
+          className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
         />
       </div>
-      <div>
-        <label htmlFor="status">Status</label>
+
+      <div className="space-y-1.5">
+        <label
+          htmlFor="status"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Status
+        </label>
         <select
           id="status"
           name="status"
           defaultValue="backlog"
           disabled={isPending}
+          className="w-full rounded-xl cursor-pointer border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         >
           <option value="backlog">Backlog</option>
           <option value="todo">Todo</option>
@@ -70,13 +103,20 @@ export default function CreateIssueForm({
           <option value="done">Done</option>
         </select>
       </div>
-      <div>
-        <label htmlFor="priority">Priority</label>
+
+      <div className="space-y-1.5">
+        <label
+          htmlFor="priority"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Priority
+        </label>
         <select
           id="priority"
           name="priority"
           defaultValue="0"
           disabled={isPending}
+          className="w-full cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         >
           <option value="0">No priority</option>
           <option value="1">Urgent</option>
@@ -85,13 +125,20 @@ export default function CreateIssueForm({
           <option value="4">Low</option>
         </select>
       </div>
-      <div>
-        <label htmlFor="assigneeId">Assignee</label>
+
+      <div className="space-y-1.5">
+        <label
+          htmlFor="assigneeId"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Assignee
+        </label>
         <select
           id="assigneeId"
           name="assigneeId"
           defaultValue=""
           disabled={isPending}
+          className="w-full  cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         >
           <option value="">Unassigned</option>
           {members.map((member) => (
@@ -102,14 +149,33 @@ export default function CreateIssueForm({
         </select>
       </div>
 
-      <div>
-        <label htmlFor="dueDate">Due date (optional)</label>
-        <input id="dueDate" name="dueDate" type="date" disabled={isPending} />
+      <div className="space-y-1.5">
+        <label
+          htmlFor="dueDate"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Due date (optional)
+        </label>
+        <input
+          id="dueDate"
+          name="dueDate"
+          type="date"
+          disabled={isPending}
+          className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+        />
       </div>
-      <button type="submit" disabled={isPending}>
+
+      {state && !state.success && (
+        <p className="text-sm text-red-500">{state.error}</p>
+      )}
+
+      <button
+        type="submit"
+        disabled={isPending}
+        className="w-full cursor-pointer rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
+      >
         {isPending ? "Creating..." : "Create Issue"}
       </button>
-      {state && !state.success && <p>{state.error}</p>}
     </form>
   );
 }

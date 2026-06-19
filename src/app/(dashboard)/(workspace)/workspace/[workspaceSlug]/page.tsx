@@ -8,7 +8,6 @@ import { getUserProfile } from "@/services/profile/getUserProfile";
 import MembersList from "@/components/member/MembersList";
 import getProjectsAction from "@/actions/project/GetProjectsAction";
 import { Project } from "@/lib/types";
-import Navbar from "@/components/ui/Navbar";
 
 export default async function WorkspacePage({
   params,
@@ -54,7 +53,6 @@ export default async function WorkspacePage({
 
   return (
     <div>
-      <Navbar />
       <WorkspaceView
         workspace={workspaceResult.workspace}
         projects={projects}

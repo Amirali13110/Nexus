@@ -6,5 +6,8 @@ export default async function signOutAction(token: string) {
   if (!result.success && result.error) {
     return { success: false, error: result.error };
   }
+
   handleSignOut();
+
+  return { success: true };
 }
