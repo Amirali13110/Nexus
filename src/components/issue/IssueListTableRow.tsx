@@ -1,7 +1,6 @@
 "use client";
 import type { Issue } from "@/lib/types";
 import Link from "next/link";
-
 const priorityConfig: Record<
   number,
   { label: string; color: string; icon: string }
@@ -63,34 +62,18 @@ const statusConfig: Record<string, { label: string; color: string }> = {
 
 interface IssueTableRowProps {
   issue: Issue;
-  role: string;
-  userId: string;
-  projectSlug: string;
-  workspaceSlug: string;
-  onEdit: (issue: Issue) => void;
-  onDelete: (issueId: string) => void;
 }
 
-export default function IssueTableRow({
-  issue,
-  role,
-  workspaceSlug,
-  projectSlug,
-  onEdit,
-  userId,
-  onDelete,
-}: IssueTableRowProps) {
+export default function IssueListTableRow({ issue }: IssueTableRowProps) {
   const priority = priorityConfig[issue.priority] ?? priorityConfig[0];
   const status = statusConfig[issue.status] ?? statusConfig.backlog;
-  const isAdmin = role === "admin" || role === "owner";
-  const hasAccess = isAdmin || issue.created_by === userId;
   const assigneeInitial = issue.assignee?.username?.[0]?.toUpperCase() || "?";
 
   return (
     <tr className="group hover:bg-gray-50 dark:hover:bg-gray-800/50">
       <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
         <Link
-          href={`/workspace/${workspaceSlug}/project/${projectSlug}/issue/${issue.id}`}
+          href={`/issue/${issue.id}`}
           className="font-medium text-gray-900 hover:text-[#0066ff] dark:text-white dark:hover:text-[#0066ff]"
         >
           {issue.title}
@@ -123,50 +106,6 @@ export default function IssueTableRow({
       </td>
       <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
         {issue.due_date ? new Date(issue.due_date).toLocaleDateString() : "—"}
-      </td>
-      <td className="px-4 py-3 text-right">
-        <div className="flex items-center justify-end gap-2">
-          <button
-            onClick={() => onEdit(issue)}
-            className="rounded p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-            aria-label="Edit issue"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-          </button>
-          {hasAccess && (
-            <button
-              onClick={() => onDelete(issue.id)}
-              className="rounded p-1 text-gray-400 transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400"
-              aria-label="Delete issue"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 6h18" />
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
-            </button>
-          )}
-        </div>
       </td>
     </tr>
   );

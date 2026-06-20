@@ -1,7 +1,7 @@
 "use server";
 import { getWorkspaceBySlug } from "@/services/workspace/getWorkspaceBySlug";
 
-export default async function GetWorkspaceBySlugAction(slug: string) {
+export default async function getWorkspaceBySlugAction(slug: string) {
   const result = await getWorkspaceBySlug(slug);
   if (result.error) {
     return { success: false, workspace: null, error: result.error };

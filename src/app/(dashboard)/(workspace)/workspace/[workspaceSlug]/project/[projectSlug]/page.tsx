@@ -1,5 +1,4 @@
-// app/workspace/[workspaceSlug]/project/[projectSlug]/page.tsx
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import getProjectBySlugAction from "@/actions/project/GetProjectBySlugAction";
 import getIssuesByProjectIdAction from "@/actions/issue/GetIssuesByProjectIdAction";
 import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
@@ -7,6 +6,8 @@ import ProjectView from "@/components/project/ProjectView";
 import { Issue, Member } from "@/lib/types";
 import ProjectInitializer from "@/components/project/ProjectInitializer";
 import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
+import { cookies } from "next/headers";
+import { getMemberRole } from "@/services/member/getMemberRole";
 
 export default async function ProjectPage({
   params,
@@ -59,6 +60,21 @@ export default async function ProjectPage({
   if (!issuesError) {
     issuesError = null;
   }
+
+  const cookieStore = await cookies();
+  const userCookie = cookieStore.get("auth_user")?.value;
+  let memberRole: string | null = null;
+  if (!userCookie) {
+    redirect("/signIn")
+  }
+  const { id: profileId } = JSON.parse(userCookie);
+  const roleResult = await getMemberRole(workspace.id, profileId);
+  if (roleResult.success) memberRole = roleResult.data;
+
+  if (!memberRole) {
+    return <p>Can't get member's role </p>;
+  }
+
   return (
     <div className="">
       <ProjectInitializer project={project} workspace={workspace} />
@@ -66,7 +82,9 @@ export default async function ProjectPage({
         project={project}
         issues={issues}
         members={members}
+        userId={profileId}
         error={issuesError}
+        role={memberRole}
         workspaceSlug={workspaceSlug}
       />
     </div>

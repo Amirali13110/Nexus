@@ -1,26 +1,13 @@
 "use client";
 import type { Issue, Member } from "@/lib/types";
-import IssueTableRow from "./IssueTableRow";
+import IssueListTableRow from "./IssueListTableRow";
 
-interface IssueTableProps {
+interface IssueListTableProps {
   issues: Issue[];
-  role: string;
-  workspaceSlug: string;
-  projectSlug: string;
-  userId: string;
-  onEdit: (issue: Issue) => void;
-  onDelete: (issueId: string) => void;
+
 }
 
-export default function IssueTable({
-  issues,
-  userId,
-  workspaceSlug,
-  projectSlug,
-  role,
-  onEdit,
-  onDelete,
-}: IssueTableProps) {
+export default function IssueListTable({ issues }: IssueListTableProps) {
   return (
     <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
@@ -36,16 +23,7 @@ export default function IssueTable({
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
           {issues.map((issue) => (
-            <IssueTableRow
-              key={issue.id}
-              workspaceSlug={workspaceSlug}
-              projectSlug={projectSlug}
-              issue={issue}
-              role={role}
-              userId={userId}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
+            <IssueListTableRow key={issue.id} issue={issue} />
           ))}
         </tbody>
       </table>

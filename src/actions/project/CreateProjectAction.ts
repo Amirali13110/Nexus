@@ -2,6 +2,8 @@
 import z from "zod";
 import { createProject } from "@/services/project/createProject";
 import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
+import { revalidatePath } from "next/cache";
+import { Workspace } from "@/lib/types";
 
 const createProjectSchema = z.object({
   name: z.string().min(1, "Project name is required").max(100),
@@ -39,8 +41,10 @@ export async function createProjectAction(prevState: any, formData: FormData) {
   }
 
   const workspaceResult = await getWorkspaceById(workspaceId);
-  const workspace = workspaceResult.success ? workspaceResult.data : null;
-
+  const workspace: Workspace = workspaceResult.success
+    ? workspaceResult.data
+    : null;
+  revalidatePath(`/workspace/${workspace.slug}`);
   return {
     success: true,
   };

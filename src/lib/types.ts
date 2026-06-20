@@ -110,13 +110,22 @@ export type Profile = {
 };
 
 //----------Issue Types----------
+export type IssueStatus =
+  | "backlog"
+  | "in_progress"
+  | "in_review"
+  | "done"
+  | "todo";
 
+export type IssuePriority = 0 | 1 | 2 | 3 | 4;
+export type SortField = "due_date" | "created_at" | "priority";
+export type SortOrder = "asc" | "desc";
 export interface Issue {
   id: string;
   title: string;
   description: string | null;
-  status: string;
-  priority: number;
+  status: IssueStatus;
+  priority: IssuePriority;
   assignee?: {
     id: string;
     username: string;

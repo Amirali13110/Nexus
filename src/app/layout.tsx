@@ -17,7 +17,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-white dark:bg-black">
+      <body className="bg-white ">
         <ThemeProvider>
           <IssueProvider>
             <ProfileProvider>

@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
 import { error } from "console";
+import { revalidatePath } from "next/cache";
 
 export async function acceptInvitationByIdAction(formData: FormData) {
   const invitationId = formData.get("invitationId") as string;
@@ -23,5 +24,6 @@ export async function acceptInvitationByIdAction(formData: FormData) {
   const workspaceResult = await getWorkspaceById(workspaceId);
 
   const workspace = workspaceResult.data;
+  revalidatePath("/");
   redirect(`/workspace/${workspace.slug}`);
 }

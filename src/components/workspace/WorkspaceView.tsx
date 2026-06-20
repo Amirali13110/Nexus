@@ -97,12 +97,10 @@ export default function WorkspaceView({
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const handleWorkspaceUpdate = () => {
-    router.refresh();
     setIsSettingsModalOpen(false);
   };
 
   const handleProjectCreated = () => {
-    router.refresh();
     setIsCreateProjectModalOpen(false);
   };
 

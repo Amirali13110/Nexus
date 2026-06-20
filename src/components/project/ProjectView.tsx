@@ -47,6 +47,8 @@ const PlusIcon = () => (
 
 interface ProjectViewProps {
   project: Project;
+  role: string;
+  userId:string;
   issues: Issue[];
   members: Member[];
   error: string | null;
@@ -57,15 +59,15 @@ export default function ProjectView({
   project,
   issues,
   members,
+  userId,
   error,
+  role,
   workspaceSlug,
 }: ProjectViewProps) {
   const router = useRouter();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingIssue, setEditingIssue] = useState<Issue | null>(null);
   const [deletingIssueId, setDeletingIssueId] = useState<string | null>(null);
-
-  const refresh = () => router.refresh();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 pt-20 md:px-8">
@@ -115,12 +117,12 @@ export default function ProjectView({
       ) : (
         <IssueTable
           issues={issues}
-          members={members}
+          onEdit={(issue: Issue) => setEditingIssue(issue)}
           workspaceSlug={workspaceSlug}
           projectSlug={project.slug}
-          onEdit={(issue: Issue) => setEditingIssue(issue)}
+          userId={userId}
+          role={role}
           onDelete={(issueId: string) => setDeletingIssueId(issueId)}
-          refresh={refresh}
         />
       )}
 
@@ -135,7 +137,6 @@ export default function ProjectView({
           members={members}
           onSuccess={() => {
             setIsCreateModalOpen(false);
-            
           }}
         />
       </Modal>
@@ -177,9 +178,12 @@ export default function ProjectView({
               </button>
               <button
                 onClick={async () => {
-                  await deleteIssueAction(deletingIssueId);
+                  await deleteIssueAction({
+                    deletingIssueId,
+                    workspaceSlug,
+                    projectSlug: project.slug,
+                  });
                   setDeletingIssueId(null);
-                  refresh();
                 }}
                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700"
               >
