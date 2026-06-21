@@ -3,7 +3,6 @@ import { useActionState, useEffect } from "react";
 import { updateWorkspaceAction } from "@/actions/workspace/UpdateWorkspaceAction";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 import type { Workspace } from "@/lib/types";
-import useRedirectAction from "@/hooks/useRedirectAction";
 
 interface UpdateWorkspaceFormProps {
   onSuccess: () => void;

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getWorkspaceBySlug } from "@/services/workspace/getWorkspaceBySlug";
 import { getMemberByProfileId } from "@/services/member/getMemberByProfileId";
+import MemberView from "@/components/member/MemberView";
 export default async function MemberProfilePage({
   params,
 }: {
@@ -16,17 +17,5 @@ export default async function MemberProfilePage({
   if (!memberResult.success) notFound();
   const member = memberResult.data;
   if (!member) notFound();
-  return (
-    <div>
-      <h1>{member.full_name || member.username}</h1>
-      <p>Username: {member.username}</p>
-      <p>Email: {member.email}</p>
-      <p>Role: {member.role}</p>
-      <p>Joined: {new Date(member.joined_at).toLocaleDateString()}</p>
-      {member.bio && <p>Bio: {member.bio}</p>}
-      {member.avatar_url && (
-        <img src={member.avatar_url} alt="Avatar" width="100" />
-      )}
-    </div>
-  );
+  return <MemberView member={member} />;
 }

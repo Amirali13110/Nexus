@@ -3,7 +3,7 @@ import { getWorkspaceBySlug } from "@/services/workspace/getWorkspaceBySlug";
 import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
 import { getMemberRole } from "@/services/member/getMemberRole";
 import { notFound } from "next/navigation";
-import MemberList from "@/components/member/MembersList";
+import MembersList from "@/components/member/MembersList";
 export default async function WorkspaceMembersPage({
   params,
 }: {
@@ -35,17 +35,13 @@ export default async function WorkspaceMembersPage({
   const members = membersResult.success ? membersResult.data : [];
   if (!members) notFound();
 
-
   return (
-    <div>
-      <h1>Members of {workspace.name}</h1>
-      <MemberList
-        members={members}
-        workspaceId={workspace.id}
-        workspaceSlug={workspaceSlug}
-        currentUserRole={currentUserRole}
-        currentUserId={currentUserId}
-      />
-    </div>
+    <MembersList
+      members={members}
+      workspaceId={workspace.id}
+      workspaceSlug={workspaceSlug}
+      currentUserRole={currentUserRole}
+      currentUserId={currentUserId}
+    />
   );
 }

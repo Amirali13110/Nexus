@@ -3,19 +3,23 @@
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
-import type { ApiResult, Issue, Profile } from "@/lib/types";
+import type { ApiResult, Issue, Profile, User } from "@/lib/types";
 
 export async function getAllIssues(): Promise<ApiResult<Issue[]>> {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
-  if (!encodedToken) return { success: false, error: "Unauthorized" };
+  const userCookie = cookieStore.get("auth_user")?.value;
+  if (!encodedToken || !userCookie)
+    return { success: false, error: "Unauthorized" };
+  const user = JSON.parse(userCookie);
+
   const accessToken = decodeURIComponent(encodedToken);
   const headers = {
     apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const issuesUrl = `${supabaseUrl}/rest/v1/issues?select=*&order=created_at.desc`;
+  const issuesUrl = `${supabaseUrl}/rest/v1/issues?select=*&assignee_id=eq.${user.id}&order=created_at.desc`;
   let issues: Issue[] = [];
   try {
     const response = await axiosWithProxy.get(issuesUrl, { headers });

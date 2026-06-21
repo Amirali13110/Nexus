@@ -200,7 +200,7 @@ export default function IssueView({
                 Priority
               </span>
               <span
-                className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium ${currentPriority.color && !currentPriority.color.includes(" ") ? "" : "px-2 py-1"}`}
+                className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium ${currentPriority.color}`}
               >
                 <span className="font-mono">{currentPriority.icon}</span>
                 <span>{currentPriority.label}</span>

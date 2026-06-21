@@ -44,10 +44,11 @@ export async function inviteWorkspaceMemberAction(
   const profileExists = await checkProfileExistsByEmail(email);
 
   const invitationResult = await createInvitation({ workspaceId, email, role });
+  console.log(invitationResult);
   if (!invitationResult.success || !invitationResult.data) {
     return {
       success: false,
-      error: "Failed to create invitation (missing token)",
+      error: invitationResult.error || "Failed to create invitation",
     };
   }
   const invitationArray = Array.isArray(invitationResult.data)

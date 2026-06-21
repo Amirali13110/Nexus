@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { getPendingInvitationsByEmail } from "@/services/invitation/getPendingInvitationByEmail";
 import InvitationList from "@/components/invitation/InvitationList";
+import { Invitation } from "@/lib/types";
 
 export default async function InvitationsPage() {
   const cookieStore = await cookies();
@@ -15,8 +16,7 @@ export default async function InvitationsPage() {
 
   return (
     <div>
-      <h1>Pending Workspace Invitations</h1>
-      <InvitationList invitations={invitations} />
+      <InvitationList invitations={invitations as Invitation[]} />
     </div>
   );
 }
