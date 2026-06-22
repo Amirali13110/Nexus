@@ -2,9 +2,10 @@
 import { useActionState, useEffect } from "react";
 import { createProjectAction } from "@/actions/project/CreateProjectAction";
 import useRedirectAction from "@/hooks/useRedirectAction";
+import Spinner from "../ui/Spinner";
 
 interface CreateProjectFormProps {
-  onSuccess: () => void;
+  onSuccess?: () => void;
   workspaceId: string;
 }
 
@@ -21,7 +22,7 @@ export default function CreateProjectForm({
 
   useEffect(() => {
     if (state?.success) {
-      onSuccess();
+      onSuccess?.();
     }
   }, [state, onSuccess]);
 
@@ -71,7 +72,7 @@ export default function CreateProjectForm({
         disabled={isPending}
         className="w-full rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
       >
-        {isPending ? "Creating..." : "Create Project"}
+        {isPending ? <Spinner size="sm" color="white"/> : "Create Project"}
       </button>
     </form>
   );

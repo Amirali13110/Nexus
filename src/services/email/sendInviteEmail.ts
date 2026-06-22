@@ -16,8 +16,6 @@ export async function sendInviteEmail({
   }
 
   const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invite/accept/${invitationToken}`;
-  // Later when we get a domain we can send actual email to them
-  console.log("Invite link:", inviteLink);
   const workspaceDisplay = workspaceName
     ? `workspace "${workspaceName}"`
     : "a workspace";
@@ -26,7 +24,6 @@ export async function sendInviteEmail({
     const response = await axios.post(
       "https://api.resend.com/emails",
       {
-        // from: "Nexus <noreply@yourdomain.com>", // use your verified domain
         from: "Acme <onboarding@resend.dev>",
         to: [to],
         subject: "You are invited to join a workspace",

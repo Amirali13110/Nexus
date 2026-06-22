@@ -9,6 +9,7 @@ import Modal from "@/components/ui/Modal";
 import UpdateWorkspaceForm from "./UpdateWorkspaceForm";
 import DeleteWorkspaceButton from "@/components/workspace/DeleteWorkspaceButton";
 import type { Workspace, Project } from "@/lib/types";
+import { useWorkspaceStore } from "@/store/workspaceStore";
 
 const MembersIcon = () => (
   <svg
@@ -95,6 +96,7 @@ export default function WorkspaceView({
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] =
     useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const { fetchWorkspaces } = useWorkspaceStore();
 
   const handleWorkspaceUpdate = () => {
     setIsSettingsModalOpen(false);

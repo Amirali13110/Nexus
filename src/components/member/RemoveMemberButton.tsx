@@ -1,6 +1,7 @@
 import { removeMemberAction } from "@/actions/member/RemoveMemberAction";
 import { Member } from "@/lib/types";
 import { useActionState, useState } from "react";
+import Spinner from "../ui/Spinner";
 
 export default function RemoveMemberButton({
   workspaceId,
@@ -18,9 +19,11 @@ export default function RemoveMemberButton({
   member: Member;
 }) {
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
   const [error, setError] = useState<string>("");
 
   async function handleRemoveMember() {
+    setIsRemoving(true);
     const result = await removeMemberAction({
       workspaceId,
       workspaceSlug,
@@ -28,11 +31,12 @@ export default function RemoveMemberButton({
       profileId,
     });
     if (!result.success && result.error) {
+      setIsRemoving(false);
       setError(result.error);
     }
-    setShowConfirm(false)
-    onSuccess()
-    
+    setShowConfirm(false);
+    onSuccess();
+    setIsRemoving(false);
   }
   return (
     <div>
@@ -63,7 +67,11 @@ export default function RemoveMemberButton({
                 onClick={() => handleRemoveMember()}
                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700"
               >
-                Yes, Remove Member
+                {isRemoving ? (
+                  <Spinner size="sm" color="white" />
+                ) : (
+                  "Yes, Remove Member"
+                )}
               </button>
             </div>
           </div>

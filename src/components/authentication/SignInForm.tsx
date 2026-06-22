@@ -1,20 +1,28 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import { signInAction } from "@/actions/authentication/SignInAction";
 import useRedirectAction from "@/hooks/useRedirectAction";
 import FormCard from "../Form/FormCard";
-import FormButton from "../Form/FormButton";
-import FormInput from "../Form/FormInput";
+import Spinner from "../ui/Spinner";
+import { toast } from "sonner";
 
 export default function SignInFormNew() {
   const [state, formAction, isPending] = useActionState(signInAction, null);
   useRedirectAction(state);
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(
+    function () {
+      if (state?.error) {
+        toast.error(state.error);
+      }
+    },
+    [state?.error],
+  );
+
   return (
     <div className="relative flex min-h-screen flex-grow items-center justify-center overflow-hidden bg-gray-50 dark:bg-black">
-      {/* Background decoration (same as sign‑up) */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-10">
         <div
           className="absolute inset-0 h-full w-full"
@@ -34,25 +42,34 @@ export default function SignInFormNew() {
           subtitle="Welcome back! Please enter your details."
         >
           <form action={formAction} className="space-y-4">
-            {/* Identifier (username or email) */}
-            <FormInput
+            <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+              Username or email
+            </label>
+            <input
               name="identifier"
               type="text"
               placeholder="Username or email"
-              label="Username or email"
               required
               disabled={isPending}
+              className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
             />
+            {state?.fieldErrors?.identifier && (
+              <p className="text-xs text-red-500 mt-1.5 font-medium">
+                {state.fieldErrors.identifier[0]}
+              </p>
+            )}
 
-            {/* Password with eye toggle */}
             <div className="relative">
-              <FormInput
+              <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                Password
+              </label>
+              <input
                 name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                label="Password"
                 required
                 disabled={isPending}
+                className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
               />
               <button
                 type="button"
@@ -100,11 +117,13 @@ export default function SignInFormNew() {
                   </svg>
                 )}
               </button>
+              {state?.fieldErrors?.password && (
+                <p className="text-xs text-red-500 mt-1.5 font-medium">
+                  {state.fieldErrors.password[0]}
+                </p>
+              )}
             </div>
 
-            {state?.error && (
-              <p className="text-sm text-red-500">{state.error}</p>
-            )}
             <div className="text-right">
               <Link
                 href="/forgetPassword"
@@ -113,9 +132,15 @@ export default function SignInFormNew() {
                 Forgot password?
               </Link>
             </div>
-            <FormButton type="submit" loading={isPending}>
-              SIGN IN
-            </FormButton>
+            <button
+              className="w-full rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
+              type="submit"
+            >
+              {isPending ? <Spinner size="sm" color="white" /> : "Sign In"}
+            </button>
+            {state?.error && (
+              <p className="text-sm text-red-500">{state.error}</p>
+            )}
           </form>
 
           <div className="mt-6 border-t border-gray-200 dark:border-[#424656] pt-4 text-center">

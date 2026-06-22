@@ -11,7 +11,7 @@ interface ProjectState {
   error: string | null;
   setProjects: (projects: Project[]) => void;
   setCurrentProject: (project: Project | null) => void;
-  setLoading: (isLoading: boolean) => void;
+  setIsLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
 }
 
@@ -22,6 +22,6 @@ export const useProjectStore = create<ProjectState>((set) => ({
   error: null,
   setProjects: (projects) => set({ projects }),
   setCurrentProject: (project) => set({ currentProject: project }),
-  setLoading: (isLoading) => set({ isLoading }),
+  setIsLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
 }));

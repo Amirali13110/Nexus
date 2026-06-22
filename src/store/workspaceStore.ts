@@ -12,6 +12,7 @@ interface WorkspaceState {
   setIsLoading: (isLoading: boolean) => void;
   setError: (error: string) => void;
   fetchWorkspaces: () => Promise<void>;
+  updateWorkspaceInList: (updatedWorkspace: Workspace) => void;
 }
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
@@ -22,13 +23,18 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
 
   setWorkspaces: (workspaces) => set({ workspaces, isLoading: false }),
   setCurrentWorkspace: (workspace) => set({ currentWorkspace: workspace }),
+  updateWorkspaceInList:(updatedWorkspace) => 
+    set((state)=>({
+      workspaces: state.workspaces.map((w)=> w.id=== updatedWorkspace.id ? updatedWorkspace : w)
+  })),
+
   setIsLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error, isLoading: false }),
   fetchWorkspaces: async () => {
     set({ isLoading: true, error: null });
     try {
       const result = await getWorkspacesAction();
-
+      console.log("Fetching workspace again")
       if (result) {
         if (result.success && result.workspaces) {
           set({ workspaces: result.workspaces, isLoading: false });

@@ -1,6 +1,7 @@
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export async function deleteWorkspace(workspaceId: string) {
@@ -17,7 +18,7 @@ export async function deleteWorkspace(workspaceId: string) {
   const url = `${supabaseUrl}/rest/v1/workspaces?id=eq.${workspaceId}`;
   try {
     await axiosWithProxy.delete(url, { headers });
-    revalidatePath("/workspaces");
+
     return { success: true };
   } catch (error: any) {
     const errorMsg =

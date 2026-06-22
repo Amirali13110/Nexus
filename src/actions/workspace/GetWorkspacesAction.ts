@@ -1,6 +1,5 @@
 "use server";
 import { getWorkspaces } from "@/services/workspace/getWorkspaces";
-import { error } from "console";
 
 export default async function getWorkspacesAction() {
   const result = await getWorkspaces();

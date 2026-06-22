@@ -4,9 +4,7 @@ import { Workspace } from "@/lib/types";
 import { addWorkspaceMember } from "@/services/member/addWorkspaceMember";
 import { createWorkspace } from "@/services/workspace/createWorkspace";
 import { slugify } from "@/utils/slugify";
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import z from "zod";
 
 const createWorkspaceSchema = z.object({

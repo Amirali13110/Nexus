@@ -7,6 +7,8 @@
 export type ApiResult<T = any> = {
   success: boolean;
   data?: T;
+  fieldErrors?: Record<string, string[]>;
+  redirectTo?: string;
   error?: string;
 };
 

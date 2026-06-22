@@ -40,7 +40,6 @@ export default async function ProjectPage({
     : [];
 
   const workspaceResult = await getWorkspaceById(project.workspace_id);
-  console.log(workspaceResult);
   if (!workspaceResult.success) notFound();
   const workspace = workspaceResult.data;
   if (!workspace) notFound();

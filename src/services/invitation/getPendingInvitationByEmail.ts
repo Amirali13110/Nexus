@@ -41,7 +41,6 @@ export async function getPendingInvitationsByEmail(
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log(workspacesRes);
     const workspaces = workspacesRes.data;
 
     const workspaceMap = new Map(workspaces.map((ws) => [ws.id, ws]));

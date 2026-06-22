@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import signOutAction from "@/actions/authentication/SignOutAction";
+import Spinner from "../ui/Spinner";
 
 interface SignOutButtonProps {
   profileToken: string;
@@ -47,8 +48,7 @@ export default function SignOutButton({ profileToken }: SignOutButtonProps) {
           <polyline points="16 17 21 12 16 7" />
           <line x1="21" x2="9" y1="12" y2="12" />
         </svg>
-        {isSigningOut ? "Signing out..." : "Sign out"}
-      </button>
+        Sign out      </button>
 
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -71,7 +71,7 @@ export default function SignOutButton({ profileToken }: SignOutButtonProps) {
                 onClick={handleSignOut}
                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700"
               >
-                Yes, Sign out
+               { isSigningOut ? <Spinner size="sm" color="white" />:" Yes, Sign out"}
               </button>
             </div>
           </div>

@@ -5,17 +5,19 @@ import { redirect } from "next/navigation";
 import { setAuthCookies } from "./AuthActions";
 import { signIn } from "@/services/authentication/SignIn";
 import { getUserProfile } from "../../services/profile/getUserProfile";
-import { Profile } from "@/lib/types";
+import { ApiResult, Profile, User } from "@/lib/types";
 import { cookies } from "next/headers";
 import { acceptInvitationByTokenAction } from "../invitation/AcceptInvitationByTokenAction";
-import { useAuthStore } from "@/store/authStore";
 
 const signInSchema = z.object({
   identifier: z.string().min(3, "Username or Email is too short"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string(),
 });
 
-export async function signInAction(prevState: any, formData: FormData) {
+export async function signInAction(
+  prevState: any,
+  formData: FormData,
+): Promise<ApiResult<User>> {
   const identifier = formData.get("identifier") as string;
   const password = formData.get("password") as string;
 
@@ -23,7 +25,7 @@ export async function signInAction(prevState: any, formData: FormData) {
   if (!validation.success) {
     return {
       success: false,
-      errors: validation.error.flatten().fieldErrors,
+      fieldErrors: validation.error.flatten().fieldErrors,
     };
   }
 

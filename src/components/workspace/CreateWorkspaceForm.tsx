@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { createWorkspaceAction } from "@/actions/workspace/CreateWorkspaceAction";
 import useRedirectAction from "@/hooks/useRedirectAction";
 import { useWorkspaceStore } from "@/store/workspaceStore";
+import Spinner from "../ui/Spinner";
 
 interface CreateWorkspaceFormProps {
   onSuccess?: () => void;
@@ -66,13 +67,12 @@ export default function CreateWorkspaceForm({
 
       {state?.error && <p className="text-sm text-red-500">{state.error}</p>}
 
-      {/* Submit button */}
       <button
         type="submit"
         disabled={isPending}
         className="w-full rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
       >
-        {isPending ? "Creating..." : "Create Workspace"}
+        {isPending ? <Spinner size="sm" color="white" /> : "Create Workspace"}
       </button>
     </form>
   );

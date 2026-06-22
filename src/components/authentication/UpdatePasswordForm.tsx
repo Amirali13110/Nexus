@@ -2,9 +2,8 @@
 import { useActionState, useState } from "react";
 import useRedirectAction from "@/hooks/useRedirectAction";
 import FormCard from "../Form/FormCard";
-import FormInput from "../Form/FormInput";
-import FormButton from "../Form/FormButton";
 import updatePasswordAction from "@/actions/authentication/UpdatePasswordAction";
+import Spinner from "../ui/Spinner";
 
 export default function UpdatePasswordForm() {
   const [state, formAction, isPending] = useActionState(
@@ -36,7 +35,6 @@ export default function UpdatePasswordForm() {
 
   return (
     <div className="relative flex h-screen flex-grow items-center justify-center overflow-hidden bg-gray-50 dark:bg-black">
-      {/* Background decoration */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-10">
         <div
           className="absolute inset-0 h-full w-full"
@@ -56,17 +54,19 @@ export default function UpdatePasswordForm() {
           subtitle="Enter your new password below."
         >
           <form action={formAction} className="space-y-4">
-            {/* New password with eye toggle */}
             <div className="relative">
-              <FormInput
+              <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                New password
+              </label>
+              <input
                 name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                label="New password"
                 required
                 disabled={isPending}
                 value={password}
                 onChange={handlePasswordChange}
+                className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
               />
               <button
                 type="button"
@@ -104,17 +104,19 @@ export default function UpdatePasswordForm() {
               </button>
             </div>
 
-            {/* Confirm password with eye toggle */}
             <div className="relative">
-              <FormInput
+              <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                Confirm new password
+              </label>
+              <input
                 name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="••••••••"
-                label="Confirm new password"
                 required
                 disabled={isPending}
                 value={confirmPassword}
                 onChange={handleConfirmChange}
+                className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
               />
               <button
                 type="button"
@@ -164,13 +166,17 @@ export default function UpdatePasswordForm() {
               </p>
             )}
 
-            <FormButton
+            <button
               type="submit"
-              loading={isPending}
+              className="w-full rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
               disabled={!!passwordError}
             >
-              UPDATE PASSWORD
-            </FormButton>
+              {isPending ? (
+                <Spinner size="sm" color="white" />
+              ) : (
+                "Update Password"
+              )}
+            </button>
           </form>
         </FormCard>
       </div>

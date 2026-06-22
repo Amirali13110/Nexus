@@ -22,7 +22,6 @@ export default function InvitationList({
   return (
     <ul className="space-y-3 max-w-2xl mt-3 mx-auto">
       {invitations.map((inv) => {
-        console.log(inv)
         return (
           <li
             key={inv.id}

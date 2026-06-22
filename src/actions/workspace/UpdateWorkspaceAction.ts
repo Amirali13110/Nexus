@@ -29,18 +29,13 @@ export async function updateWorkspaceAction(
 
   const result = await updateWorkspace({ workspaceId, name, description });
 
+
   if (!result.success) return { success: false, error: result.error };
 
-  const slug = result.data?.slug;
-
-  revalidatePath(`/workspace/${slug}`);
-  revalidatePath(`/`);
-  if (result.success) {
-    redirect(`/workspace/${slug}`);
-  }
 
   return {
     success: true,
+    redirectTo: result.redirectTo,
     data: result.data,
   };
 }

@@ -3,6 +3,8 @@ import { useActionState, useEffect } from "react";
 import { updateWorkspaceAction } from "@/actions/workspace/UpdateWorkspaceAction";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 import type { Workspace } from "@/lib/types";
+import useRedirectAction from "@/hooks/useRedirectAction";
+import Spinner from "../ui/Spinner";
 
 interface UpdateWorkspaceFormProps {
   onSuccess: () => void;
@@ -13,18 +15,22 @@ export default function UpdateWorkspaceForm({
   onSuccess,
   workspace,
 }: UpdateWorkspaceFormProps) {
-  const { setCurrentWorkspace } = useWorkspaceStore();
+  const { setCurrentWorkspace, fetchWorkspaces } = useWorkspaceStore();
   const [state, formAction, isPending] = useActionState(
     updateWorkspaceAction,
     null,
   );
+  useRedirectAction(state);
 
   useEffect(() => {
-    if (state?.success && state.data) {
-      setCurrentWorkspace(state.data);
+    if (state?.success) {
+      fetchWorkspaces();
       onSuccess();
+      if (state.data) {
+        setCurrentWorkspace(state.data);
+      }
     }
-  }, [state, setCurrentWorkspace, onSuccess]);
+  }, [state?.success, setCurrentWorkspace, onSuccess, fetchWorkspaces]);
 
   return (
     <form action={formAction} className="space-y-6">
@@ -72,7 +78,7 @@ export default function UpdateWorkspaceForm({
         disabled={isPending}
         className="w-full rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
       >
-        {isPending ? "Saving..." : "Save Changes"}
+        {isPending ? <Spinner size="sm" color="white" /> : "Save Changes"}
       </button>
     </form>
   );

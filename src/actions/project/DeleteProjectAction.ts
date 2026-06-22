@@ -9,7 +9,10 @@ export async function deleteProjectAction(
 ) {
   const result = await deleteProject(projectId);
   if (!result.success) throw new Error(result.error);
-  revalidatePath(`/workspace/${workspaceSlug}`);
+  if (result.success) {
+    revalidatePath(`/workspace/${workspaceSlug}`);
+    redirect(`/workspace/${workspaceSlug}`);
+  }
   return {
     success: true,
   };

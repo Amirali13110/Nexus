@@ -4,9 +4,8 @@ import Link from "next/link";
 import { signUpAction } from "@/actions/authentication/SignUpAction";
 
 import FormCard from "../Form/FormCard";
-import FormInput from "../Form/FormInput";
-import FormButton from "../Form/FormButton";
 import useRedirectAction from "@/hooks/useRedirectAction";
+import Spinner from "../ui/Spinner";
 
 export default function SignUpForm() {
   const [state, formAction, isPending] = useActionState(signUpAction, null);
@@ -57,43 +56,61 @@ export default function SignUpForm() {
         >
           <form action={formAction} className="space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <FormInput
-                name="fullname"
-                type="text"
-                placeholder="John Doe"
-                label="Full Name (Optional)"
-                disabled={isPending}
-              />
-              <FormInput
-                name="username"
-                type="text"
-                placeholder="jdoe_admin"
-                label="Username"
+              <div>
+                <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                  Full Name (Optional)
+                </label>
+                <input
+                  name="fullname"
+                  type="text"
+                  placeholder="John Doe"
+                  disabled={isPending}
+                  className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                  Username
+                </label>
+                <input
+                  name="username"
+                  type="text"
+                  placeholder="jdoe_admin"
+                  required
+                  disabled={isPending}
+                  className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                Email Address
+              </label>
+              <input
+                name="email"
+                type="email"
+                placeholder="operator@nexus.systems"
                 required
                 disabled={isPending}
+                className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
               />
             </div>
 
-            <FormInput
-              name="email"
-              type="email"
-              placeholder="operator@nexus.systems"
-              label="Email Address"
-              required
-              disabled={isPending}
-            />
-
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="relative">
-                <FormInput
+                <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                  Password
+                </label>
+                <input
                   name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  label="Password"
                   required
                   disabled={isPending}
                   value={password}
                   onChange={handlePasswordChange}
+                  className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
                 />
                 <button
                   type="button"
@@ -101,7 +118,6 @@ export default function SignUpForm() {
                   className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   {showPassword ? (
-                    // Eye open (visible)
                     <svg
                       width="20"
                       height="20"
@@ -125,7 +141,6 @@ export default function SignUpForm() {
                       />
                     </svg>
                   ) : (
-                    // Eye closed (hidden)
                     <svg
                       width="20"
                       height="20"
@@ -145,15 +160,18 @@ export default function SignUpForm() {
                 </button>
               </div>
               <div className="relative">
-                <FormInput
+                <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
+                  Confirm Password
+                </label>
+                <input
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  label="Confirm Password"
                   required
                   disabled={isPending}
                   value={confirmPassword}
                   onChange={handleConfirmChange}
+                  className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
                 />
                 <button
                   type="button"
@@ -211,13 +229,13 @@ export default function SignUpForm() {
               <p className="text-sm text-red-500">{state.error}</p>
             )}
 
-            <FormButton
+            <button
               type="submit"
-              loading={isPending}
+              className="w-full rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
               disabled={!!passwordError}
             >
-              CREATE ACCOUNT
-            </FormButton>
+              {isPending ? <Spinner size="sm" color="white"/> : "Create Account"}
+            </button>
           </form>
 
           <div className="mt-6 border-t border-gray-200 dark:border-[#424656] pt-4 text-center">

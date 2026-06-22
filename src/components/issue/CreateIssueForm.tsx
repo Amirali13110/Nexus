@@ -4,6 +4,7 @@ import { createIssueAction } from "@/actions/issue/CreateIssueAction";
 import type { Member } from "@/lib/types";
 import { useProjectStore } from "@/store/projectStore";
 import { useWorkspaceStore } from "@/store/workspaceStore";
+import Spinner from "../ui/Spinner";
 
 export default function CreateIssueForm({
   onSuccess,
@@ -175,7 +176,7 @@ export default function CreateIssueForm({
         disabled={isPending}
         className="w-full cursor-pointer rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
       >
-        {isPending ? "Creating..." : "Create Issue"}
+        {isPending ? <Spinner size="sm" color="white" /> : "Create Issue"}
       </button>
     </form>
   );

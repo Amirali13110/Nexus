@@ -5,12 +5,16 @@ import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/store/profileStore";
 import { useAuthStore } from "@/store/authStore";
 import ThemeToggle from "../Button/ThemeToggle";
+import Spinner from "../ui/Spinner";
 
 export default function UserAvatar() {
   const router = useRouter();
   const { profile } = useProfileStore();
   const { signOut } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,7 +28,9 @@ export default function UserAvatar() {
   }, []);
 
   const handleLogout = async () => {
+    setIsSigningOut(true);
     signOut();
+    setIsSigningOut(false);
     router.push("/signIn");
   };
 
@@ -63,11 +69,42 @@ export default function UserAvatar() {
           </Link>
           <ThemeToggle />
           <button
-            onClick={handleLogout}
+            onClick={() => setShowConfirm(true)}
             className="block w-full px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
           >
             Log out
           </button>
+          {showConfirm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+              <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Do you want to sign out?
+                </h3>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  This action cannot be undone. All projects and issues will be
+                  permanently removed.
+                </p>
+                <div className="mt-6 flex justify-end gap-3">
+                  <button
+                    onClick={() => setShowConfirm(false)}
+                    className="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700"
+                  >
+                    {isSigningOut ? (
+                      <Spinner size="sm" color="white" />
+                    ) : (
+                      " Yes, Sign out"
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
