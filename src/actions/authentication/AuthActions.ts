@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { signOut } from "../../services/authentication/SignOut";
+import { getRefreshToken } from "@/services/authentication/getRefreshToken";
 
 export async function setAuthCookies(data: any) {
   const cookieStore = await cookies();
@@ -14,22 +15,47 @@ export async function setAuthCookies(data: any) {
   cookieStore.set("access_token", encodedAccessToken, {
     httpOnly: true,
     secure: isProd,
-    maxAge: 60 * 60, // 30 days
+    sameSite: "lax",
+    maxAge: 30,
     path: "/",
   });
   cookieStore.set("refresh_token", encodeURIComponent(refreshToken), {
     httpOnly: true,
     secure: isProd,
-    maxAge: 60 * 60, // 30 days
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 30,
     path: "/",
   });
   cookieStore.set("auth_user", JSON.stringify(data.user), {
     httpOnly: false,
     secure: isProd,
     sameSite: "lax",
-    maxAge: 60 * 60,
+    maxAge: 60,
     path: "/",
   });
+}
+
+export async function refreshAuthCookies(refreshToken: string) {
+  try {
+    const freshPayload = await getRefreshToken(refreshToken);
+
+    await setAuthCookies({
+      access_token: freshPayload.access_token,
+      refresh_token: freshPayload.refresh_token,
+      user: freshPayload.user,
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Token recharge loop failed:", error);
+
+    const cookieStore = await cookies();
+    cookieStore.delete("access_token");
+    cookieStore.delete("refresh_token");
+    cookieStore.delete("auth_user");
+
+    return { success: false, error: "Session expired" };
+  }
 }
 
 export async function setUserCookie(user: any) {

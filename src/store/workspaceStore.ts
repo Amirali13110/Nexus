@@ -34,7 +34,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const result = await getWorkspacesAction();
-      console.log("Fetching workspace again")
       if (result) {
         if (result.success && result.workspaces) {
           set({ workspaces: result.workspaces, isLoading: false });

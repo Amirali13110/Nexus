@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { validateUser } from "./services/authentication/ValidateUser";
+import { refreshAuthCookies } from "./actions/authentication/AuthActions";
+import { redirect } from "next/navigation";
 
 export async function proxy(request: NextRequest) {
-  const token = request.cookies.get("access_token")?.value;
-
+  const accessToken = request.cookies.get("access_token")?.value;
+  const refreshToken = request.cookies.get("refresh_token")?.value;
   const { pathname } = request.nextUrl;
   const isCallbackPage = pathname.startsWith("/callback");
   const isAuthPage =
@@ -12,19 +13,30 @@ export async function proxy(request: NextRequest) {
     pathname === "/signUp" ||
     pathname === "/forgetPassword";
   const isProtectedPage =
-    pathname.startsWith("/") && !isAuthPage && !isCallbackPage;
+    pathname.startsWith("/") && !isAuthPage && !isCallbackPage ;
 
   const isInviteRoute = pathname.startsWith("/invite/accept");
 
-  if (isProtectedPage && !token && !isInviteRoute) {
+  if (isProtectedPage && !accessToken && refreshToken) {
+    try {
+      const result = await refreshAuthCookies(refreshToken);
+      if (!result.success) {
+        redirect("/signIn");
+      }
+    } catch (err: any) {
+      redirect("/signIn");
+    }
+  }
+
+  if (isProtectedPage && !accessToken && !isInviteRoute) {
     return NextResponse.redirect(new URL("/signIn", request.url));
   }
 
-  if (isAuthPage && token) {
+  if (isAuthPage && accessToken) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  if (token && isAuthPage) {
+  if (accessToken && isAuthPage) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -32,7 +44,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|public|callback).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|public|callback).*)"],
 };

@@ -11,9 +11,7 @@ export default function ProfileView() {
   const [isShowUpdateModal, setIsShowUpdateModal] = useState(false);
   const { profile } = useProfileStore();
   const { access_token } = useAuthStore();
-  if (!access_token) {
-    redirect("/signIn");
-  }
+
   const profileDetails = [
     {
       label: "Bio",
@@ -83,25 +81,6 @@ export default function ProfileView() {
             <div className="w-32 h-32 rounded-full bg-[#0066ff] flex items-center justify-center text-white shadow-xl border-4 border-white dark:border-[#131313] overflow-hidden">
               <span className="text-4xl font-bold">A</span>
             </div>
-            {/* <button
-              type="button"
-              className="absolute bottom-0 right-0 bg-[#0050cb] dark:bg-[#0066ff] text-white p-2 rounded-full border-2 border-white dark:border-[#0a0a0a] shadow-md active:scale-90 transition-transform flex items-center justify-center"
-              aria-label="Edit avatar"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-[16px] h-[16px]"
-              >
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-              </svg>
-            </button> */}
           </div>
           <div className="mt-6 text-center">
             <h1 className="text-2xl font-semibold tracking-tight text-[#191c1e] dark:text-white">
@@ -156,7 +135,7 @@ export default function ProfileView() {
             Edit Profile
           </button>
 
-          <SignOutButton profileToken={access_token} />
+          <SignOutButton profileToken={access_token as string} />
         </section>
       </main>
 

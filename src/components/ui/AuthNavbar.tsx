@@ -11,9 +11,7 @@ export default function AuthNavbar() {
           <div className="h-7 w-7 sm:h-8 sm:w-8">
             <Logo />
           </div>
-          <span className="hidden text-lg font-bold tracking-tighter text-[#0066ff] sm:inline sm:text-2xl">
-            NEXUS
-          </span>
+     
         </Link>
         <AuthThemeToggle />
       </div>

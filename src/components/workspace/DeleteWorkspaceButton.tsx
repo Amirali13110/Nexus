@@ -32,7 +32,6 @@ export default function DeleteWorkspaceButton({
         return;
       }
       if (onSuccess) {
-        console.log("We are on onSuccess now")
         fetchWorkspaces();
         onSuccess();
         setShowConfirm(false);
