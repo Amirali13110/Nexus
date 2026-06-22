@@ -1,7 +1,7 @@
 export default function Logo() {
   return  <svg
-      width="48"
-      height="48"
+      width="40"
+      height="40"
       viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -13,7 +13,6 @@ export default function Logo() {
         </linearGradient>
       </defs>
 
-      {/* Left vertical */}
       <path
         d="M25 75V25"
         stroke="#3887ff"
@@ -21,7 +20,6 @@ export default function Logo() {
         strokeLinecap="round"
       />
 
-      {/* Right vertical */}
       <path
         d="M75 75V25"
         stroke="#3887ff"

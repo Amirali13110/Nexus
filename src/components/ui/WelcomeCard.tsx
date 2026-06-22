@@ -16,8 +16,8 @@ export default function WelcomeCard() {
       <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-2xl">
-            Welcome back, <span className="whitespace-nowrap">{fullName}</span>{" "}
-            👋
+            Welcome back,{" "}
+            <span className="whitespace-nowrap">{fullName}</span>{" "}
           </h2>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Here's what's happening with your workspaces today.

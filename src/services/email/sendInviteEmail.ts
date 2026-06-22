@@ -14,6 +14,7 @@ export async function sendInviteEmail({
     console.error("RESEND_API_KEY is not set");
     return { success: false, error: "Email service not configured" };
   }
+  const fromEmail = process.env.RESEND_FROM_EMAIL;
 
   const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invite/accept/${invitationToken}`;
   const workspaceDisplay = workspaceName
@@ -24,7 +25,7 @@ export async function sendInviteEmail({
     const response = await axios.post(
       "https://api.resend.com/emails",
       {
-        from: "Acme <onboarding@resend.dev>",
+        from: fromEmail,
         to: [to],
         subject: "You are invited to join a workspace",
         html: `<p>You have been invited to join ${workspaceDisplay}.</p>

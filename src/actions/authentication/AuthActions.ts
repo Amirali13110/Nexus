@@ -16,7 +16,7 @@ export async function setAuthCookies(data: any) {
     httpOnly: true,
     secure: isProd,
     sameSite: "lax",
-    maxAge: 30,
+    maxAge: 60 * 60,
     path: "/",
   });
   cookieStore.set("refresh_token", encodeURIComponent(refreshToken), {
@@ -30,7 +30,7 @@ export async function setAuthCookies(data: any) {
     httpOnly: false,
     secure: isProd,
     sameSite: "lax",
-    maxAge: 60,
+    maxAge: 60 * 60,
     path: "/",
   });
 }
