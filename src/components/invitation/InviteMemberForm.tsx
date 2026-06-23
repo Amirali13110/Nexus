@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { inviteWorkspaceMemberAction } from "@/actions/invitation/InviteWorkspaceMemberAction";
 import Spinner from "../ui/Spinner";
+import { useSuccessToast } from "@/hooks/useSuccessToast";
 
 export default function InviteMemberForm({
   onSuccess,

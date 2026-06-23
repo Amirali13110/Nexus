@@ -1,20 +1,29 @@
 "use server";
 
+import z from "zod";
 import { requestPasswordReset } from "../../services/authentication/RequestPasswordReset";
-import { getUserProfile } from "@/services/profile/getUserProfile";
-export type ActionState = {
-  success: boolean;
-  message: string | null;
-  error: string | null;
-};
+import { ApiResult, User } from "@/lib/types";
+
+const resetPasswordSchema = z.object({
+  email: z.string().email("Enter a real email address"),
+});
+
 export async function requestPasswordResetAction(
-  prevState: ActionState | null,
+  prevState: ApiResult | null,
   formData: FormData,
-): Promise<ActionState> {
+): Promise<ApiResult> {
   const email = formData.get("email") as string;
-  console.log(email);
+
+  const validation = resetPasswordSchema.safeParse(email);
+
+  if (!validation.success) {
+    const fieldErrors = validation.error.flatten().fieldErrors;
+    return {
+      success: false,
+      fieldErrors,
+    };
+  }
   try {
-    console.log(email);
     const result = await requestPasswordReset(email);
     if (!result.success && result.error) {
       return {
@@ -28,12 +37,10 @@ export async function requestPasswordResetAction(
       success: true,
       message:
         "IF an account exists, A reset link has been sent to your email!",
-      error: null,
     };
   } catch (error: unknown) {
     return {
       success: false,
-      message: null,
       error: "Failed to reset password",
     };
   }

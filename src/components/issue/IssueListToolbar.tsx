@@ -24,7 +24,7 @@ export default function IssueListToolbar() {
     priorityFilter !== "all";
 
   return (
-    <div className="flex flex-wrap items-center gap-3  border-gray-200 bg-white  transition-colors dark:border-gray-800 dark:bg-[#131313]">
+    <div className="flex flex-wrap items-center mb-2 gap-3  border-gray-200 bg-white  transition-colors dark:border-gray-800 dark:bg-black">
       <div className="relative w-full">
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
           <svg

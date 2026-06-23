@@ -1,12 +1,8 @@
 "use client";
 import Link from "next/link";
-import type { Project, Issue, Member } from "@/lib/types";
-import IssueSearchBar from "@/components/issue/IssueSearchBar";
-import IssueSort from "@/components/issue/IssueSort";
-import IssueFilter from "../issue/IssueFilter";
+
 import { useIssueStore } from "@/store/issueStore";
 import IssueListTable from "./IssueListTable";
-import IssueListFilter from "./IssueListFilter";
 import IssueListToolbar from "./IssueListToolbar";
 import { useFilteredIssues } from "@/hooks/useFilteredIssues";
 

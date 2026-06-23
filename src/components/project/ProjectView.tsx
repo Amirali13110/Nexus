@@ -133,10 +133,9 @@ export default function ProjectView({
 
       <div className="mb-4 flex flex-wrap items-center gap-4">
         <IssueSearchBar />
-        <div className="grid grid-cols-2 gap-2">
-          <IssueFilter members={members} />
-          <IssueSort />
-        </div>
+
+        <IssueFilter members={members} />
+        <IssueSort />
       </div>
 
       {error ? (

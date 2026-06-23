@@ -38,17 +38,12 @@ export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {
+      let message = error.response.data?.msg || "Sign up failed";
       const { data } = error.response;
-      if (
-        data?.code === 23505 ||
-        data?.message.includes("profiles_username_key")
-      ) {
-        return {
-          success: false,
-          error: "The username is already taken , Please try a different one.",
-        };
+      console.log(data);
+      if (data?.code === "23505") {
+        message = data.detail;
       }
-      const message = error.response.data?.message || "Sign up failed";
 
       return {
         success: false,

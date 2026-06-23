@@ -5,21 +5,12 @@ import { signInAction } from "@/actions/authentication/SignInAction";
 import useRedirectAction from "@/hooks/useRedirectAction";
 import FormCard from "../Form/FormCard";
 import Spinner from "../ui/Spinner";
-import { toast } from "sonner";
-
+import { useErrorToast } from "@/hooks/useErrorToast";
 export default function SignInFormNew() {
   const [state, formAction, isPending] = useActionState(signInAction, null);
   useRedirectAction(state);
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(
-    function () {
-      if (state?.error) {
-        toast.error(state.error);
-      }
-    },
-    [state?.error],
-  );
+  useErrorToast(state?.error);
 
   return (
     <div className="relative flex min-h-screen flex-grow items-center justify-center overflow-hidden bg-gray-50 dark:bg-black">
@@ -117,11 +108,6 @@ export default function SignInFormNew() {
                   </svg>
                 )}
               </button>
-              {state?.fieldErrors?.password && (
-                <p className="text-xs text-red-500 mt-1.5 font-medium">
-                  {state.fieldErrors.password[0]}
-                </p>
-              )}
             </div>
 
             <div className="text-right">
@@ -138,9 +124,6 @@ export default function SignInFormNew() {
             >
               {isPending ? <Spinner size="sm" color="white" /> : "Sign In"}
             </button>
-            {state?.error && (
-              <p className="text-sm text-red-500">{state.error}</p>
-            )}
           </form>
 
           <div className="mt-6 border-t border-gray-200 dark:border-[#424656] pt-4 text-center">

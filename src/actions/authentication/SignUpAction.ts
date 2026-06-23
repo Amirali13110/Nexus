@@ -6,6 +6,7 @@ import { signUp } from "@/services/authentication/SignUp";
 import { setAuthCookies } from "./AuthActions";
 import { cookies } from "next/headers";
 import { acceptInvitationByTokenAction } from "../invitation/AcceptInvitationByTokenAction";
+import { ApiResult, User } from "@/lib/types";
 
 const signUpSchema = z.object({
   fullname: z
@@ -17,8 +18,10 @@ const signUpSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-export async function signUpAction(prevState: any, formData: FormData) {
-
+export async function signUpAction(
+  prevState: any,
+  formData: FormData,
+): Promise<ApiResult<User>> {
   const fullname = formData.get("fullname") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -34,7 +37,8 @@ export async function signUpAction(prevState: any, formData: FormData) {
     const fieldErrors = validation.error.flatten().fieldErrors;
 
     return {
-      errors: fieldErrors,
+      success: false,
+      fieldErrors: fieldErrors,
     };
   }
 

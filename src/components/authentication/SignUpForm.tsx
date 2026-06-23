@@ -6,12 +6,14 @@ import { signUpAction } from "@/actions/authentication/SignUpAction";
 import FormCard from "../Form/FormCard";
 import useRedirectAction from "@/hooks/useRedirectAction";
 import Spinner from "../ui/Spinner";
+import { useErrorToast } from "@/hooks/useErrorToast";
 
 export default function SignUpForm() {
   const [state, formAction, isPending] = useActionState(signUpAction, null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   useRedirectAction(state);
+  useErrorToast(state?.error);
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -80,6 +82,11 @@ export default function SignUpForm() {
                   disabled={isPending}
                   className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
                 />
+                    {state?.fieldErrors?.usename && (
+              <p className="text-xs text-red-500 mt-1.5 font-medium">
+                {state.fieldErrors.usename[0]}
+              </p>
+            )}
               </div>
             </div>
 
@@ -95,6 +102,11 @@ export default function SignUpForm() {
                 disabled={isPending}
                 className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
               />
+                  {state?.fieldErrors?.email && (
+              <p className="text-xs text-red-500 mt-1.5 font-medium">
+                {state.fieldErrors.email[0]}
+              </p>
+            )}
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -112,6 +124,11 @@ export default function SignUpForm() {
                   onChange={handlePasswordChange}
                   className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
                 />
+                    {state?.fieldErrors?.password && (
+              <p className="text-xs text-red-500 mt-1.5 font-medium">
+                {state.fieldErrors.password[0]}
+              </p>
+            )}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -173,6 +190,11 @@ export default function SignUpForm() {
                   onChange={handleConfirmChange}
                   className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
                 />
+                    {state?.fieldErrors?.confirmPassword && (
+              <p className="text-xs text-red-500 mt-1.5 font-medium">
+                {state.fieldErrors.confirmPassword[0]}
+              </p>
+            )}
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -225,16 +247,17 @@ export default function SignUpForm() {
             {passwordError && (
               <p className="text-sm text-red-500">{passwordError}</p>
             )}
-            {state?.error && (
-              <p className="text-sm text-red-500">{state.error}</p>
-            )}
-
+       
             <button
               type="submit"
               className="w-full rounded-xl bg-[#0066ff] py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#0052cc] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-900"
               disabled={!!passwordError}
             >
-              {isPending ? <Spinner size="sm" color="white"/> : "Create Account"}
+              {isPending ? (
+                <Spinner size="sm" color="white" />
+              ) : (
+                "Create Account"
+              )}
             </button>
           </form>
 

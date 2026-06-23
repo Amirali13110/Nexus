@@ -45,7 +45,6 @@ export async function inviteWorkspaceMemberAction(
   const profileExists = await checkProfileExistsByEmail(email);
 
   const invitationResult = await createInvitation({ workspaceId, email, role });
-  console.log(invitationResult);
   if (!invitationResult.success || !invitationResult.data) {
     return {
       success: false,
@@ -65,12 +64,7 @@ export async function inviteWorkspaceMemberAction(
   }
 
   if (!profileExists) {
-    // const emailResult = await sendInviteEmail({
-    //   to: email,
-    //   invitationToken: invitation.token,
-    //   workspaceName,
-    // });
-    // if (!emailResult.success) return { error: emailResult.error };
+
     return {
       success: false,
       error: `Your member doesn't have account on nexus please invite your member to nexus first`,

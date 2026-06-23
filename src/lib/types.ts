@@ -9,6 +9,7 @@ export type ApiResult<T = any> = {
   data?: T;
   fieldErrors?: Record<string, string[]>;
   redirectTo?: string;
+  message?:string;
   error?: string;
 };
 

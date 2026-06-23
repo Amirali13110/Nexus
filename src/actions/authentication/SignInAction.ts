@@ -59,5 +59,9 @@ export async function signInAction(
   if (inviteToken) {
     await acceptInvitationByTokenAction(inviteToken);
   }
-  return { success: true, redirectTo: "/" };
+  return {
+    success: true,
+    message: "Sign In was successfull!",
+    redirectTo: "/",
+  };
 }
