@@ -11,19 +11,11 @@ export async function requestPasswordResetAction(
   prevState: ActionState | null,
   formData: FormData,
 ): Promise<ActionState> {
-  const identifier = formData.get("identifier") as string;
-
+  const email = formData.get("email") as string;
+  console.log(email);
   try {
-    let emailToSend = identifier;
-
-    const response = await getUserProfile({ username: identifier });
-    const profile = response.data;
-
-    if (profile) {
-      emailToSend = profile.email;
-    }
-
-    const result = await requestPasswordReset(emailToSend);
+    console.log(email);
+    const result = await requestPasswordReset(email);
     if (!result.success && result.error) {
       return {
         success: false,

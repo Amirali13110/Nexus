@@ -6,6 +6,7 @@ import { checkProfileExistsByEmail } from "@/services/profile/checkProfileExists
 import { inviteUserByEmail } from "@/services/invitation/inviteUserByEmail";
 // import { sendInviteEmail } from "@/services/email/sendInviteEmail";
 import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
+import { error } from "console";
 
 const inviteSchema = z.object({
   workspaceId: z.string().uuid(),
@@ -72,7 +73,7 @@ export async function inviteWorkspaceMemberAction(
     // if (!emailResult.success) return { error: emailResult.error };
     return {
       success: false,
-      message: `Your member doesn't have account on nexus please invite him`,
+      error: `Your member doesn't have account on nexus please invite your member to nexus first`,
     };
   }
 
