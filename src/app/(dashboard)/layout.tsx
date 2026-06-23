@@ -1,3 +1,4 @@
+import HashError from "@/components/ui/HashError";
 import Navbar from "@/components/ui/Navbar";
 
 export default function DashboardLayout({
@@ -8,6 +9,7 @@ export default function DashboardLayout({
   return (
     <div>
       <Navbar />
+      <HashError />
       {children}
     </div>
   );

@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { signOut } from "../../services/authentication/SignOut";
 import { getRefreshToken } from "@/services/authentication/getRefreshToken";
+import { redirect } from "next/navigation";
 
 export async function setAuthCookies(data: any) {
   const cookieStore = await cookies();
@@ -54,6 +55,7 @@ export async function refreshAuthCookies(refreshToken: string) {
     cookieStore.delete("refresh_token");
     cookieStore.delete("auth_user");
 
+    redirect('/signIn')
     return { success: false, error: "Session expired" };
   }
 }

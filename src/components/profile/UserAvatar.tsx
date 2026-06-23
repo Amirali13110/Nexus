@@ -28,9 +28,7 @@ export default function UserAvatar() {
   }, []);
 
   const handleLogout = async () => {
-    setIsSigningOut(true);
     signOut();
-    setIsSigningOut(false);
     router.push("/signIn");
   };
 

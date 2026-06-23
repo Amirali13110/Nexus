@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import useRedirectAction from "@/hooks/useRedirectAction";
 import FormCard from "../Form/FormCard";
 import updatePasswordAction from "@/actions/authentication/UpdatePasswordAction";
@@ -11,6 +11,17 @@ export default function UpdatePasswordForm() {
     null,
   );
   useRedirectAction(state);
+
+  useEffect(
+    function () {
+      console.log(state)
+      if (state?.success) {
+        window.location.href = "/";
+      }
+    },
+    [state?.success],
+  );
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");

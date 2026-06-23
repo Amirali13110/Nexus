@@ -1,6 +1,5 @@
 import IssueStatusChart from "@/components/issue/IssueStatusChart";
 import RecentIssues from "@/components/issue/RecentIssues";
-import Spinner from "@/components/ui/Spinner";
 import WelcomeCard from "@/components/ui/WelcomeCard";
 import WorkspaceCards from "@/components/workspace/WorkspaceCards";
 

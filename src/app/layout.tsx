@@ -4,6 +4,7 @@ import "./globals.css";
 import IssueProvider from "@/components/issue/IssueProvider";
 import WorkspaceProvider from "@/components/workspace/WorkspaceProvider";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
+import HashError from "@/components/ui/HashError";
 
 export const metadata: Metadata = {
   title: "Nexus",
@@ -21,7 +22,10 @@ export default async function RootLayout({
         <ThemeProvider>
           <IssueProvider>
             <ProfileProvider>
-              <WorkspaceProvider>{children}</WorkspaceProvider>
+              <WorkspaceProvider>
+                {children}
+                <HashError />
+              </WorkspaceProvider>
             </ProfileProvider>
           </IssueProvider>
         </ThemeProvider>
