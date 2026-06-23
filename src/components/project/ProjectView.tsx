@@ -81,13 +81,13 @@ export default function ProjectView({
   role,
   workspaceSlug,
 }: ProjectViewProps) {
-  // const router = useRouter();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingIssue, setEditingIssue] = useState<Issue | null>(null);
   const [isEditingProject, setIsEditingProject] = useState(false);
   const [deletingIssueId, setDeletingIssueId] = useState<string | null>(null);
   const [isDeletingProject, setIsDeletingProject] = useState(false);
   const isAdmin = role === "owner" || role === "admin";
+  const { fetchIssues } = useIssueStore();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 pt-20 md:px-8">
@@ -133,8 +133,10 @@ export default function ProjectView({
 
       <div className="mb-4 flex flex-wrap items-center gap-4">
         <IssueSearchBar />
-        <IssueFilter members={members} />
-        <IssueSort />
+        <div className="grid grid-cols-2 gap-2">
+          <IssueFilter members={members} />
+          <IssueSort />
+        </div>
       </div>
 
       {error ? (
@@ -268,6 +270,7 @@ export default function ProjectView({
                     projectSlug: project.slug,
                   });
                   setDeletingIssueId(null);
+                  fetchIssues();
                 }}
                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700"
               >

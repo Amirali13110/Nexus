@@ -6,6 +6,7 @@ import {
   SortField,
   SortOrder,
 } from "@/lib/types";
+import getAllIssuesAction from "@/actions/issue/GetAllIssuesAction";
 
 interface IssueState {
   issues: Issue[];
@@ -29,6 +30,7 @@ interface IssueState {
   setPriorityFilter: (priority: IssuePriority | "all") => void;
   setSorting: (field: SortField) => void;
   resetFilters: () => void;
+  fetchIssues: () => void;
 }
 
 export const useIssueStore = create<IssueState>((set) => ({
@@ -57,6 +59,20 @@ export const useIssueStore = create<IssueState>((set) => ({
       sortBy: "created_at",
       sortOrder: "asc",
     }),
-
+  fetchIssues: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const result = await getAllIssuesAction();
+      if (result) {
+        if (result.success && result.data) {
+          set({ issues: result.data, isLoading: false });
+        } else {
+          set({ error: result.error, isLoading: false });
+        }
+      }
+    } catch (err: any) {
+      set({ error: err.message, isLoading: false });
+    }
+  },
   clearIssues: () => set({ issues: [], isLoading: false, error: null }),
 }));

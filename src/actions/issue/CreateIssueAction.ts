@@ -72,5 +72,6 @@ export async function createIssueAction(
   const path = `/workspace/${workspaceSlug}/project/${projectSlug}`;
 
   revalidatePath(path);
+  revalidatePath("/", "page");
   return { success: true, data: result.data };
 }

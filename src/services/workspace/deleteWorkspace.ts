@@ -1,7 +1,6 @@
 import { axiosWithProxy } from "../HttpService";
 import { supabaseUrl, supabaseKey } from "@/utils/supabase";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+
 import { cookies } from "next/headers";
 
 export async function deleteWorkspace(workspaceId: string) {
@@ -25,6 +24,6 @@ export async function deleteWorkspace(workspaceId: string) {
       error.response?.data?.message ||
       error.message ||
       "Failed to delete workspace";
-    return { success: false, error: errorMsg };
+    return { success: false, error: errorMsg};
   }
 }

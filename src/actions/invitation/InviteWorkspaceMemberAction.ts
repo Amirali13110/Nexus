@@ -4,7 +4,7 @@ import { createInvitation } from "@/services/invitation/createInvitation";
 import { cookies } from "next/headers";
 import { checkProfileExistsByEmail } from "@/services/profile/checkProfileExistsByEmail";
 import { inviteUserByEmail } from "@/services/invitation/inviteUserByEmail";
-import { sendInviteEmail } from "@/services/email/sendInviteEmail";
+// import { sendInviteEmail } from "@/services/email/sendInviteEmail";
 import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
 
 const inviteSchema = z.object({
@@ -64,13 +64,16 @@ export async function inviteWorkspaceMemberAction(
   }
 
   if (!profileExists) {
-    const emailResult = await sendInviteEmail({
-      to: email,
-      invitationToken: invitation.token,
-      workspaceName,
-    });
-    if (!emailResult.success) return { error: emailResult.error };
-    return { success: true, message: `Invitation email sent to ${email}` };
+    // const emailResult = await sendInviteEmail({
+    //   to: email,
+    //   invitationToken: invitation.token,
+    //   workspaceName,
+    // });
+    // if (!emailResult.success) return { error: emailResult.error };
+    return {
+      success: false,
+      message: `Your member doesn't have account on nexus please invite him`,
+    };
   }
 
   return { success: true, message: `Invitation sent to ${email}` };

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { deleteWorkspaceAction } from "@/actions/workspace/DeleteWorkspaceAction";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 import Spinner from "../ui/Spinner";
+import useRedirectAction from "@/hooks/useRedirectAction";
 
 interface DeleteWorkspaceButtonProps {
   onSuccess?: () => void;
@@ -19,6 +20,7 @@ export default function DeleteWorkspaceButton({
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { fetchWorkspaces } = useWorkspaceStore();
+
   const handleDelete = async () => {
     setIsDeleting(true);
     setError(null);
@@ -32,6 +34,7 @@ export default function DeleteWorkspaceButton({
         return;
       }
       if (onSuccess) {
+        // useRedirectAction({success={true} ,redirectTo: "/" };
         fetchWorkspaces();
         onSuccess();
         setShowConfirm(false);

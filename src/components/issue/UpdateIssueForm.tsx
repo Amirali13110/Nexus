@@ -26,10 +26,12 @@ export default function UpdateIssueForm({
     updateIssueAction,
     null,
   );
+  const { fetchIssues } = useIssueStore();
   useEffect(
     function () {
       if (state?.success) {
         onSuccess();
+        fetchIssues();
       }
     },
     [state?.success],
@@ -79,7 +81,7 @@ export default function UpdateIssueForm({
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label
             htmlFor="status"

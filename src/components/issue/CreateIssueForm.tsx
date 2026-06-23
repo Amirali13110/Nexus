@@ -5,6 +5,7 @@ import type { Member } from "@/lib/types";
 import { useProjectStore } from "@/store/projectStore";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 import Spinner from "../ui/Spinner";
+import { useIssueStore } from "@/store/issueStore";
 
 export default function CreateIssueForm({
   onSuccess,
@@ -23,11 +24,12 @@ export default function CreateIssueForm({
     createIssueAction,
     null,
   );
-
+  const { fetchIssues } = useIssueStore();
   useEffect(
     function () {
       if (state?.success && state.data) {
         onSuccess();
+        fetchIssues();
       }
     },
     [state, onSuccess],
@@ -42,7 +44,7 @@ export default function CreateIssueForm({
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-6 ">
       <input type="hidden" name="projectId" value={projectId} />
       <input type="hidden" name="workspaceId" value={workspaceId} />
       <input type="hidden" name="projectSlug" value={currentProject.slug} />
@@ -53,7 +55,7 @@ export default function CreateIssueForm({
           htmlFor="title"
           className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
-          Title *
+          Title
         </label>
         <input
           id="title"
@@ -82,7 +84,7 @@ export default function CreateIssueForm({
           className="w-full resize-none rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-1 focus:ring-[#0066ff] disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
         />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2  sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label
             htmlFor="status"

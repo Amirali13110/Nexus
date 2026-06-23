@@ -190,7 +190,7 @@ export default function WorkspaceView({
               workspaceId={workspace.id}
               onSuccess={() => {
                 setIsSettingsModalOpen(false);
-                router.push("/");
+                window.location.href = "/";
               }}
             />
           </div>
