@@ -33,7 +33,7 @@ export default function WorkspaceCards() {
       {workspaces.map((ws) => (
         <Link
           key={ws.id}
-          href={`/workspace/${ws.slug}`}
+          href={`/workspace/${ws.id}`}
           className="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950"
         >
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-[#0066ff]">

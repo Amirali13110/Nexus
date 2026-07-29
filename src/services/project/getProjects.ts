@@ -1,29 +1,25 @@
 "use server";
 
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import { ApiResult, Project } from "@/lib/types";
-import axios from "axios";
 
 export async function getProjectsByWorkspace(
   workspaceId: string,
 ): Promise<ApiResult<Project[]>> {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
-  const userCookie = cookieStore.get("auth_user")?.value;
 
-  if (!encodedToken || !userCookie) {
+  if (!encodedToken) {
     return { success: false, error: "Not authenticated" };
   }
 
   const accessToken = decodeURIComponent(encodedToken);
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const url = `${supabaseUrl}/rest/v1/projects?select=*&workspace_id=eq.${workspaceId}&order=created_at.desc`;
+  const url = `${process.env.BACKEND_URL}/workspaces/${workspaceId}/projects`;
 
   try {
     const response = await axiosWithProxy.get<Project[]>(url, { headers });
@@ -33,10 +29,7 @@ export async function getProjectsByWorkspace(
     console.error("Fetch projects error:", error);
     return {
       success: false,
-      error:
-        error.response?.data?.msg ||
-        error.message ||
-        "Failed to fetch projects",
+      error: error.response?.data?.detail || "Failed to fetch projects",
     };
   }
 }

@@ -49,8 +49,8 @@ export default function IssueFilter({ members }: { members: Member[] }) {
       >
         <option value="">All assignees</option>
         {members.map((member) => (
-          <option key={member.id} value={member.id}>
-            {member.username}
+          <option key={member.id} value={member.user.id}>
+            {member.user.profile.full_name}
           </option>
         ))}
       </select>

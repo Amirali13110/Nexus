@@ -3,11 +3,12 @@
 import { Member } from "@/lib/types";
 
 export default function MemberView({ member }: { member: Member }) {
-  const avatarLetter = member?.full_name?.trim()?.charAt(0)?.toUpperCase() || "?";
+  const memberProfile = member.user.profile;
+  const avatarLetter = memberProfile.full_name ? member?.user.profile.full_name?.trim()?.charAt(0)?.toUpperCase() || "?" :  member?.user.profile.username?.trim()?.charAt(0)?.toUpperCase()
   const memberDetails = [
     {
       label: "Bio",
-      value: member?.bio,
+      value: memberProfile?.bio,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +28,7 @@ export default function MemberView({ member }: { member: Member }) {
     },
     {
       label: "Username",
-      value: member?.username,
+      value: memberProfile?.username,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +47,7 @@ export default function MemberView({ member }: { member: Member }) {
     },
     {
       label: "Email Address",
-      value: member?.email,
+      value: member?.user.email,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +76,7 @@ export default function MemberView({ member }: { member: Member }) {
           </div>
           <div className="mt-6 text-center">
             <h1 className="text-2xl font-semibold tracking-tight text-[#191c1e] dark:text-white">
-              {member?.full_name}
+              {memberProfile?.full_name || memberProfile.username}
             </h1>
           </div>
         </section>

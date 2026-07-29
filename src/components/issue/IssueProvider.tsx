@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useIssueStore } from "@/store/issueStore";
-import getAllIssuesAction from "@/actions/issue/GetAllIssuesAction";
+import getAssignedIssuesAction from "@/actions/issue/GetAssignedIssuesAction";
 
 export default function IssueProvider({
   children,
@@ -9,11 +9,11 @@ export default function IssueProvider({
   children: React.ReactNode;
 }) {
   const { issues, setIssues, setLoading, setError } = useIssueStore();
-  
+
   useEffect(() => {
     if (issues.length === 0) {
       setLoading(true);
-      getAllIssuesAction()
+      getAssignedIssuesAction()
         .then((result) => {
           if (result.success && result.data) {
             setIssues(result.data);

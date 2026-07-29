@@ -1,15 +1,12 @@
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
 export async function updateProfile({
-  profileId,
   username,
   full_name,
   bio,
   avatar_url,
 }: {
-  profileId: string;
   username?: string;
   full_name?: string;
   bio?: string;
@@ -21,10 +18,8 @@ export async function updateProfile({
   const accessToken = decodeURIComponent(encodedToken);
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
-    Prefer: "return=representation",
   };
 
   const body: any = {};
@@ -33,14 +28,13 @@ export async function updateProfile({
   if (bio !== undefined) body.bio = bio;
   if (avatar_url !== undefined) body.avatar_url = avatar_url;
 
-  const url = `${supabaseUrl}/rest/v1/profiles?id=eq.${profileId}`;
+  const url = `${process.env.BACKEND_URL}/profile/me`;
 
   try {
     const response = await axiosWithProxy.patch(url, body, { headers });
-    const updated = Array.isArray(response.data) ? response.data[0] : response.data;
+    const updated =  response.data;
     return { success: true, data: updated };
   } catch (error: any) {
-    const errorMsg = error.response?.data?.message || error.message || "Failed to update profile";
-    return { success: false, error: errorMsg };
+    return { success: false, error: error.response.data.detail || "Failed to update profile" };
   }
 }

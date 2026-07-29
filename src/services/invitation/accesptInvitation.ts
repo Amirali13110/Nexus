@@ -1,58 +1,44 @@
-import { Invitation } from "@/lib/types";
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
-import axios from "axios";
-import { updateInvitationStatus } from "./updateInvitationStatus";
+import type { ApiResult } from "@/lib/types";
 
-export async function acceptInvitation({
-  invitationId,
-  workspaceId,
-  profileId,
-  role,
-}: {
-  invitationId: string;
-  workspaceId: string;
-  profileId: string;
-  role: string;
-}) {
+export async function acceptInvitation(
+  invitationId: string,
+): Promise<ApiResult<void>> {
   const cookieStore = await cookies();
+
   const encodedToken = cookieStore.get("access_token")?.value;
-  if (!encodedToken) return { success: false, error: "Unauthorized" };
+
+  if (!encodedToken) {
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+  }
+
   const accessToken = decodeURIComponent(encodedToken);
 
-  const memberBody = {
-    workspace_id: workspaceId,
-    profile_id: profileId,
-    role,
-  };
-
-  const headers = {
-    apikey: supabaseKey,
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-
-  const checkUrl = `${supabaseUrl}/rest/v1/workspace_members?workspace_id=eq.${workspaceId}&profile_id=eq.${profileId}`;
-  const checkRes = await axiosWithProxy.get(checkUrl, { headers });
-  const existingMember = checkRes.data && checkRes.data.length > 0;
-
-  if (!existingMember) {
-    const memberRes = await axiosWithProxy.post(
-      `${supabaseUrl}/rest/v1/workspace_members`,
-      memberBody,
+  try {
+    await axiosWithProxy.post(
+      `${process.env.BACKEND_URL}/workspace-invitations/${invitationId}/accept`,
+      {},
       {
         headers: {
-          apikey: supabaseKey,
           Authorization: `Bearer ${accessToken}`,
         },
       },
     );
-    if (memberRes.status !== 201)
-      return { success: false, error: "Failed to add member" };
+
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      error:
+        error.response?.data?.detail ??
+        error.message ??
+        "Failed to accept invitation",
+    };
   }
-
-  await updateInvitationStatus(invitationId, "accepted");
-
-  return { success: true };
 }

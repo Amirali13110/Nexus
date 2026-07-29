@@ -1,65 +1,40 @@
 "use server";
-
-import { Workspace } from "@/lib/types";
-import { addWorkspaceMember } from "@/services/member/addWorkspaceMember";
 import { createWorkspace } from "@/services/workspace/createWorkspace";
 import { slugify } from "@/utils/slugify";
-import { cookies } from "next/headers";
 import z from "zod";
 
 const createWorkspaceSchema = z.object({
-  workspaceName: z.string().min(1, "Workspace name is required").max(50),
+  name: z.string().min(1, "Workspace name is required").max(50),
+  description: z.string().max(500).optional(),
 });
 
 export async function createWorkspaceAction(
   prevState: any,
   formData: FormData,
 ) {
-  const workspaceName = formData.get("workspace-name") as string;
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
 
-  const validation = createWorkspaceSchema.safeParse({ workspaceName });
+  const validation = createWorkspaceSchema.safeParse({ name, description });
   if (!validation.success) {
-    return {
-      success: false,
-      error:
-        validation.error.flatten().fieldErrors.workspaceName?.[0] ||
-        "Invalid name",
-    };
+    const errors = validation.error.flatten().fieldErrors;
+    const firstError = errors.name?.[0] || errors.description?.[0];
+    return { success: false, error: firstError || "Invalid input" };
   }
 
-  const cookieStore = await cookies();
-  const userCookie = cookieStore.get("auth_user")?.value;
-  if (!userCookie) {
-    return { success: false, error: "User not authenticated" };
-  }
-  const { id: profileId } = JSON.parse(userCookie);
 
-  const slug = slugify(workspaceName);
-  const result = await createWorkspace({ name: workspaceName, slug });
+  const slug = slugify(name);
+  const result = await createWorkspace({ name, slug , description});
 
   if (!result.data && result.error) {
     return { success: false, error: result.error };
   }
   if (!result.data) return { success: false, error: result.error };
-  const workspace: Workspace = result.data[0];
 
-  const memberResult = await addWorkspaceMember({
-    workspaceId: workspace.id,
-    profileId,
-    role: "owner",
-  });
 
-  if (!memberResult.success && memberResult.error) {
-    return {
-      success: false,
-      error: memberResult.error || "Failed to create workspace",
-    };
-  }
-
-  if (memberResult.success && result.success) {
     return {
       success: true,
       workspaces: result.data,
     };
-  }
+  
 }

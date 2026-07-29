@@ -1,7 +1,4 @@
-// types/supabase.ts
-// ==================================================
-// SHARED TYPES FOR SUPABASE + SERVER ACTIONS
-// ==================================================
+
 
 // ---------- Generic API Response ----------
 export type ApiResult<T = any> = {
@@ -17,8 +14,7 @@ export type ApiResult<T = any> = {
 export type User = {
   id: string;
   email: string;
-  username: string;
-  fullname?: string;
+  profile:Profile
   created_at?: string;
   access_token?: string;
 };
@@ -64,16 +60,18 @@ export type Workspace = {
 };
 // ---------- Members ----------
 
-export type Member = {
+export interface Member {
   id: string;
-  email: string;
-  bio: string;
-  username: string | null;
-  full_name: string | null;
-  avatar_url: string | null;
-  role: string;
-  joined_at: string;
-};
+  role: "owner" | "admin" | "member";
+  current_user_role:"owner" |"admin"| "member"
+  created_at: string;
+  user: User;
+}
+
+export interface WorkspaceMembersResponse {
+  current_user_role: "owner" | "admin" | "member";
+  members: Member[];
+}
 
 // Input for creating a workspace (if needed)
 export type CreateWorkspaceInput = {
@@ -82,7 +80,6 @@ export type CreateWorkspaceInput = {
 };
 
 // ---------- Project Types ----------
-// Database shape (what Supabase returns)
 export type Project = {
   id: string;
   name: string;
@@ -131,9 +128,7 @@ export interface Issue {
   priority: IssuePriority;
   assignee?: {
     id: string;
-    username: string;
     full_name?: string;
-    email: string;
   };
   assignee_id?: string;
   project_id: string;

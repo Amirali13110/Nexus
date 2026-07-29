@@ -28,8 +28,6 @@ export default function InvitationList({
             className="bg-white dark:bg-[#131313] border border-zinc-200 dark:border-[#27272a] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-200 hover:border-zinc-300 dark:hover:border-zinc-700/60 shadow-sm"
           >
             <div className="flex items-center gap-4">
-             
-
               <div className="space-y-1">
                 <h3 className="text-[15px] font-semibold tracking-tight text-zinc-900 dark:text-white">
                   {inv.workspace?.name || `Workspace ID: ${inv.workspace_id}`}
@@ -62,7 +60,7 @@ export default function InvitationList({
                 <input
                   type="hidden"
                   name="workspaceId"
-                  value={inv.workspace_id}
+                  value={inv.workspace?.id}
                 />
                 <input type="hidden" name="role" value={inv.role} />
                 <button

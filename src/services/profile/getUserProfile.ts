@@ -1,36 +1,44 @@
-import { supabaseKey, supabaseUrl } from "@/utils/supabase";
-import { axiosWithProxy } from "@/services/HttpService";
+"use server"
+
 import { ApiResult, Profile } from "@/lib/types";
-import axios from "axios";
+import { cookies } from "next/headers"
+import { axiosWithProxy } from "../HttpService";
 
-export async function getUserProfile(filter: {
-  username?: string;
-  id?: string;
-}): Promise<ApiResult<Profile>> {
-  const headers = {
-    apikey: supabaseKey,
-    Authorization: `Bearer ${supabaseKey}`,
-  };
-  let queryParam: string = "";
 
-  if (filter.id) {
-    queryParam = `id=eq.${filter.id}`;
-  } else if (filter.username) {
-    queryParam = `username=eq.${filter.username}`;
+
+
+
+export async function getUserProfile(): Promise<ApiResult<Profile>> {
+  const cookieStore = await cookies()
+  const access_token = cookieStore.get("access_token")?.value
+  if (!access_token) {
+    return {
+      success: false,
+      error: "No access token found",
+    };
   }
 
-  const url = `${supabaseUrl}/rest/v1/profiles?${queryParam}&select=*`;
-
   try {
-    const response = await axiosWithProxy.get<Profile[]>(url, { headers });
+    const response = await axiosWithProxy.get<Profile>(
+      `${process.env.BACKEND_URL}/profile/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
 
-    return { success: true, data: response.data[0] };
+    return {
+      success: true,
+      data: response.data,
+    };
+
   } catch (error: any) {
     return {
       success: false,
       error:
-        error.msg ||
-        "Failed to get user's profile check your internet connection",
+        error.response?.data?.detail ||
+        "Failed to get user profile",
     };
   }
 }

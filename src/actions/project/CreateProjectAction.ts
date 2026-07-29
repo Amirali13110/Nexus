@@ -8,7 +8,6 @@ import { Workspace } from "@/lib/types";
 const createProjectSchema = z.object({
   name: z.string().min(1, "Project name is required").max(100),
   description: z.string().max(500).optional(),
-  workspaceId: z.string().uuid("Invalid workspace ID"),
 });
 
 export async function createProjectAction(prevState: any, formData: FormData) {
@@ -19,12 +18,11 @@ export async function createProjectAction(prevState: any, formData: FormData) {
   const validation = createProjectSchema.safeParse({
     name,
     description,
-    workspaceId,
   });
   if (!validation.success) {
     const errors = validation.error.flatten().fieldErrors;
     const firstError =
-      errors.name?.[0] || errors.workspaceId?.[0] || errors.description?.[0];
+      errors.name?.[0] || errors.description?.[0];
     return { success: false, error: firstError || "Invalid input" };
   }
 
@@ -40,6 +38,7 @@ export async function createProjectAction(prevState: any, formData: FormData) {
     return { success: false, error: result.error };
   }
 
+
   const workspaceResult = await getWorkspaceById(workspaceId);
   const workspace: Workspace = workspaceResult.success
     ? workspaceResult.data
@@ -49,3 +48,4 @@ export async function createProjectAction(prevState: any, formData: FormData) {
     success: true,
   };
 }
+

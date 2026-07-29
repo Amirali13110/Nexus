@@ -1,5 +1,6 @@
 "use client";
 import type { Issue } from "@/lib/types";
+import { useAuthStore } from "@/store/authStore";
 import Link from "next/link";
 
 const priorityConfig: Record<
@@ -64,9 +65,8 @@ const statusConfig: Record<string, { label: string; color: string }> = {
 interface IssueTableRowProps {
   issue: Issue;
   role: string;
-  userId: string;
-  projectSlug: string;
-  workspaceSlug: string;
+  projectId: string;
+  workspaceId: string;
   onEdit: (issue: Issue) => void;
   onDelete: (issueId: string) => void;
 }
@@ -74,23 +74,24 @@ interface IssueTableRowProps {
 export default function IssueTableRow({
   issue,
   role,
-  workspaceSlug,
-  projectSlug,
+  workspaceId,
+  projectId,
   onEdit,
-  userId,
   onDelete,
 }: IssueTableRowProps) {
+  const {user} = useAuthStore()
   const priority = priorityConfig[issue.priority] ?? priorityConfig[0];
   const status = statusConfig[issue.status] ?? statusConfig.backlog;
   const isAdmin = role === "admin" || role === "owner";
-  const hasAccess = isAdmin || issue.created_by === userId;
-  const assigneeInitial = issue.assignee?.username?.[0]?.toUpperCase() || "?";
+  const hasAccess = isAdmin || issue.created_by === user?.id;
+  console.log(issue)
+  const assigneeInitial = issue.assignee?.full_name?.[0].toUpperCase() || "?";
 
   return (
     <tr className="group hover:bg-gray-50 dark:hover:bg-gray-800/50">
       <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
         <Link
-          href={`/workspace/${workspaceSlug}/project/${projectSlug}/issue/${issue.id}`}
+          href={`/workspace/${workspaceId}/project/${projectId}/issue/${issue.id}`}
           className="font-medium text-gray-900 hover:text-[#0066ff] dark:text-white dark:hover:text-[#0066ff]"
         >
           {issue.title}
@@ -117,7 +118,7 @@ export default function IssueTableRow({
             {assigneeInitial}
           </div>
           <span className="text-sm text-gray-700 dark:text-gray-300">
-            {issue.assignee?.username || "Unassigned"}
+            {issue.assignee?.full_name || "Unassigned"}
           </span>
         </div>
       </td>

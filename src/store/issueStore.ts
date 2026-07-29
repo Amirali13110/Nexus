@@ -6,7 +6,7 @@ import {
   SortField,
   SortOrder,
 } from "@/lib/types";
-import getAllIssuesAction from "@/actions/issue/GetAllIssuesAction";
+import getAssignedIssuesAction from "@/actions/issue/GetAssignedIssuesAction";
 
 interface IssueState {
   issues: Issue[];
@@ -62,7 +62,7 @@ export const useIssueStore = create<IssueState>((set) => ({
   fetchIssues: async () => {
     set({ isLoading: true, error: null });
     try {
-      const result = await getAllIssuesAction();
+      const result = await getAssignedIssuesAction();
       if (result) {
         if (result.success && result.data) {
           set({ issues: result.data, isLoading: false });

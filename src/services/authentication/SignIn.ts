@@ -1,6 +1,4 @@
 "use server";
-import axios from "axios";
-import { supabaseKey, supabaseUrl } from "../../utils/supabase";
 import { ApiResult, User, UserCredentials } from "@/lib/types";
 import { axiosWithProxy } from "../HttpService";
 
@@ -12,10 +10,8 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
 
   const headers: {} = {
     "Content-Type": "application/json",
-    apikey: supabaseKey,
-    Authorization: `Bearer ${supabaseKey}`,
   };
-  const signInUrl = `${supabaseUrl}/auth/v1/token?grant_type=password`;
+  const signInUrl = `${process.env.BACKEND_URL}/auth/signin`;
 
   try {
     const response = await axiosWithProxy.post<User>(signInUrl, body, {
@@ -27,23 +23,14 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
     }
     return { success: true, data: response.data };
   } catch (error: any) {
-    console.error("=== FULL ERROR OBJECT ===");
-    console.error("Error message:", error.message);
-    console.error("Error code:", error.code);
-    console.error("Error stack:", error.stack);
-    if (error.request) {
-      console.error("Request was made but no response");
-    }
+
 
     if (error.response) {
-      const message =
-        error.response.data?.msg ||
-        error.response.data.error_description ||
-        "Sign in failed";
+      const {data} = error.response
 
       return {
         success: false,
-        error: message || "Data validation failed",
+        error: data.detail || "Sign In Failed",
       };
     }
 
@@ -57,7 +44,7 @@ export async function signIn(user: UserCredentials): Promise<ApiResult<User>> {
     return {
       success: false,
       error:
-        error.msg ||
+        error.response.data.detail ||
         "Unable to connect to the server . Please check your internet connection",
     };
   }

@@ -5,13 +5,13 @@ import { redirect } from "next/navigation";
 
 export async function deleteProjectAction(
   projectId: string,
-  workspaceSlug: string,
+  workspaceId: string,
 ) {
-  const result = await deleteProject(projectId);
+  const result = await deleteProject({projectId, workspaceId});
   if (!result.success) throw new Error(result.error);
   if (result.success) {
-    revalidatePath(`/workspace/${workspaceSlug}`);
-    redirect(`/workspace/${workspaceSlug}`);
+    revalidatePath(`/workspace/${workspaceId}`);
+    redirect(`/workspace/${workspaceId}`);
   }
   return {
     success: true,

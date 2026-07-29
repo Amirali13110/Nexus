@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { refreshAuthCookies } from "./actions/authentication/AuthActions";
-import { redirect } from "next/navigation";
 
 export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("access_token")?.value;
@@ -11,9 +10,10 @@ export async function proxy(request: NextRequest) {
   const isAuthPage =
     pathname === "/signIn" ||
     pathname === "/signUp" ||
-    pathname === "/forgetPassword";
+    pathname === "/forgotPassword" ||
+    pathname === "/resetPassword";
   const isProtectedPage =
-    pathname.startsWith("/") && !isAuthPage && !isCallbackPage ;
+    pathname.startsWith("/") && !isAuthPage && !isCallbackPage;
 
   const isInviteRoute = pathname.startsWith("/invite/accept");
 
@@ -21,10 +21,10 @@ export async function proxy(request: NextRequest) {
     try {
       const result = await refreshAuthCookies(refreshToken);
       if (!result.success) {
-        redirect("/signIn");
+        return NextResponse.redirect(new URL("/signIn", request.url));
       }
     } catch (err: any) {
-      redirect("/signIn");
+      return NextResponse.redirect(new URL("/signIn", request.url));
     }
   }
 

@@ -7,10 +7,8 @@ import { Project } from "@/lib/types";
 export default function UpdateProjectForm({
   onSuccess,
   project,
-  workspaceSlug,
 }: {
   project: Project;
-  workspaceSlug: string;
   onSuccess: () => void;
 }) {
   const [state, formAction, isPending] = useActionState(
@@ -27,12 +25,11 @@ export default function UpdateProjectForm({
     ) {
       onSuccess();
     }
-  }, [state, workspaceSlug, project.slug]);
-
+  }, [state, project.slug]);
   return (
     <form action={formAction} className="space-y-6 max-w-xl">
       <input type="hidden" name="projectId" value={project.id} />
-      <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
+      <input type="hidden" name="workspaceId" value={project.workspace_id} />
 
       <div className="space-y-1.5">
         <label

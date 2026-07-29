@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { signUp } from "@/services/authentication/SignUp";
 import { setAuthCookies } from "./AuthActions";
 import { cookies } from "next/headers";
-import { acceptInvitationByTokenAction } from "../invitation/AcceptInvitationByTokenAction";
 import { ApiResult, User } from "@/lib/types";
 
 const signUpSchema = z.object({
@@ -62,11 +61,6 @@ export async function signUpAction(
     await setAuthCookies(data);
   }
 
-  const cookieStore = await cookies();
-  const inviteToken = cookieStore.get("pending_invite_token")?.value;
-  if (inviteToken) {
-    await acceptInvitationByTokenAction(inviteToken);
-  }
-
+  
   return { success: true, redirectTo: "/" };
 }

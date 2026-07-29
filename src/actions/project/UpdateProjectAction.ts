@@ -1,7 +1,7 @@
 "use server";
 import z from "zod";
 import { revalidatePath } from "next/cache";
-import { updateProject } from "@/services/project/updateProfile";
+import { updateProject } from "@/services/project/updateProject";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ApiResult, Project } from "@/lib/types";
@@ -16,7 +16,7 @@ export async function updateProjectAction(
   formData: FormData,
 ): Promise<ApiResult<Project>> {
   const projectId = formData.get("projectId") as string;
-  const workspaceSlug = formData.get("workspaceSlug") as string;
+  const workspaceId = formData.get("workspaceId") as string;
   const name = (formData.get("name") as string) || undefined;
   const description = (formData.get("description") as string) || undefined;
 
@@ -30,6 +30,7 @@ export async function updateProjectAction(
 
   const result = await updateProject({
     projectId,
+    workspaceId,
     name,
     description,
   });
@@ -37,8 +38,8 @@ export async function updateProjectAction(
 
   const project = result.data;
   if (project) {
-    revalidatePath(`/workspace/${workspaceSlug}/project/${project.slug}`);
-    redirect(`/workspace/${workspaceSlug}/project/${project.slug}`);
+    revalidatePath(`/workspace/${workspaceId}/project/${project.id}`);
+    redirect(`/workspace/${workspaceId}/project/${project.id}`);
   }
 
   return { success: true, data: project };

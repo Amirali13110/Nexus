@@ -1,6 +1,5 @@
 "use server";
-import axios from "axios";
-import { supabaseKey, supabaseUrl } from "../../utils/supabase";
+
 import { cookies } from "next/headers";
 import { axiosWithProxy } from "../HttpService";
 import { ApiResult, User, UserCredentials } from "@/lib/types";
@@ -9,17 +8,13 @@ export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
   const body = {
     email: user.email,
     password: user.password,
-    data: {
-      username: user.username,
-      full_name: user.fullname,
-    },
+    username: user.username,
+    fullname: user.fullname,
   };
   const headers: {} = {
     "Content-Type": "application/json",
-    apikey: supabaseKey,
-    Authorization: `Bearer ${supabaseKey}`,
   };
-  const signUpUrl = `${supabaseUrl}/auth/v1/signup`;
+  const signUpUrl = `${process.env.BACKEND_URL}/auth/signup`;
 
   try {
     const cookieStore = await cookies();
@@ -38,16 +33,10 @@ export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
     return { success: true, data: response.data };
   } catch (error: any) {
     if (error.response) {
-      let message = error.response.data?.msg || "Sign up failed";
       const { data } = error.response;
-      console.log(data);
-      if (data?.code === "23505") {
-        message = data.detail;
-      }
-
       return {
         success: false,
-        error: message || "Data validation failed",
+        error: data.detail || "Sign Up Failed",
       };
     }
 
@@ -60,7 +49,7 @@ export async function signUp(user: UserCredentials): Promise<ApiResult<User>> {
     return {
       success: false,
       error:
-        error.msg ||
+        error.detail ||
         "Unable to connect to the server . Please check your internet connection",
     };
   }

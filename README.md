@@ -2,7 +2,6 @@
 
 ### Advanced Auth & Password Recovery System
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with `create-next-app`, heavily customized to implement a high-security **PKCE Auth flow** with **Supabase**.
 
 ---
 
@@ -20,7 +19,6 @@ Unlike standard implementations, Project Nexus handles authentication entirely o
 
 # Nexus Authentication System
 
-A complete, secure authentication implementation for **Nexus** – a mini Linear.app clone – built with Next.js, Supabase, Axios, and httpOnly cookies.
 
 ## Features
 
@@ -36,10 +34,9 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 
 ### Profile Management
 
-- ✅ Server‑side profile fetching with **`unstable_cache`** (1‑hour cache, no redundant Supabase calls)
+- ✅ Server‑side profile fetching with **`unstable_cache`**
 - ✅ Global profile state with **Zustand** (includes `profile`, `isLoading`, `error`)
 - ✅ `ProfileProvider` hydrates the store once – no duplicate requests
-- ✅ Auto‑create missing profile rows via Supabase RPC (handles edge cases after password reset)
 - **Edit profile** – Users can update their `username`, `full_name`, `bio`, and `avatar_url` via a dedicated profile edit page (`/profile/edit`).
 - **Server action** – `updateProfileAction` validates input with Zod, updates the `profiles` table via a PATCH request, and revalidates relevant pages.
 - **Real‑time store sync** – After a successful update, the Zustand store (`useProfileStore`) is immediately updated, so the new name appears across the app without a refresh.
@@ -48,7 +45,7 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 
 ### Workspaces
 
-- **Create workspace** – Users can create a workspace by providing a name. A URL‑friendly slug is auto‑generated. The workspace is stored in Supabase with the authenticated user as `owner_id`.
+- **Create workspace** – Users can create a workspace by providing a name. A URL‑friendly slug is auto‑generated. 
 - **List workspaces** – Only workspaces owned by the current user are fetched (filtered by `owner_id`). Data is cached server‑side with `unstable_cache` (1 hour) and stored globally in a Zustand store.
 - **Global store** – `WorkspaceProvider` (wrapped in the workspace layout) fetches workspaces once and populates the store. Any component can access `useWorkspaceStore().workspaces`.
 - **Loading & error states** – The store provides `isLoading` and `error` fields, so you can show skeletons or error messages.
@@ -83,7 +80,7 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 
 ### Projects
 
-- **Create a project** – From any workspace page, click “New Project” to open an inline form. Enter a name and optional description. The slug is auto‑generated from the name. The project is stored in Supabase with the current workspace as its parent.
+- **Create a project** – From any workspace page, click “New Project” to open an inline form. Enter a name and optional description. The slug is auto‑generated from the name. 
 - **List projects** – The workspace page fetches and displays all projects belonging to that workspace. Each project name is a clickable link to its own page.
 - **Security** – RLS policies ensure users can only see and create projects in workspaces they own.
 - **Tech stack** – Uses the same pattern as workspaces: axios service → server action → client form (useActionState). Fetching is done on the server (no client‑side store needed).
@@ -138,7 +135,6 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Edit issue** – Workspace members can edit any issue via a dedicated edit page (`/workspace/[ws]/project/[p]/issue/[id]/edit`). The form allows changing title, description, status, priority, assignee, and due date. After saving, the user is redirected to the updated issue page, and the cache is revalidated.
 - **Delete issue** – Only the issue creator, workspace owner, or workspace admin can delete an issue. A confirmation dialog prevents accidental deletion. After deletion, the user is redirected to the project page.
 - **Server actions** – `updateIssueAction` validates input with Zod, calls the update service, revalidates the issue page, and redirects. `deleteIssueAction` checks permissions via the issue creator and the user's role in the workspace, then calls the delete service and redirects.
-- **Service layer** – `updateIssue` and `deleteIssue` use axios to interact with Supabase REST API, handling errors and returning `ApiResult` objects.
 - **Client components** – `EditIssueForm` uses `useActionState` for form handling and pending state. `DeleteIssueButton` submits a form action and shows an alert on error.
 - **Security** – Row Level Security (RLS) policies on the `issues` table restrict deletion to creators, owners, and admins (optional). The server action also enforces permission checks for added safety.
 
@@ -187,7 +183,7 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 - **Filter by priority** – No priority, Urgent, High, Normal, Low.
 - **Filter by assignee** – Select any workspace member from the dropdown.
 - **Sort options** – Sort issues by **priority**, **due date**, or **created date**, in ascending or descending order.
-- **Server‑side execution** – All filters and sorting are applied directly in the database using Supabase queries, ensuring scalability even with thousands of issues.
+- **Server‑side execution** – All filters and sorting are applied directly in the database  ensuring scalability even with thousands of issues.
 - **URL persistence** – Filter and sort selections are stored in the URL (`?status=in_progress&sort=priority&order=desc`), making views shareable and bookmarkable.
 - **Loading state** – A `loading.tsx` skeleton provides immediate visual feedback during navigation.
 
@@ -205,7 +201,6 @@ A complete, secure authentication implementation for **Nexus** – a mini Linear
 | Layer       | Technology                            |
 | ----------- | ------------------------------------- |
 | Framework   | Next.js 15+ (App Router)              |
-| Auth API    | Supabase (REST endpoints)             |
 | HTTP Client | Axios + native fetch (for middleware) |
 | Cookies     | httpOnly (server‑side)                |
 | Validation  | `jose` (local JWT verification)       |

@@ -32,14 +32,14 @@ export default function CreateWorkspaceForm({
     <form action={formAction} className="space-y-6">
       <div className="space-y-1.5">
         <label
-          htmlFor="workspace-name"
+          htmlFor="name"
           className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           Workspace name
         </label>
         <input
-          id="workspace-name"
-          name="workspace-name"
+          id="name"
+          name="name"
           type="text"
           placeholder="e.g., Acme Inc."
           required
@@ -65,7 +65,8 @@ export default function CreateWorkspaceForm({
         />
       </div>
 
-      {state?.error &&        <div className="flex items-start gap-2.5 mt-2 rounded-lg border border-red-200 bg-red-50/50 p-3 text-xs font-medium text-red-600 dark:border-red-900/30 dark:bg-red-950/10 dark:text-red-400">
+      {state?.error && (
+        <div className="flex items-start gap-2.5 mt-2 rounded-lg border border-red-200 bg-red-50/50 p-3 text-xs font-medium text-red-600 dark:border-red-900/30 dark:bg-red-950/10 dark:text-red-400">
           <svg
             className="h-4 w-4 mt-0.5 shrink-0 text-red-500 dark:text-red-400"
             fill="none"
@@ -80,7 +81,8 @@ export default function CreateWorkspaceForm({
             />
           </svg>
           <span>{state.error}</span>
-        </div>}
+        </div>
+      )}
 
       <button
         type="submit"

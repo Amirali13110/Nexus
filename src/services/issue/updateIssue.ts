@@ -1,9 +1,10 @@
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
 export async function updateIssue({
   issueId,
+  workspaceId,
+  projectId,
   title,
   description,
   status,
@@ -12,6 +13,8 @@ export async function updateIssue({
   dueDate,
 }: {
   issueId: string;
+  workspaceId: string;
+  projectId: string;
   title?: string;
   description?: string;
   status?: string;
@@ -25,10 +28,8 @@ export async function updateIssue({
   const accessToken = decodeURIComponent(encodedToken);
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
-    Prefer: "return=representation",
   };
 
   const body: any = {};
@@ -39,19 +40,15 @@ export async function updateIssue({
   if (assigneeId !== undefined) body.assignee_id = assigneeId || null;
   if (dueDate !== undefined) body.due_date = dueDate || null;
 
-  const url = `${supabaseUrl}/rest/v1/issues?id=eq.${issueId}`;
+  const url = `${process.env.BACKEND_URL}/issues/workspaces/${workspaceId}/projects/${projectId}/issues/${issueId}`;
 
   try {
     const response = await axiosWithProxy.patch(url, body, { headers });
-    const updated = Array.isArray(response.data)
-      ? response.data[0]
-      : response.data;
+    const updated = response.data;
     return { success: true, data: updated };
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to update issue";
+    console.log(error.response.data);
+    const errorMsg = error.response?.data?.detail || "Failed to update issue";
     return { success: false, error: errorMsg };
   }
 }

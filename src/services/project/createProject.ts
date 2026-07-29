@@ -1,12 +1,10 @@
 "use server";
 
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import { slugify } from "@/utils/slugify";
 import { ApiResult, CreateProjectInput } from "@/lib/types";
 import { Project } from "@/lib/types";
-import axios from "axios";
 
 export async function createProject({
   name,
@@ -20,17 +18,18 @@ export async function createProject({
 
   const slug = slugify(name);
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
     Prefer: "return=representation",
   };
 
   const body = { name, slug, description, workspace_id: workspace_id };
+  const url = `${process.env.BACKEND_URL}/workspaces/${workspace_id}/projects`;
 
+  console.log(workspace_id)
   try {
     const response = await axiosWithProxy.post<Project>(
-      `${supabaseUrl}/rest/v1/projects`,
+      url,
       body,
       { headers },
     );
@@ -40,18 +39,16 @@ export async function createProject({
         error: response.data || "Failed to create project",
       };
     }
-    const project = Array.isArray(response.data)
-      ? response.data[0]
-      : response.data;
-    if (!project || !project.slug) {
-      return { success: false, error: "Project created but missing data" };
-    }
+    console.log(response)
+    const project =  response.data;
+    
+
     return { success: true, data: project };
   } catch (error: any) {
-    ("Can't create your project");
+    console.log(error.response.data)
     return {
       success: false,
-      error: error.response?.data?.msg || error.msg,
+      error: error.response?.data?.detail || "Failed to create project",
     };
   }
 }

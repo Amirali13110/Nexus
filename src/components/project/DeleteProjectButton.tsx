@@ -5,19 +5,19 @@ import Spinner from "../ui/Spinner";
 
 export default function DeleteProjectButton({
   projectId,
-  workspaceSlug,
+  workspaceId,
   onSuccess,
 }: {
   onSuccess: () => void;
   projectId: string;
-  workspaceSlug: string;
+  workspaceId: string;
 }) {
   const [isPending, setIsPending] = useState(false);
 
   async function handleDelete() {
     setIsPending(true);
     try {
-      const result = await deleteProjectAction(projectId, workspaceSlug);
+      const result = await deleteProjectAction(projectId, workspaceId);
       if (result) {
         onSuccess();
       }

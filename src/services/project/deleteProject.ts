@@ -1,24 +1,21 @@
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
-export async function deleteProject(projectId: string) {
+export async function deleteProject({projectId , workspaceId}: {projectId:string , workspaceId:string}) {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
   if (!encodedToken) return { success: false, error: "Unauthorized" };
   const accessToken = decodeURIComponent(encodedToken);
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const url = `${supabaseUrl}/rest/v1/projects?id=eq.${projectId}`;
+  const url = `${process.env.BACKEND_URL}/workspaces/${workspaceId}/projects/${projectId}`;
   try {
     await axiosWithProxy.delete(url, { headers });
     return { success: true };
   } catch (error: any) {
-    const errorMsg = error.response?.data?.message || error.message || "Failed to delete project";
-    return { success: false, error: errorMsg };
+    return { success: false, error: error.response?.data?.detail || "Failed to delete project" };
   }
 }

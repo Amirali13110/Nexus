@@ -1,30 +1,29 @@
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
 export async function deleteMember({
   workspaceId,
-  profileId,
+  memberId,
 }: {
   workspaceId: string;
-  profileId: string;
+  memberId: string;
 }) {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
   if (!encodedToken) return { success: false, error: "Unauthorized" };
   const accessToken = decodeURIComponent(encodedToken);
+  console.log(workspaceId)
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const url = `${supabaseUrl}/rest/v1/workspace_members?workspace_id=eq.${workspaceId}&profile_id=eq.${profileId}`;
+  const url = `${process.env.BACKEND_URL}/workspaces/${workspaceId}/members/${memberId}`;
   try {
     await axiosWithProxy.delete(url, { headers });
     return { success: true };
   } catch (error: any) {
-    const errorMsg = error.response?.data?.message || error.message || "Failed to delete member";
-    return { success: false, error: errorMsg };
+    console.log(error.response.data)
+    return { success: false, error: error.response.data.detail || "Failed to remove member" };
   }
 }

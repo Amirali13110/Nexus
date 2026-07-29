@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useIssueStore } from "@/store/issueStore";
-import { useProfileStore } from "@/store/profileStore";
 
 const statusColors: Record<string, string> = {
   backlog: "#94A3B8",
@@ -23,23 +22,19 @@ const statuses = ["backlog", "todo", "in_progress", "in_review", "done"];
 
 export default function IssueStatusChart() {
   const { issues } = useIssueStore();
-  const { profile } = useProfileStore();
   const [hoveredStatus, setHoveredStatus] = useState<string | null>(null);
 
-  const assignedIssues = issues.filter(
-    (issue) => issue.assignee_id === profile?.id,
-  );
-  const total = assignedIssues.length;
+
+  const total = issues.length;
 
   const counts = statuses.map(
-    (status) => assignedIssues.filter((i) => i.status === status).length,
+    (status) => issues.filter((i) => i.status === status).length,
   );
 
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
   let currentAngle = -90;
 
-  // Build segments, filtering out any null values
   const segments = statuses
     .map((status, index) => {
       const count = counts[index];
@@ -95,7 +90,6 @@ export default function IssueStatusChart() {
       </p>
 
       <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-8">
-        {/* Donut */}
         <div className="relative h-52 w-52 shrink-0">
           <svg width="100%" height="100%" viewBox="0 0 200 200">
             {segments.map((seg) => {
@@ -148,7 +142,6 @@ export default function IssueStatusChart() {
           </svg>
         </div>
 
-        {/* Legend + Tooltip */}
         <div className="flex-1 min-w-[140px]">
           <div className="space-y-2">
             {segments.map((seg) => {

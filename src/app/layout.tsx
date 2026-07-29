@@ -5,6 +5,7 @@ import IssueProvider from "@/components/issue/IssueProvider";
 import WorkspaceProvider from "@/components/workspace/WorkspaceProvider";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import HashError from "@/components/ui/HashError";
+import AuthProvider from "@/components/authentication/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Nexus",
@@ -23,7 +24,9 @@ export default async function RootLayout({
           <IssueProvider>
             <ProfileProvider>
               <WorkspaceProvider>
+                <AuthProvider>
                 {children}
+                </AuthProvider>
                 <HashError />
               </WorkspaceProvider>
             </ProfileProvider>

@@ -1,7 +1,12 @@
 "use client";
 import Modal from "../ui/Modal";
 
-import type { Issue, Member, Project } from "@/lib/types";
+import type {
+  Issue,
+  Member,
+  Project,
+  WorkspaceMembersResponse,
+} from "@/lib/types";
 import UpdateIssueForm from "./UpdateIssueForm";
 import { useState } from "react";
 import { deleteIssueAction } from "@/actions/issue/DeleteIssueAction";
@@ -76,17 +81,16 @@ const priorityStyles: Record<
 
 export default function IssueView({
   issue,
-  members,
-  workspaceSlug,
+  membersResult,
+  workspaceId,
   project,
 }: {
   issue: Issue;
-  members: Member[];
-  workspaceSlug: string;
+  membersResult: WorkspaceMembersResponse;
+  workspaceId: string;
   project: Project;
 }) {
-  const assigneeName =
-    issue.assignee?.full_name || issue.assignee?.username || "Unassigned";
+  const assigneeName = issue.assignee?.full_name || "Unassigned";
 
   const currentStatus = statusStyles[issue.status] || {
     label: issue.status,
@@ -289,9 +293,8 @@ export default function IssueView({
           <UpdateIssueForm
             issue={issue}
             projectId={project.id}
-            workspaceSlug={workspaceSlug}
-            projectSlug={project.slug}
-            members={members}
+            workspaceId={workspaceId}
+            members={membersResult.members}
             onSuccess={() => {
               setIsEditing(false);
             }}
@@ -318,10 +321,10 @@ export default function IssueView({
                 onClick={async () => {
                   const result = await deleteIssueAction({
                     deletingIssueId: issue.id,
-                    workspaceSlug,
-                    projectSlug: project.slug,
+                    workspaceId,
+                    projectId: issue.project_id,
                   });
-                  result.success && redirect("/");
+                  result.success && redirect(`/workspace/${workspaceId}/project/${issue.project_id}`);
                   setIsDeleting(false);
                 }}
                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700"

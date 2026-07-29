@@ -1,11 +1,12 @@
 "use client";
 import { useActionState, useEffect } from "react";
 import { createIssueAction } from "@/actions/issue/CreateIssueAction";
-import type { Member } from "@/lib/types";
+import type { Member, WorkspaceMembersResponse } from "@/lib/types";
 import { useProjectStore } from "@/store/projectStore";
 import { useWorkspaceStore } from "@/store/workspaceStore";
 import Spinner from "../ui/Spinner";
 import { useIssueStore } from "@/store/issueStore";
+import { notFound } from "next/navigation";
 
 export default function CreateIssueForm({
   onSuccess,
@@ -24,6 +25,7 @@ export default function CreateIssueForm({
     createIssueAction,
     null,
   );
+
   const { fetchIssues } = useIssueStore();
   useEffect(
     function () {
@@ -145,8 +147,8 @@ export default function CreateIssueForm({
           >
             <option value="">Unassigned</option>
             {members.map((member) => (
-              <option key={member.id} value={member.id}>
-                {member.username} ({member.email})
+              <option key={member.id} value={member.user.id}>
+                {member.user.profile.full_name}
               </option>
             ))}
           </select>
@@ -170,7 +172,7 @@ export default function CreateIssueForm({
       </div>
 
       {state && !state.success && (
-       <div className="flex items-start gap-2.5 mt-2 rounded-lg border border-red-200 bg-red-50/50 p-3 text-xs font-medium text-red-600 dark:border-red-900/30 dark:bg-red-950/10 dark:text-red-400">
+        <div className="flex items-start gap-2.5 mt-2 rounded-lg border border-red-200 bg-red-50/50 p-3 text-xs font-medium text-red-600 dark:border-red-900/30 dark:bg-red-950/10 dark:text-red-400">
           <svg
             className="h-4 w-4 mt-0.5 shrink-0 text-red-500 dark:text-red-400"
             fill="none"
@@ -185,7 +187,8 @@ export default function CreateIssueForm({
             />
           </svg>
           <span>{state.error}</span>
-        </div>      )}
+        </div>
+      )}
 
       <button
         type="submit"

@@ -1,12 +1,13 @@
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 
 export async function updateMemberRole({
-  profileId,
+  memberId,
+  workspaceId,
   role,
 }: {
-  profileId: string;
+  memberId: string;
+  workspaceId: string;
   role: string;
 }) {
   const cookieStore = await cookies();
@@ -15,26 +16,20 @@ export async function updateMemberRole({
   const accessToken = decodeURIComponent(encodedToken);
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
-    Prefer: "return=representation",
   };
 
-  const url = `${supabaseUrl}/rest/v1/workspace_members?profile_id=eq.${profileId}`;
+  const url = `${process.env.BACKEND_URL}/workspaces/${workspaceId}/members/${memberId}/role`;
   const body = { role };
 
   try {
     const response = await axiosWithProxy.patch(url, body, { headers });
-    const updated = Array.isArray(response.data)
-      ? response.data[0]
-      : response.data;
+    const updated = response.data;
     return { success: true, data: updated };
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to update member role";
-    return { success: false, error: errorMsg };
+    console.log(error.response.data.detail.msg)
+    
+    return { success: false, error: error.response.data.detail || "Failed to update members role " };
   }
 }

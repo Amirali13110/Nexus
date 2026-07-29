@@ -10,15 +10,6 @@ const createIssueSchema = z.object({
   description: z.string().max(1000).optional(),
   status: z.enum(["backlog", "todo", "in_progress", "in_review", "done"]),
   priority: z.number().int().min(0).max(4),
-  projectId: z.string().uuid("Invalid project ID"),
-  workspaceId: z.string().uuid("Invalid workspace ID"),
-  assigneeId: z
-    .string()
-    .uuid()
-    .optional()
-    .nullable()
-    .or(z.literal(""))
-    .transform((val) => (val === "" ? null : val)),
   dueDate: z.string().date().nullish(),
 });
 

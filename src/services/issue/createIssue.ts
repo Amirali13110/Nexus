@@ -1,9 +1,6 @@
-// services/issue/createIssue.ts
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import type { Issue, ApiResult } from "@/lib/types";
-import axios from "axios";
 
 export async function createIssue({
   title,
@@ -34,10 +31,8 @@ export async function createIssue({
   const { id: userId } = JSON.parse(userCookie);
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
-    Prefer: "return=representation",
   };
 
   let assignee_id = assigneeId === "" ? null : assigneeId;
@@ -53,8 +48,9 @@ export async function createIssue({
     assignee_id,
     due_date: dueDate || null,
   };
+  console.log(assigneeId)
 
-  const url = `${supabaseUrl}/rest/v1/issues`;
+  const url = `${process.env.BACKEND_URL}/issues/workspaces/${workspaceId}/projects/${projectId}`;
 
   try {
     const response = await axiosWithProxy.post<Issue>(url, body, {
@@ -63,6 +59,7 @@ export async function createIssue({
     const createdIssue = response.data as Issue;
     return { success: true, data: createdIssue };
   } catch (error: any) {
+    console.log(error.response.data)
     return {
       success: false,
       error:

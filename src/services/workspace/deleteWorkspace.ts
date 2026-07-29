@@ -1,6 +1,4 @@
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
-
 import { cookies } from "next/headers";
 
 export async function deleteWorkspace(workspaceId: string) {
@@ -10,20 +8,18 @@ export async function deleteWorkspace(workspaceId: string) {
   const accessToken = decodeURIComponent(encodedToken);
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const url = `${supabaseUrl}/rest/v1/workspaces?id=eq.${workspaceId}`;
+  const url = `${process.env.BACKEND_URL}/workspaces/${workspaceId}`;
   try {
     await axiosWithProxy.delete(url, { headers });
 
     return { success: true };
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to delete workspace";
-    return { success: false, error: errorMsg};
+    return {
+      success: false,
+      error: error.response?.data?.detail || "Failed to update workspace",
+    };
   }
 }

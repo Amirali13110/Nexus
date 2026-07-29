@@ -27,13 +27,7 @@ export async function updateProfileAction(prevState: any, formData: FormData) {
     return { success: false, error: validation.error.issues[0].message };
   }
 
-  const cookieStore = await cookies();
-  const userCookie = cookieStore.get("auth_user")?.value;
-  if (!userCookie) return { success: false, error: "Not authenticated" };
-  const { id: profileId } = JSON.parse(userCookie);
-
   const result = await updateProfile({
-    profileId,
     username,
     full_name,
     bio,

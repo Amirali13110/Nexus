@@ -1,17 +1,17 @@
 "use server";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { axiosWithProxy } from "../HttpService";
 import { cookies } from "next/headers";
-import axios from "axios";
 import { ApiResult, Workspace } from "@/lib/types";
 
 export async function createWorkspace({
   name,
+  description,
   slug,
 }: {
   name: string;
+  description?:string;
   slug: string;
-}): Promise<ApiResult<Workspace[]>> {
+}): Promise<ApiResult<Workspace>> {
   const cookieStore = await cookies();
   const encodedToken = cookieStore.get("access_token")?.value;
   const userCookie = cookieStore.get("auth_user")?.value;
@@ -32,29 +32,18 @@ export async function createWorkspace({
       };
     }
     const response = await axiosWithProxy.post(
-      `${supabaseUrl}/rest/v1/workspaces`,
-      { name, slug, owner_id },
+      `${process.env.BACKEND_URL}/workspaces`,
+      { name, slug, description ,owner_id },
       {
         headers: {
           "Content-Type": "application/json",
-          apikey: supabaseKey,
           Authorization: `Bearer ${accessToken}`,
-          Prefer: "return=representation",
         },
       },
     );
-
     return { success: true, data: response.data };
   } catch (error: any) {
-    const status = error.response?.status;
-    const message = error.response?.data?.message || error.message;
-    if (status === 409 && message.includes("workspaces_owner_slug_unique")) {
-      return {
-        success: false,
-        error:
-          "You already have a workspace with this name. Please choose a different name.",
-      };
-    }
-    return { success: false, error: message };
+   
+    return { success: false, error: error?.response?.data?.detail || "Failed to create workspace" };
   }
 }

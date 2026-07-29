@@ -5,11 +5,11 @@ import UpdateProfileForm from "./UpdateProfileForm";
 import { useProfileStore } from "@/store/profileStore";
 import SignOutButton from "./SignOutButton";
 import { useAuthStore } from "@/store/authStore";
-import { redirect } from "next/navigation";
 
 export default function ProfileView() {
   const [isShowUpdateModal, setIsShowUpdateModal] = useState(false);
   const { profile } = useProfileStore();
+  const { user } = useAuthStore();
   const { access_token } = useAuthStore();
 
   const profileDetails = [
@@ -54,7 +54,7 @@ export default function ProfileView() {
     },
     {
       label: "Email Address",
-      value: profile?.email,
+      value: user?.email,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,7 @@ export default function ProfileView() {
             Edit Profile
           </button>
 
-          <SignOutButton profileToken={access_token as string} />
+          <SignOutButton />
         </section>
       </main>
 

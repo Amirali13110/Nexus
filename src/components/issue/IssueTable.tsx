@@ -5,18 +5,16 @@ import IssueTableRow from "./IssueTableRow";
 interface IssueTableProps {
   issues: Issue[];
   role: string;
-  workspaceSlug: string;
-  projectSlug: string;
-  userId: string;
+  workspaceId: string;
+  projectId: string;
   onEdit: (issue: Issue) => void;
   onDelete: (issueId: string) => void;
 }
 
 export default function IssueTable({
   issues,
-  userId,
-  workspaceSlug,
-  projectSlug,
+  workspaceId,
+  projectId,
   role,
   onEdit,
   onDelete,
@@ -38,11 +36,10 @@ export default function IssueTable({
           {issues.map((issue) => (
             <IssueTableRow
               key={issue.id}
-              workspaceSlug={workspaceSlug}
-              projectSlug={projectSlug}
+              workspaceId={workspaceId}
+              projectId={projectId}
               issue={issue}
               role={role}
-              userId={userId}
               onEdit={onEdit}
               onDelete={onDelete}
             />

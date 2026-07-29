@@ -5,31 +5,20 @@ import { getWorkspaceById } from "@/services/workspace/getWorkspaceById";
 
 type RemoveMemberActionProps = {
   workspaceId: string;
-  profileId: string;
-  workspaceSlug: string;
-  role: string;
+  memberId: string;
+
 };
 
 export async function removeMemberAction({
   workspaceId,
-  profileId,
-  workspaceSlug,
-  role,
+  memberId,
+  
 }: RemoveMemberActionProps) {
-  const workspaceResult = await getWorkspaceById(workspaceId);
-  if (!workspaceResult.success) {
-    return { success: false, error: "Workspace not found" };
-  }
-  const workspace = workspaceResult.data;
-  if (workspace.owner_id === profileId && role !== "owner") {
-    return {
-      success: false,
-      error: "Cannot change the workspace owner's role",
-    };
-  }
 
-  const result = await deleteMember({ workspaceId, profileId });
+
+  const result = await deleteMember({ workspaceId, memberId});
+  console.log(result)
   if (!result.success) return { success: false, error: result.error };
-  revalidatePath(`/workspace/${workspaceSlug}`);
+  revalidatePath(`/workspace/${workspaceId}`);
   return { success: true };
 }

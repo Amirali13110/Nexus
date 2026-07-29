@@ -4,22 +4,17 @@ import { updateIssueAction } from "@/actions/issue/UpdateIssueAction";
 import { Issue, Member } from "@/lib/types";
 import { useIssueStore } from "@/store/issueStore";
 import Spinner from "../ui/Spinner";
-
 export default function UpdateIssueForm({
   onSuccess,
   issue,
   projectId,
-  workspaceSlug,
-
-  projectSlug,
+  workspaceId,
   members,
 }: {
   onSuccess: () => void;
   issue: Issue;
   projectId: string;
-
-  workspaceSlug: string;
-  projectSlug: string;
+  workspaceId: string;
   members: Member[];
 }) {
   const [state, formAction, isPending] = useActionState(
@@ -27,22 +22,19 @@ export default function UpdateIssueForm({
     null,
   );
   const { fetchIssues } = useIssueStore();
-  useEffect(
-    function () {
-      if (state?.success) {
-        onSuccess();
-        fetchIssues();
-      }
-    },
-    [state?.success],
-  );
+  useEffect(() => {
+    if (!state?.success) return;
+
+    onSuccess();
+    fetchIssues();
+  }, [state, fetchIssues,  onSuccess]);
 
   return (
     <form action={formAction} className="w-full space-y-4">
       <input type="hidden" name="issueId" value={issue.id} />
       <input type="hidden" name="projectId" value={projectId} />
-      <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
-      <input type="hidden" name="projectSlug" value={projectSlug} />
+      <input type="hidden" name="workspaceId" value={workspaceId} />
+
 
       <div className="space-y-1.5">
         <label
@@ -142,8 +134,8 @@ export default function UpdateIssueForm({
           >
             <option value="">Unassigned</option>
             {members.map((member) => (
-              <option key={member.id} value={member.id}>
-                {member.username} ({member.email})
+              <option key={member.user.id} value={member.user.id}>
+                {member.user.profile.full_name}{" "}
               </option>
             ))}
           </select>

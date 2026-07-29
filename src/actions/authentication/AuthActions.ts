@@ -1,8 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { signOut } from "../../services/authentication/SignOut";
-import { getRefreshToken } from "@/services/authentication/getRefreshToken";
+import { refreshAccessToken } from "@/services/authentication/refreshAccessToken";
 import { redirect } from "next/navigation";
 
 export async function setAuthCookies(data: any) {
@@ -38,7 +37,7 @@ export async function setAuthCookies(data: any) {
 
 export async function refreshAuthCookies(refreshToken: string) {
   try {
-    const freshPayload = await getRefreshToken(refreshToken);
+    const freshPayload = await refreshAccessToken();
 
     await setAuthCookies({
       access_token: freshPayload.access_token,
@@ -55,7 +54,7 @@ export async function refreshAuthCookies(refreshToken: string) {
     cookieStore.delete("refresh_token");
     cookieStore.delete("auth_user");
 
-    redirect('/signIn')
+    redirect("/signIn");
     return { success: false, error: "Session expired" };
   }
 }
@@ -76,11 +75,6 @@ export async function setUserCookie(user: any) {
 export async function handleSignOut() {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("access_token")?.value;
-
-    if (token) {
-      await signOut(token);
-    }
 
     cookieStore.delete("access_token");
     cookieStore.delete("refresh_token");

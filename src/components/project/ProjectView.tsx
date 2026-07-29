@@ -1,15 +1,13 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Project, Issue, Member } from "@/lib/types";
+import type { Project, Issue, Member, WorkspaceMembersResponse } from "@/lib/types";
 import IssueTable from "@/components/issue/IssueTable";
 import IssueSearchBar from "@/components/issue/IssueSearchBar";
 import IssueSort from "@/components/issue/IssueSort";
 import Modal from "@/components/ui/Modal";
 import CreateIssueForm from "@/components/issue/CreateIssueForm";
 import UpdateIssueForm from "@/components/issue/UpdateIssueForm";
-
 import IssueFilter from "../issue/IssueFilter";
 import { deleteIssueAction } from "@/actions/issue/DeleteIssueAction";
 import { useIssueStore } from "@/store/issueStore";
@@ -65,21 +63,20 @@ const PlusIcon = () => (
 interface ProjectViewProps {
   project: Project;
   role: string;
-  userId: string;
+
   issues: Issue[];
-  members: Member[];
+  membersResult: WorkspaceMembersResponse;
   error: string | null;
-  workspaceSlug: string;
+  workspaceId: string;
 }
 
 export default function ProjectView({
   project,
   issues,
-  members,
-  userId,
+  membersResult,
   error,
   role,
-  workspaceSlug,
+  workspaceId,
 }: ProjectViewProps) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingIssue, setEditingIssue] = useState<Issue | null>(null);
@@ -88,13 +85,12 @@ export default function ProjectView({
   const [isDeletingProject, setIsDeletingProject] = useState(false);
   const isAdmin = role === "owner" || role === "admin";
   const { fetchIssues } = useIssueStore();
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 pt-20 md:px-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <Link
-            href={`/workspace/${workspaceSlug}`}
+            href={`/workspace/${workspaceId}`}
             className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             <BackIcon />
@@ -134,7 +130,7 @@ export default function ProjectView({
       <div className="mb-4 flex flex-wrap items-center gap-4">
         <IssueSearchBar />
 
-        <IssueFilter members={members} />
+        <IssueFilter members={membersResult.members} />
         <IssueSort />
       </div>
 
@@ -152,9 +148,8 @@ export default function ProjectView({
         <IssueTable
           issues={issues}
           onEdit={(issue: Issue) => setEditingIssue(issue)}
-          workspaceSlug={workspaceSlug}
-          projectSlug={project.slug}
-          userId={userId}
+          workspaceId={workspaceId}
+          projectId={project.id}
           role={role}
           onDelete={(issueId: string) => setDeletingIssueId(issueId)}
         />
@@ -168,7 +163,7 @@ export default function ProjectView({
         <CreateIssueForm
           projectId={project.id}
           workspaceId={project.workspace_id}
-          members={members}
+          members={membersResult.members}
           onSuccess={() => {
             setIsCreateModalOpen(false);
           }}
@@ -184,9 +179,8 @@ export default function ProjectView({
           <UpdateIssueForm
             issue={editingIssue}
             projectId={project.id}
-            workspaceSlug={workspaceSlug}
-            projectSlug={project.slug}
-            members={members}
+            workspaceId={workspaceId}
+            members={membersResult.members}
             onSuccess={() => {
               setEditingIssue(null);
             }}
@@ -202,7 +196,6 @@ export default function ProjectView({
         <div className="space-y-6">
           <UpdateProjectForm
             project={project}
-            workspaceSlug={workspaceSlug}
             onSuccess={() => setIsEditingProject}
           />
           <hr className="border-gray-200 dark:border-gray-700" />
@@ -237,7 +230,7 @@ export default function ProjectView({
                 Cancel
               </button>
               <DeleteProjectButton
-                workspaceSlug={workspaceSlug}
+                workspaceId={workspaceId}
                 projectId={project.id}
                 onSuccess={() => setIsDeletingProject(false)}
               />
@@ -265,8 +258,8 @@ export default function ProjectView({
                 onClick={async () => {
                   await deleteIssueAction({
                     deletingIssueId,
-                    workspaceSlug,
-                    projectSlug: project.slug,
+                    workspaceId,
+                    projectId: project.id,
                   });
                   setDeletingIssueId(null);
                   fetchIssues();

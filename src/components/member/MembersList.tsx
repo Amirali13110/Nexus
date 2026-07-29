@@ -2,29 +2,27 @@
 
 import { updateMemberRoleAction } from "@/actions/member/UpdateMemberAction";
 import Link from "next/link";
-import { Member } from "@/lib/types";
+import { Member, WorkspaceMembersResponse } from "@/lib/types";
 import { useActionState, useState } from "react";
 import UpdateMemberForm from "./UpdateMemberForm";
 import Modal from "../ui/Modal";
 import InviteMemberForm from "../invitation/InviteMemberForm";
+import { useAuthStore } from "@/store/authStore";
 
 export default function MemberList({
-  members,
+  membersResult,
   workspaceId,
-  workspaceSlug,
   currentUserRole,
-  currentUserId,
 }: {
-  members: Member[];
+  membersResult: WorkspaceMembersResponse;
   workspaceId: string;
-  workspaceSlug: string;
   currentUserRole: string;
-  currentUserId: string;
 }) {
   const [state, formAction, isPending] = useActionState(
     updateMemberRoleAction,
     null,
   );
+  const { user } = useAuthStore();
   const canManage = currentUserRole === "admin" || currentUserRole === "owner";
   const [isEditingRole, setIsEditingRole] = useState(false);
   const [isInvitingMember, setIsInvitingMember] = useState(false);
@@ -48,7 +46,7 @@ export default function MemberList({
             Operators
           </h2>
           <p className="text-sm font-bold text-zinc-400 dark:text-zinc-500 mt-0.5">
-            {members.length} Active Personnel
+            {membersResult.members.length} Active Personnel
           </p>
         </div>
 
@@ -76,12 +74,14 @@ export default function MemberList({
       </div>
 
       <div className="space-y-2.5">
-        {members.map((member) => {
-          const initial = member.username?.charAt(0).toUpperCase() || "M";
-          const profileUrl = `/workspace/${workspaceSlug}/members/${member.id}`;
-          const isSelf = member.id === currentUserId;
-          const isOwner = member.role === currentUserRole;
-          const isProtectedOwner = isSelf && isOwner;
+        {membersResult.members.map((member) => {
+          const memberProfile = member.user.profile;
+          const initial =
+            member.user.profile.username?.charAt(0).toUpperCase() || "M";
+          const profileUrl = `/workspace/${workspaceId}/members/${member.id}`;
+
+          const isProtectedOwner =
+            member.user.id === user?.id && member.role === "owner";
           return (
             <div
               key={member.id}
@@ -99,7 +99,7 @@ export default function MemberList({
                     href={profileUrl}
                     className="text-sm font-bold text-zinc-900 dark:text-zinc-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate"
                   >
-                    {member.full_name}
+                    {memberProfile.full_name || memberProfile.username}
                   </Link>
 
                   <span
@@ -114,7 +114,7 @@ export default function MemberList({
                 </div>
 
                 <p className="text-xs font-medium font-mono text-zinc-400 dark:text-zinc-500 mt-0.5 truncate">
-                  {member.email}
+                  {memberProfile.email}
                 </p>
               </div>
 
@@ -150,10 +150,9 @@ export default function MemberList({
                 >
                   <UpdateMemberForm
                     workspaceId={workspaceId}
+                    memberId={member.id}
                     member={member}
                     onSuccess={() => setIsEditingRole(false)}
-                    currentUserId={currentUserId}
-                    workspaceSlug={workspaceSlug}
                   />
                 </Modal>
               )}

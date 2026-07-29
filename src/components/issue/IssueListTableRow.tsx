@@ -67,13 +67,13 @@ interface IssueTableRowProps {
 export default function IssueListTableRow({ issue }: IssueTableRowProps) {
   const priority = priorityConfig[issue.priority] ?? priorityConfig[0];
   const status = statusConfig[issue.status] ?? statusConfig.backlog;
-  const assigneeInitial = issue.assignee?.username?.[0]?.toUpperCase() || "?";
+  const assigneeInitial = issue.assignee?.full_name?.[0]?.toUpperCase() || "?";
 
   return (
     <tr className="group hover:bg-gray-50 dark:hover:bg-gray-800/50">
       <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
         <Link
-          href={`/issue/${issue.id}`}
+          href={`/workspace/${issue.workspace_id}/project/${issue.project_id}/issue/${issue.id}`}
           className="font-medium text-gray-900 hover:text-[#0066ff] dark:text-white dark:hover:text-[#0066ff]"
         >
           {issue.title}
@@ -100,7 +100,7 @@ export default function IssueListTableRow({ issue }: IssueTableRowProps) {
             {assigneeInitial}
           </div>
           <span className="text-sm text-gray-700 dark:text-gray-300">
-            {issue.assignee?.username || "Unassigned"}
+            {issue.assignee?.full_name || "Unassigned"}
           </span>
         </div>
       </td>

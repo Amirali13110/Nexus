@@ -34,12 +34,12 @@ export default function SignInFormNew() {
         >
           <form action={formAction} className="space-y-4">
             <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-[#c2c6d8]">
-              Username or email
+              Email
             </label>
             <input
-              name="identifier"
+              name="email"
               type="text"
-              placeholder="Username or email"
+              placeholder="Enter your email"
               required
               disabled={isPending}
               className="w-full rounded-xl border border-gray-300 dark:border-[#424656] bg-gray-50 dark:bg-[#2a2a2a] px-4 py-2 text-sm text-gray-900 dark:text-[#e5e2e1] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066ff] focus:outline-none focus:ring-0"
@@ -112,7 +112,7 @@ export default function SignInFormNew() {
 
             <div className="text-right">
               <Link
-                href="/forgetPassword"
+                href="/forgotPassword"
                 className="text-sm text-[#0066ff] hover:underline"
               >
                 Forgot password?

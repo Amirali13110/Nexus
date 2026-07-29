@@ -23,7 +23,7 @@ const BackIcon = () => (
 );
 
 export default function IssueList() {
-  const { issues, error } = useIssueStore();
+  const { error } = useIssueStore();
   const computedIssues = useFilteredIssues();
 
   return (

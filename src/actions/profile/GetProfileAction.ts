@@ -26,7 +26,7 @@ export default async function getProfileAction() {
       return { success: false, error: "Invalid auth_user cookie format" };
     }
 
-    const result = await getUserProfile({ id });
+    const result = await getUserProfile();
     const profile = result.data;
     if (!profile) {
       return { success: false, error: "Profile not found" };

@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CreateProjectForm from "../project/CreateProjectForm";
 import ProjectList from "../project/ProjectList";
@@ -9,7 +8,6 @@ import Modal from "@/components/ui/Modal";
 import UpdateWorkspaceForm from "./UpdateWorkspaceForm";
 import DeleteWorkspaceButton from "@/components/workspace/DeleteWorkspaceButton";
 import type { Workspace, Project } from "@/lib/types";
-import { useWorkspaceStore } from "@/store/workspaceStore";
 
 const MembersIcon = () => (
   <svg
@@ -90,13 +88,11 @@ export default function WorkspaceView({
   projects,
   role,
 }: WorkspaceViewProps) {
-  const router = useRouter();
   const isAdmin = role === "owner" || role === "admin";
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] =
     useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const { fetchWorkspaces } = useWorkspaceStore();
 
   const handleWorkspaceUpdate = () => {
     setIsSettingsModalOpen(false);
@@ -125,7 +121,7 @@ export default function WorkspaceView({
         </div>
         <div className="flex items-center gap-3">
           <Link
-            href={`/workspace/${workspace.slug}/members`}
+            href={`/workspace/${workspace.id}/members`}
             className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
           >
             <MembersIcon />
@@ -167,7 +163,7 @@ export default function WorkspaceView({
             </button>
           )}
         </div>
-        <ProjectList projects={projects} workspaceSlug={workspace.slug} />
+        <ProjectList projects={projects} workspaceId={workspace.id} />
       </div>
 
       <Modal

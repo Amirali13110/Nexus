@@ -1,8 +1,6 @@
 import { axiosWithProxy } from "../HttpService";
-import { supabaseUrl, supabaseKey } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import { slugify } from "@/utils/slugify";
-import { redirect } from "next/navigation";
 import { ApiResult, Workspace } from "@/lib/types";
 
 export async function updateWorkspace({
@@ -20,10 +18,8 @@ export async function updateWorkspace({
   const accessToken = decodeURIComponent(encodedToken);
 
   const headers = {
-    apikey: supabaseKey,
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
-    Prefer: "return=representation",
   };
 
   const body: any = {};
@@ -33,24 +29,21 @@ export async function updateWorkspace({
   }
   if (description !== undefined) body.description = description;
 
-  const url = `${supabaseUrl}/rest/v1/workspaces?id=eq.${workspaceId}`;
+  const url = `${process.env.BACKEND_URL}/workspaces/${workspaceId}`;
 
   try {
     const response = await axiosWithProxy.patch(url, body, { headers });
-    const updated = Array.isArray(response.data)
-      ? response.data[0]
-      : response.data;
+    const updated = response.data;
 
     return {
       success: true,
-      redirectTo: `/workspace/${updated.slug}`,
+      redirectTo: `/workspace/${updated.id}`,
       data: updated,
     };
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to update workspace";
-    return { success: false, error: errorMsg };
+    return {
+      success: false,
+      error: error.response?.data?.detail || "Failed to update workspace",
+    };
   }
 }

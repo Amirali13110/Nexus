@@ -2,6 +2,7 @@
 import z from "zod";
 import { revalidatePath } from "next/cache";
 import { updateIssue } from "@/services/issue/updateIssue";
+import { Issue } from "@/lib/types";
 
 const updateIssueSchema = z.object({
   title: z.string().min(1).max(200).optional(),
@@ -10,15 +11,13 @@ const updateIssueSchema = z.object({
     .enum(["backlog", "todo", "in_progress", "in_review", "done"])
     .optional(),
   priority: z.number().int().min(0).max(4).optional(),
-  assigneeId: z.string().uuid().optional().nullable(),
   dueDate: z.string().optional().nullable(),
 });
 
 export async function updateIssueAction(prevState: any, formData: FormData) {
   const issueId = formData.get("issueId") as string;
   const projectId = formData.get("projectId") as string;
-  const workspaceSlug = formData.get("workspaceSlug") as string;
-  const projectSlug = formData.get("projectSlug") as string;
+  const workspaceId = formData.get("workspaceId") as string;
 
   const title = (formData.get("title") as string) || undefined;
   const description = (formData.get("description") as string) || undefined;
@@ -34,7 +33,6 @@ export async function updateIssueAction(prevState: any, formData: FormData) {
     description,
     status,
     priority,
-    assigneeId,
     dueDate,
   });
   if (!validation.success) {
@@ -43,6 +41,8 @@ export async function updateIssueAction(prevState: any, formData: FormData) {
 
   const result = await updateIssue({
     issueId,
+    workspaceId,
+    projectId,
     title,
     description,
     status,
@@ -52,6 +52,7 @@ export async function updateIssueAction(prevState: any, formData: FormData) {
   });
   if (!result.success) return { success: false, error: result.error };
 
-  revalidatePath(`/workspace/${workspaceSlug}/project/${projectSlug}`)
+  revalidatePath(`/workspace/${workspaceId}/project/${projectId}`);
+  revalidatePath("/");
   return { success: true, issue: result.data };
 }

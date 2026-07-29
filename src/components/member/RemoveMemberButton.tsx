@@ -5,17 +5,11 @@ import Spinner from "../ui/Spinner";
 
 export default function RemoveMemberButton({
   workspaceId,
-  workspaceSlug,
   onSuccess,
-  role,
-  profileId,
   member,
 }: {
   workspaceId: string;
-  workspaceSlug: string;
-  role: string;
   onSuccess: () => void;
-  profileId: string;
   member: Member;
 }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -26,17 +20,18 @@ export default function RemoveMemberButton({
     setIsRemoving(true);
     const result = await removeMemberAction({
       workspaceId,
-      workspaceSlug,
-      role,
-      profileId,
+      memberId: member.id,
     });
     if (!result.success && result.error) {
+      console.log(result);
       setIsRemoving(false);
       setError(result.error);
     }
-    setShowConfirm(false);
-    onSuccess();
-    setIsRemoving(false);
+    if (result.success) {
+      setShowConfirm(false);
+      onSuccess();
+      setIsRemoving(false);
+    }
   }
   return (
     <div>
@@ -74,6 +69,11 @@ export default function RemoveMemberButton({
                 )}
               </button>
             </div>
+            {error && (
+              <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">
+                {error}
+              </p>
+            )}
           </div>
         </div>
       )}

@@ -4,12 +4,12 @@ import type { Project } from "@/lib/types";
 
 interface ProjectListProps {
   projects: Project[];
-  workspaceSlug: string;
+  workspaceId: string;
 }
 
 export default function ProjectList({
   projects,
-  workspaceSlug,
+  workspaceId,
 }: ProjectListProps) {
   if (!projects || projects.length === 0) {
     return (
@@ -26,7 +26,7 @@ export default function ProjectList({
       {projects.map((project) => (
         <Link
           key={project.id}
-          href={`/workspace/${workspaceSlug}/project/${project.slug}`}
+          href={`/workspace/${workspaceId}/project/${project.id}`}
           className="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950"
         >
           <h3 className="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#0066ff] dark:text-white">
