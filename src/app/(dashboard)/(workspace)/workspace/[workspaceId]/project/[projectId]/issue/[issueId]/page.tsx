@@ -1,8 +1,6 @@
 import GetIssueByIdAction from "@/actions/issue/GetIssueByIdAction";
 import IssueView from "@/components/issue/IssueView";
 import { notFound } from "next/navigation";
-import getWorkspaceBySlugAction from "@/actions/workspace/GetWorkspaceByIdAction";
-import getProjectBySlugAction from "@/actions/project/GetProjectBySlugAction";
 import { getWorkspaceMembers } from "@/services/member/getWorkspaceMembers";
 import { Member, Project } from "@/lib/types";
 import getWorkspaceByIdAction from "@/actions/workspace/GetWorkspaceByIdAction";
