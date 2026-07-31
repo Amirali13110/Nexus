@@ -17,7 +17,6 @@ export async function removeMemberAction({
 
 
   const result = await deleteMember({ workspaceId, memberId});
-  console.log(result)
   if (!result.success) return { success: false, error: result.error };
   revalidatePath(`/workspace/${workspaceId}`);
   return { success: true };

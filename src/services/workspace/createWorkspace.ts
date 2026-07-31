@@ -25,7 +25,6 @@ export async function createWorkspace({
   const accessToken = decodeURIComponent(encodedToken);
   try {
     if (!accessToken) {
-      console.error("No access token found in authStore");
       return {
         success: false,
         error: "Your session has expired. Please log in again.",

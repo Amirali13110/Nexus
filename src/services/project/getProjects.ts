@@ -26,7 +26,6 @@ export async function getProjectsByWorkspace(
     const projects = response.data;
     return { success: true, data: projects };
   } catch (error: any) {
-    console.error("Fetch projects error:", error);
     return {
       success: false,
       error: error.response?.data?.detail || "Failed to fetch projects",

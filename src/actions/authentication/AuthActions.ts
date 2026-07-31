@@ -47,7 +47,6 @@ export async function refreshAuthCookies(refreshToken: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Token recharge loop failed:", error);
 
     const cookieStore = await cookies();
     cookieStore.delete("access_token");
@@ -82,7 +81,6 @@ export async function handleSignOut() {
 
     return { success: true };
   } catch (error: any) {
-    console.error("Logout error:", error);
     return {
       success: false,
       error:

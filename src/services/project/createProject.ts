@@ -26,7 +26,6 @@ export async function createProject({
   const body = { name, slug, description, workspace_id: workspace_id };
   const url = `${process.env.BACKEND_URL}/workspaces/${workspace_id}/projects`;
 
-  console.log(workspace_id)
   try {
     const response = await axiosWithProxy.post<Project>(
       url,
@@ -39,13 +38,11 @@ export async function createProject({
         error: response.data || "Failed to create project",
       };
     }
-    console.log(response)
     const project =  response.data;
     
 
     return { success: true, data: project };
   } catch (error: any) {
-    console.log(error.response.data)
     return {
       success: false,
       error: error.response?.data?.detail || "Failed to create project",

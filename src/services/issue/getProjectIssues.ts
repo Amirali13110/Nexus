@@ -30,7 +30,6 @@ export async function getProjectIssues(
         sort_order: filters?.sortOrder,
       }, },);
     const data = response.data as Issue[];
-    console.log(data)
     return { success: true, data };
   } catch (error: any) {
     return {

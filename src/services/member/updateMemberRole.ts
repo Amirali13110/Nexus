@@ -28,7 +28,6 @@ export async function updateMemberRole({
     const updated = response.data;
     return { success: true, data: updated };
   } catch (error: any) {
-    console.log(error.response.data.detail.msg)
     
     return { success: false, error: error.response.data.detail || "Failed to update members role " };
   }

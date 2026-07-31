@@ -20,7 +20,7 @@ export async function declineInvitation(invitationId: string) {
     await axiosWithProxy.post(url, {}, { headers });
     return { success: true };
   } catch (error: any) {
-    console.log(error.response.data)
+
 
     return { success: false, error: error.response.data.detail || "Failed to decline invitation" };
   }

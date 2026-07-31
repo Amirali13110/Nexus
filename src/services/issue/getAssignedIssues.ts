@@ -24,7 +24,6 @@ export async function getAssignedIssues(): Promise<ApiResult<Issue[]>> {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log(response.data)
     return {
       success: true,
       data: response.data,

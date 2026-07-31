@@ -24,7 +24,6 @@ export async function getCurrentUser(): Promise<ApiResult<User>> {
      const user = response.data;
      return { success: true, data: user };
    } catch (error: any) {
-     console.error("Fetch user error:", error);
      return {
        success: false,
        error:

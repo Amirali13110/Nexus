@@ -23,10 +23,9 @@ export default async function IssuePage({
     notFound();
   }
   const issue = issueResult.data;
-  console.log(issueResult.data)
   const workspaceResult = await getWorkspaceByIdAction(workspaceId);
-  if (!workspaceResult.success && !workspaceResult.workspace) notFound();
-  const workspace = workspaceResult.workspace;
+  if (!workspaceResult.success && !workspaceResult.data) notFound();
+  const workspace = workspaceResult.data
 
   const projectResult = await getProjectByIdAction({
     workspaceId,

@@ -23,7 +23,6 @@ export default function AuthProvider({
           }
 
         } catch (err) {
-          console.error("Failed to load current user:", err);
         } 
       }
     };

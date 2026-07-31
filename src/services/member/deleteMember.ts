@@ -12,7 +12,6 @@ export async function deleteMember({
   const encodedToken = cookieStore.get("access_token")?.value;
   if (!encodedToken) return { success: false, error: "Unauthorized" };
   const accessToken = decodeURIComponent(encodedToken);
-  console.log(workspaceId)
 
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -23,7 +22,6 @@ export async function deleteMember({
     await axiosWithProxy.delete(url, { headers });
     return { success: true };
   } catch (error: any) {
-    console.log(error.response.data)
     return { success: false, error: error.response.data.detail || "Failed to remove member" };
   }
 }

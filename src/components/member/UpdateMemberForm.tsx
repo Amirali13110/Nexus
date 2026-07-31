@@ -32,7 +32,6 @@ export default function UpdateMemberForm({
   const isSelf = member.id === user?.id;
   const allRoles = ["member", "admin", "owner"];
   const otherRoles = allRoles.filter((role) => role !== member.role);
-  console.log(state?.error);
   const allowedRoles = otherRoles.filter((role) => {
     if (role === "owner") return isOwner && isSelf;
     return true;

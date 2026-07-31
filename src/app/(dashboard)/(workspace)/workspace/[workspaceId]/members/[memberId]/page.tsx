@@ -9,7 +9,6 @@ export default async function MemberProfilePage({
 }) {
   const { workspaceId, memberId } = await params;
   const workspaceResult = await getWorkspaceByIdAction(workspaceId);
-  console.log(workspaceResult);
   if (!workspaceResult.success || !workspaceResult.data) notFound();
   const workspace = workspaceResult.data;
 
@@ -17,7 +16,6 @@ export default async function MemberProfilePage({
     workspaceId: workspace.id,
     memberId,
   });
-  console.log(memberResult);
   if (!memberResult.success || !memberResult.data) notFound();
   const member = memberResult.data;
   return <MemberView member={member} />;

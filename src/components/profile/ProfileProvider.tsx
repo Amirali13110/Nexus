@@ -23,7 +23,7 @@ export default function ProfileProvider({
             setError(result.error);
           }
         } catch (err) {
-          console.error("Failed to load profile:", err);
+          throw new Error("Failed to get profiles")
         }
       }
     };

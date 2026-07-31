@@ -35,7 +35,6 @@ export async function getWorkspaces(): Promise<ApiResult<Workspace[]>> {
     };
 
   } catch (error: any) {
-    console.error("Fetch workspaces error:", error);
 
     return {
       success: false,

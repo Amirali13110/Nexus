@@ -48,7 +48,6 @@ export async function createIssue({
     assignee_id,
     due_date: dueDate || null,
   };
-  console.log(assigneeId)
 
   const url = `${process.env.BACKEND_URL}/issues/workspaces/${workspaceId}/projects/${projectId}`;
 
@@ -59,7 +58,6 @@ export async function createIssue({
     const createdIssue = response.data as Issue;
     return { success: true, data: createdIssue };
   } catch (error: any) {
-    console.log(error.response.data)
     return {
       success: false,
       error:

@@ -22,7 +22,6 @@ export default async function getProfileAction() {
         return { success: false, error: "User ID missing in auth_user cookie" };
       }
     } catch (parseErr) {
-      console.error("Failed to parse auth_user cookie:", parseErr);
       return { success: false, error: "Invalid auth_user cookie format" };
     }
 
@@ -38,7 +37,6 @@ export default async function getProfileAction() {
 
     return { success: true, profile, error: null };
   } catch (error: any) {
-    console.error("getProfileAction unexpected error:", error);
     return { success: false, error: "Internal server error" };
   }
 }

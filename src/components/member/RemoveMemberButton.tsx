@@ -23,7 +23,6 @@ export default function RemoveMemberButton({
       memberId: member.id,
     });
     if (!result.success && result.error) {
-      console.log(result);
       setIsRemoving(false);
       setError(result.error);
     }

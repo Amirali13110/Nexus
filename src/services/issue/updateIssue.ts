@@ -47,7 +47,6 @@ export async function updateIssue({
     const updated = response.data;
     return { success: true, data: updated };
   } catch (error: any) {
-    console.log(error.response.data);
     const errorMsg = error.response?.data?.detail || "Failed to update issue";
     return { success: false, error: errorMsg };
   }

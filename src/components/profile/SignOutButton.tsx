@@ -17,7 +17,7 @@ export default function SignOutButton() {
     try {
       signOut();
     } catch (error) {
-      console.error("Failed to delete workspace:", error);
+    throw new Error("Failed to delete workspace");
     } finally {
       setIsSigningOut(false);
       setShowConfirm(false);

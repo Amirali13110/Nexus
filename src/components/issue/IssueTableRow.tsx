@@ -84,7 +84,6 @@ export default function IssueTableRow({
   const status = statusConfig[issue.status] ?? statusConfig.backlog;
   const isAdmin = role === "admin" || role === "owner";
   const hasAccess = isAdmin || issue.created_by === user?.id;
-  console.log(issue)
   const assigneeInitial = issue.assignee?.full_name?.[0].toUpperCase() || "?";
 
   return (

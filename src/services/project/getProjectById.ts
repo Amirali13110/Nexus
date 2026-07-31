@@ -20,7 +20,6 @@ export async function getProjectById({projectId , workspaceId}: {
   try {
     const response = await axiosWithProxy.get(url, { headers });
     const project = response.data || null;
-    console.log(response.data) 
     if (!project) return { success: false, error: "Project not found" };
     return { success: true, data: project };
   } catch (error: any) {

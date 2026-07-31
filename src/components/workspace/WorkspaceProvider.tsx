@@ -26,7 +26,7 @@ export default function WorkspaceProvider({
             setError(result.error);
           }
         } catch (err) {
-          console.error("Failed to load workspaces:", err);
+          throw new Error("Failed to load workspaces")
         } finally {
           setIsLoading(false);
         }
